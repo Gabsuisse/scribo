@@ -1,0 +1,724 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>extractorultimator.ai — extraction locale de documents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --encre:#161B2B;
+  --encre-doux:#4A5468;
+  --papier:#EAEDE6;
+  --papier-clair:#F5F7F2;
+  --filigrane:#C3CDC0;
+  --tampon:#5A46C8;
+  --valide:#2C7A57;
+  --doute:#A8730A;
+  --alerte:#B23A2E;
+  --trait:#CBD2C6;
+  --r:3px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--papier);
+  color:var(--encre);
+  font-family:"Public Sans",system-ui,sans-serif;
+  font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+
+/* ---------- barre haute ---------- */
+.bar{
+  position:sticky;top:0;z-index:40;
+  background:rgba(234,237,230,.88);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--trait);
+}
+.bar-in{display:flex;align-items:center;justify-content:space-between;gap:16px;height:56px}
+.marque{
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+  font-size:15px;letter-spacing:-.02em;
+}
+.marque span{color:var(--tampon)}
+.statut{
+  display:flex;align-items:center;gap:8px;
+  font-family:"JetBrains Mono",monospace;font-size:11px;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--encre-doux);
+  border:1px solid var(--trait);border-radius:999px;padding:5px 12px;
+  background:var(--papier-clair);
+}
+.pastille{width:7px;height:7px;border-radius:50%;background:var(--encre-doux);flex:none}
+.pastille.on{background:var(--valide)}
+.pastille.off{background:var(--alerte)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--trait)}
+#guilloche{position:absolute;inset:0;width:100%;height:100%;opacity:.5;pointer-events:none}
+.hero-in{position:relative;padding:96px 0 88px;max-width:760px}
+.eyebrow{
+  font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:500;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--tampon);
+  display:flex;align-items:center;gap:10px;margin-bottom:22px;
+}
+.eyebrow::after{content:"";height:1px;flex:1;background:var(--filigrane);max-width:180px}
+.hero h1{
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+  font-size:clamp(38px,6.2vw,68px);line-height:1.02;letter-spacing:-.035em;
+  max-width:14ch;
+}
+.hero h1 em{font-style:normal;color:var(--tampon)}
+.hero p{
+  margin-top:26px;max-width:52ch;font-size:18px;color:var(--encre-doux);
+}
+.compte{
+  margin-top:36px;display:flex;flex-wrap:wrap;gap:0;
+  border:1px solid var(--trait);background:var(--papier-clair);width:fit-content;
+}
+.compte div{padding:12px 20px;border-right:1px solid var(--trait)}
+.compte div:last-child{border-right:0}
+.compte b{
+  display:block;font-family:"JetBrains Mono",monospace;font-size:20px;font-weight:700;
+  line-height:1.2;
+}
+.compte small{
+  font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--encre-doux);
+}
+.scan{
+  position:absolute;left:0;right:0;height:120px;top:-140px;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(90,70,200,.12),transparent);
+  animation:sweep 1.6s cubic-bezier(.4,0,.2,1) .3s 1 forwards;
+}
+@keyframes sweep{to{top:110%}}
+
+/* ---------- catalogue ---------- */
+.catalogue{padding:72px 0 96px}
+.fam{margin-bottom:52px}
+.fam-tete{
+  display:flex;align-items:baseline;gap:14px;margin-bottom:18px;
+  border-bottom:1px solid var(--trait);padding-bottom:10px;
+}
+.fam-tete h2{
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:700;
+  font-size:19px;letter-spacing:-.02em;
+}
+.fam-tete span{
+  font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--encre-doux);
+  letter-spacing:.08em;
+}
+.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(224px,1fr));gap:12px}
+.carte{
+  text-align:left;font:inherit;color:inherit;
+  border:1px solid var(--trait);background:var(--papier-clair);
+  padding:18px;border-radius:var(--r);
+  display:flex;flex-direction:column;gap:6px;min-height:118px;
+  cursor:not-allowed;opacity:.55;
+}
+.carte h3{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.carte p{font-size:13px;color:var(--encre-doux);line-height:1.4}
+.carte .etat{
+  margin-top:auto;font-family:"JetBrains Mono",monospace;font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--encre-doux);
+}
+.carte.actif{
+  opacity:1;cursor:pointer;background:#fff;border-color:var(--encre);
+  box-shadow:3px 3px 0 var(--tampon);transition:transform .12s ease,box-shadow .12s ease;
+}
+.carte.actif:hover,.carte.actif:focus-visible{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--tampon)}
+.carte.actif .etat{color:var(--tampon);font-weight:700}
+
+/* ---------- modale ---------- */
+.modale{
+  position:fixed;inset:0;z-index:60;background:var(--papier);
+  overflow-y:auto;display:none;
+}
+.modale.ouverte{display:block}
+.modale-bar{
+  position:sticky;top:0;background:rgba(234,237,230,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--trait);z-index:2;
+}
+.modale-bar .bar-in{height:56px}
+.fermer{
+  border:1px solid var(--trait);background:var(--papier-clair);color:var(--encre);
+  font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;padding:7px 14px;border-radius:999px;cursor:pointer;
+}
+.fermer:hover{background:#fff;border-color:var(--encre)}
+.modale-corps{padding:44px 0 96px}
+.modale h2{
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+  font-size:clamp(28px,4vw,42px);letter-spacing:-.03em;line-height:1.05;
+}
+.consigne{
+  margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:0;
+  border:1px solid var(--trait);background:var(--papier-clair);
+}
+.consigne div{padding:16px 20px}
+.consigne div:first-child{border-right:1px solid var(--trait)}
+.consigne h4{
+  font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--tampon);margin-bottom:8px;
+}
+.consigne p,.consigne li{font-size:14px;color:var(--encre-doux)}
+.consigne ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.consigne li{
+  font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--encre);
+  border:1px solid var(--trait);background:#fff;padding:3px 9px;border-radius:var(--r);
+}
+
+/* dropzone */
+.zone{
+  margin-top:22px;position:relative;
+  border:2px dashed var(--filigrane);border-radius:var(--r);background:var(--papier-clair);
+  min-height:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;text-align:center;padding:40px 24px;transition:border-color .15s,background .15s;
+}
+.zone.survol{border-color:var(--tampon);background:#fff}
+.zone-icone{width:44px;height:44px;color:var(--filigrane)}
+.zone h3{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:22px;letter-spacing:-.02em}
+.zone p{font-size:14px;color:var(--encre-doux)}
+.lien{
+  background:none;border:0;padding:0;font:inherit;color:var(--tampon);
+  text-decoration:underline;text-underline-offset:3px;cursor:pointer;
+}
+.fichier{
+  display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--encre);
+  padding:12px 16px;border-radius:var(--r);font-family:"JetBrains Mono",monospace;font-size:13px;
+  max-width:100%;
+}
+.fichier b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.fichier small{color:var(--encre-doux)}
+.cta{
+  margin-top:6px;background:var(--encre);color:var(--papier-clair);border:0;
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:15px;letter-spacing:-.01em;
+  padding:14px 30px;border-radius:var(--r);cursor:pointer;
+}
+.cta:hover{background:var(--tampon)}
+.cta:disabled{opacity:.35;cursor:not-allowed}
+.cta.secondaire{background:var(--tampon)}
+
+/* loader */
+.loader{display:flex;flex-direction:column;align-items:center;gap:18px}
+.barres{display:flex;gap:5px;height:40px;align-items:flex-end}
+.barres i{
+  width:6px;background:var(--tampon);border-radius:1px;
+  animation:lire 1.1s ease-in-out infinite;
+}
+.barres i:nth-child(1){animation-delay:0s}
+.barres i:nth-child(2){animation-delay:.12s}
+.barres i:nth-child(3){animation-delay:.24s}
+.barres i:nth-child(4){animation-delay:.36s}
+.barres i:nth-child(5){animation-delay:.48s}
+.barres i:nth-child(6){animation-delay:.6s}
+@keyframes lire{0%,100%{height:10px;opacity:.35}50%{height:40px;opacity:1}}
+.etape{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.06em;color:var(--encre-doux)}
+
+/* erreur */
+.erreur{
+  margin-top:18px;border:1px solid var(--alerte);border-left-width:4px;
+  background:#fff;padding:16px 20px;border-radius:var(--r);
+}
+.erreur h4{font-size:14px;font-weight:600;color:var(--alerte);margin-bottom:6px}
+.erreur p{font-size:14px;color:var(--encre-doux)}
+.erreur code{
+  font-family:"JetBrains Mono",monospace;font-size:12px;background:var(--papier);
+  padding:2px 6px;border-radius:2px;display:inline-block;margin-top:6px;
+}
+
+/* résultats */
+.resultats{margin-top:44px;display:none}
+.resultats.visible{display:block}
+.res-tete{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  border-bottom:1px solid var(--trait);padding-bottom:14px;margin-bottom:6px;
+}
+.res-tete h3{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:22px;letter-spacing:-.02em}
+.res-tete p{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--encre-doux);letter-spacing:.06em}
+.champ{
+  display:grid;grid-template-columns:1fr auto;gap:8px 20px;align-items:center;
+  padding:16px 0;border-bottom:1px solid var(--trait);
+}
+.champ-nom{
+  font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--encre-doux);grid-column:1;
+}
+.champ-val{
+  grid-column:1;font-family:"JetBrains Mono",monospace;font-size:19px;font-weight:500;
+  letter-spacing:.01em;word-break:break-word;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.champ-val.vide{color:var(--filigrane);font-style:italic;font-weight:400}
+.copier{
+  border:1px solid var(--trait);background:var(--papier-clair);color:var(--encre-doux);
+  font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  padding:4px 10px;border-radius:var(--r);cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+  transition:all .12s ease;flex:none;
+}
+.copier:hover{border-color:var(--tampon);color:var(--tampon);background:#fff}
+.copier.ok{border-color:var(--valide);color:var(--valide);background:rgba(44,122,87,.06)}
+.copier svg{width:12px;height:12px}
+.tout-copier{
+  display:inline-flex;align-items:center;gap:8px;margin-bottom:4px;
+  border:1px solid var(--encre);background:#fff;color:var(--encre);
+  font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  padding:8px 14px;border-radius:var(--r);cursor:pointer;transition:all .12s ease;
+}
+.tout-copier:hover{background:var(--encre);color:var(--papier-clair)}
+.tout-copier.ok{border-color:var(--valide);background:var(--valide);color:#fff}
+.champ-src{grid-column:1;font-size:12px;color:var(--encre-doux)}
+.jauge{grid-column:2;grid-row:1/4;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.jauge b{font-family:"JetBrains Mono",monospace;font-size:15px;font-weight:700}
+.segments{display:flex;gap:2px}
+.segments i{width:7px;height:14px;background:var(--filigrane);border-radius:1px}
+.haut b{color:var(--valide)} .haut .segments i.on{background:var(--valide)}
+.moyen b{color:var(--doute)} .moyen .segments i.on{background:var(--doute)}
+.bas b{color:var(--alerte)} .bas .segments i.on{background:var(--alerte)}
+.tampon{
+  display:inline-flex;align-items:center;gap:8px;margin:22px 0 0;
+  border:2px solid var(--tampon);color:var(--tampon);border-radius:var(--r);
+  padding:8px 16px;font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;transform:rotate(-1.6deg);
+  background:rgba(90,70,200,.05);
+}
+.tampon.ko{border-color:var(--alerte);color:var(--alerte);background:rgba(178,58,46,.05)}
+.actions{margin-top:26px;display:flex;gap:10px;flex-wrap:wrap}
+.note{
+  margin-top:26px;font-size:13px;color:var(--encre-doux);border-left:2px solid var(--filigrane);
+  padding-left:14px;max-width:60ch;
+}
+.brut{margin-top:22px}
+.brut summary{
+  font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--encre-doux);cursor:pointer;
+}
+.brut pre{
+  margin-top:12px;background:var(--papier-clair);border:1px solid var(--trait);
+  padding:16px;border-radius:var(--r);font-family:"JetBrains Mono",monospace;font-size:12px;
+  white-space:pre-wrap;max-height:280px;overflow:auto;color:var(--encre-doux);
+}
+
+footer{border-top:1px solid var(--trait);padding:32px 0 56px;font-size:13px;color:var(--encre-doux)}
+footer code{font-family:"JetBrains Mono",monospace;background:var(--papier-clair);padding:2px 6px;border:1px solid var(--trait)}
+
+:focus-visible{outline:2px solid var(--tampon);outline-offset:3px}
+@media (max-width:720px){
+  .consigne{grid-template-columns:1fr}
+  .consigne div:first-child{border-right:0;border-bottom:1px solid var(--trait)}
+  .champ{grid-template-columns:1fr}
+  .jauge{grid-column:1;grid-row:auto;align-items:flex-start;margin-top:4px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .scan{display:none}
+}
+</style>
+
+<div class="bar"><div class="wrap bar-in">
+  <div class="marque">extractorultimator<span>.ai</span></div>
+  <div class="statut"><span class="pastille" id="pastille"></span><span id="statutTexte">connexion au modèle…</span></div>
+</div></div>
+
+<header class="hero">
+  <svg id="guilloche" preserveAspectRatio="none"></svg>
+  <div class="scan"></div>
+  <div class="wrap hero-in">
+    <div class="eyebrow">Extraction locale · Mistral 7B</div>
+    <h1>Vos documents ne quittent pas <em>votre machine</em>.</h1>
+    <p>Déposez un document, récupérez un JSON propre et prêt à pré-remplir un formulaire. Le modèle tourne sur votre ordinateur, chaque valeur est recontrôlée par des règles de calcul avant de vous être montrée.</p>
+    <div class="compte">
+      <div><b id="cptActif">1</b><small>document actif</small></div>
+      <div><b id="cptSoon">0</b><small>en préparation</small></div>
+      <div><b>0 €</b><small>par extraction</small></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap catalogue" id="catalogue"></main>
+
+<footer class="wrap">
+  Tout se passe en local : l'analyse tourne dans votre process Python, le fichier temporaire est supprimé juste après. Rien ne part ailleurs.
+</footer>
+
+<!-- ================= MODALE ================= -->
+<div class="modale" id="modale" role="dialog" aria-modal="true" aria-labelledby="modaleTitre">
+  <div class="modale-bar"><div class="wrap bar-in">
+    <div class="marque">extractorultimator<span>.ai</span></div>
+    <button class="fermer" id="btnFermer">Fermer ✕</button>
+  </div></div>
+
+  <div class="wrap modale-corps">
+    <h2 id="modaleTitre">Relevé d'identité bancaire</h2>
+
+    <div class="consigne">
+      <div>
+        <h4>Ce que le système va lire</h4>
+        <p>Le titulaire, l'IBAN, le BIC et la domiciliation. Le code banque, le code guichet, le numéro de compte et la clé RIB sont ensuite recalculés à partir de l'IBAN, ils ne sont pas devinés.</p>
+      </div>
+      <div>
+        <h4>Formats acceptés</h4>
+        <ul><li>PDF</li><li>PNG</li><li>JPG</li><li>WEBP</li></ul>
+        <p style="margin-top:10px">Un PDF avec texte est lu directement. Une image ou un PDF scanné passe par la reconnaissance de caractères, c'est plus lent.</p>
+      </div>
+    </div>
+
+    <div class="zone" id="zone">
+      <div id="zoneVide">
+        <svg class="zone-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 14px">
+          <path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M12 17v-6"/><path d="m9.5 13.5 2.5-2.5 2.5 2.5"/>
+        </svg>
+        <h3>Glissez votre RIB ici</h3>
+        <p>ou <button class="lien" id="btnParcourir">choisissez un fichier</button></p>
+      </div>
+      <input type="file" id="input" accept=".pdf,.png,.jpg,.jpeg,.webp" hidden>
+    </div>
+
+    <div class="erreur" id="erreur" hidden><h4 id="erreurTitre"></h4><p id="erreurTexte"></p></div>
+
+    <section class="resultats" id="resultats">
+      <div class="res-tete">
+        <h3>Données extraites</h3>
+        <p id="resMeta"></p>
+      </div>
+      <div id="champs"></div>
+      <div id="zoneTampon"></div>
+      <div class="actions">
+        <button class="cta secondaire" id="btnJson">Télécharger le JSON</button>
+        <button class="cta" id="btnRecommencer" style="background:transparent;color:var(--encre);border:1px solid var(--trait)">Extraire un autre RIB</button>
+      </div>
+      <p class="note">Le pourcentage n'est pas déclaré par le modèle, il est calculé ici : 50 % de base, +30 si la valeur se retrouve telle quelle dans le texte source, +20 si elle passe son contrôle de forme (clé mod-97 pour l'IBAN, format pour le BIC). Les champs sous 80 % méritent un coup d'œil avant d'être injectés dans un formulaire.</p>
+      <details class="brut"><summary>Voir le texte source lu dans le document</summary><pre id="brut"></pre></details>
+    </section>
+  </div>
+</div>
+
+<script>
+/* Le serveur Python sert cette page : même origine, aucun appel externe. */
+let MODELE = "mistral 7b";
+
+/* ============ Guilloche ============ */
+(function(){
+  const svg = document.getElementById("guilloche");
+  const W = 1200, H = 520;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  let d = "";
+  for (let i = 0; i < 34; i++){
+    const r = 40 + i * 13, cx = W * .78, cy = H * .5;
+    d += `<ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r*.42}" transform="rotate(${i*5.2} ${cx} ${cy})" fill="none" stroke="var(--filigrane)" stroke-width=".7"/>`;
+  }
+  svg.innerHTML = d;
+})();
+
+/* ============ Catalogue ============ */
+const CATALOGUE = [
+  { fam:"Finance & banque", docs:[
+    { id:"rib", nom:"RIB", desc:"IBAN, BIC, titulaire, domiciliation", actif:true },
+    { id:"avis", nom:"Avis d'imposition", desc:"Revenus, parts fiscales, adresse fiscale" },
+    { id:"paie", nom:"Bulletin de salaire", desc:"Salaire net, employeur, type de contrat" },
+    { id:"releve", nom:"Relevé de compte", desc:"Soldes, période, mouvements" },
+  ]},
+  { fam:"Identité & administratif", docs:[
+    { id:"cni", nom:"Carte d'identité", desc:"État civil lu depuis la bande MRZ" },
+    { id:"passeport", nom:"Passeport", desc:"État civil, numéro, validité" },
+    { id:"sejour", nom:"Titre de séjour", desc:"Statut, dates de validité" },
+    { id:"famille", nom:"Livret de famille", desc:"Composition du foyer, enfants" },
+  ]},
+  { fam:"Logement", docs:[
+    { id:"domicile", nom:"Justificatif de domicile", desc:"Adresse, fournisseur, date d'émission" },
+    { id:"quittance", nom:"Quittance de loyer", desc:"Loyer, charges, bailleur" },
+    { id:"dpe", nom:"Diagnostic énergétique", desc:"Classe, surface, consommation" },
+  ]},
+  { fam:"Véhicule", docs:[
+    { id:"grise", nom:"Carte grise", desc:"Immatriculation, modèle, mise en circulation" },
+    { id:"permis", nom:"Permis de conduire", desc:"Catégories, date d'obtention" },
+  ]},
+  { fam:"Santé", docs:[
+    { id:"vitale", nom:"Attestation de droits", desc:"Numéro de sécurité sociale, ayants droit" },
+    { id:"mutuelle", nom:"Carte de mutuelle", desc:"Organisme, garanties, numéro d'adhérent" },
+  ]},
+  { fam:"Entreprise", docs:[
+    { id:"kbis", nom:"Extrait Kbis", desc:"Raison sociale, SIREN, forme juridique" },
+    { id:"statuts", nom:"Statuts de société", desc:"Capital, objet social, associés" },
+  ]},
+  { fam:"Emploi & formation", docs:[
+    { id:"contrat", nom:"Contrat de travail", desc:"Poste, rémunération, date d'entrée" },
+    { id:"cv", nom:"CV", desc:"Expériences, formations, compétences" },
+    { id:"diplome", nom:"Diplôme", desc:"Intitulé, établissement, année" },
+  ]},
+];
+
+(function(){
+  const hote = document.getElementById("catalogue");
+  let actifs = 0, soon = 0;
+  CATALOGUE.forEach(fam => {
+    const dispo = fam.docs.filter(d => d.actif).length;
+    const sec = document.createElement("section");
+    sec.className = "fam";
+    sec.innerHTML = `<div class="fam-tete"><h2>${fam.fam}</h2>
+      <span>${dispo}/${fam.docs.length} disponible${dispo>1?"s":""}</span></div>
+      <div class="grille"></div>`;
+    const grille = sec.querySelector(".grille");
+    fam.docs.forEach(doc => {
+      doc.actif ? actifs++ : soon++;
+      const el = document.createElement(doc.actif ? "button" : "div");
+      el.className = "carte" + (doc.actif ? " actif" : "");
+      el.innerHTML = `<h3>${doc.nom}</h3><p>${doc.desc}</p>
+        <div class="etat">${doc.actif ? "Extraire →" : "Bientôt"}</div>`;
+      if (doc.actif) el.addEventListener("click", ouvrir);
+      grille.appendChild(el);
+    });
+    hote.appendChild(sec);
+  });
+  document.getElementById("cptActif").textContent = actifs;
+  document.getElementById("cptSoon").textContent = soon;
+})();
+
+/* ============ Modale ============ */
+const modale = document.getElementById("modale");
+let dernierFocus = null;
+function ouvrir(e){ dernierFocus = e.currentTarget; modale.classList.add("ouverte");
+  document.body.style.overflow = "hidden"; document.getElementById("btnFermer").focus(); }
+function fermer(){ modale.classList.remove("ouverte"); document.body.style.overflow = "";
+  if (dernierFocus) dernierFocus.focus(); }
+document.getElementById("btnFermer").addEventListener("click", fermer);
+document.addEventListener("keydown", e => { if (e.key === "Escape" && modale.classList.contains("ouverte")) fermer(); });
+
+/* ============ État de la zone ============ */
+const zone = document.getElementById("zone");
+const input = document.getElementById("input");
+let fichier = null, texteSource = "", resultat = null;
+
+document.getElementById("btnParcourir").addEventListener("click", () => input.click());
+input.addEventListener("change", () => { if (input.files[0]) recevoir(input.files[0]); });
+["dragenter","dragover"].forEach(t => zone.addEventListener(t, e => {
+  e.preventDefault(); zone.classList.add("survol"); }));
+["dragleave","drop"].forEach(t => zone.addEventListener(t, e => {
+  e.preventDefault(); zone.classList.remove("survol"); }));
+zone.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) recevoir(f); });
+
+function recevoir(f){
+  const ok = /\.(pdf|png|jpe?g|webp)$/i.test(f.name);
+  if (!ok) return montrerErreur("Format non pris en charge",
+    `« ${f.name} » n'est pas lisible. Utilisez un PDF, un PNG, un JPG ou un WEBP.`);
+  cacherErreur(); fichier = f; etatPret();
+}
+
+function etatPret(){
+  zone.innerHTML = `
+    <div class="fichier"><b>${fichier.name}</b><small>${(fichier.size/1024).toFixed(0)} Ko</small></div>
+    <button class="cta" id="btnExtraire">Extraire les informations</button>
+    <button class="lien" id="btnAutre">Changer de fichier</button>`;
+  document.getElementById("btnExtraire").addEventListener("click", lancer);
+  document.getElementById("btnAutre").addEventListener("click", () => { input.value=""; input.click(); });
+}
+
+function etatChargement(msg){
+  zone.innerHTML = `<div class="loader">
+    <div class="barres"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="etape" id="etape">${msg}</div></div>`;
+}
+function etape(m){ const el = document.getElementById("etape"); if (el) el.textContent = m; }
+
+function etatFini(){
+  zone.innerHTML = `
+    <div class="fichier"><b>${fichier.name}</b><small>lu</small></div>
+    <p style="font-size:14px;color:var(--encre-doux)">Extraction terminée, les données sont plus bas.</p>
+    <button class="cta secondaire" id="btnJson2">Télécharger le JSON</button>`;
+  document.getElementById("btnJson2").addEventListener("click", telecharger);
+}
+
+function montrerErreur(titre, texte, code){
+  const e = document.getElementById("erreur");
+  document.getElementById("erreurTitre").textContent = titre;
+  document.getElementById("erreurTexte").innerHTML = texte + (code ? `<br><code>${code}</code>` : "");
+  e.hidden = false;
+}
+function cacherErreur(){ document.getElementById("erreur").hidden = true; }
+
+/* ============ Extraction ============ */
+async function lancer(){
+  cacherErreur();
+  document.getElementById("resultats").classList.remove("visible");
+  etatChargement("Envoi du document…");
+
+  const minuteur = [
+    [1200, "Lecture du document…"],
+    [3500, "Analyse par Mistral 7B…"],
+    [12000, "Le modèle se charge en mémoire, c'est plus long au premier document…"],
+    [30000, "Toujours en cours, ne fermez pas la page…"],
+  ].map(([d, m]) => setTimeout(() => etape(m), d));
+
+  try {
+    const reponse = await fetch("/extract", {
+      method: "POST",
+      headers: { "X-Nom-Fichier": encodeURIComponent(fichier.name).replace(/%20/g, " ") },
+      body: fichier
+    });
+    const charge = await reponse.json();
+    if (!reponse.ok) throw { doux: true, titre: "L'extraction n'a pas abouti", texte: charge.erreur };
+
+    texteSource = charge.texte || "";
+    MODELE = charge.modele || MODELE;
+    resultat = charge;
+    afficher(charge);
+    etatFini();
+  } catch (e) {
+    etatPret();
+    if (e && e.doux) montrerErreur(e.titre, e.texte);
+    else montrerErreur("Le serveur local ne répond pas",
+      "Vérifiez que le serveur d'extraction tourne dans le Terminal, puis relancez.",
+      "python3 extracteur.py");
+  } finally {
+    minuteur.forEach(clearTimeout);
+  }
+}
+
+function valeurACopier(c){
+  // règle par champ : IBAN et codes → brut sans espaces ; le reste → tel quel
+  if (!c.valeur) return "";
+  if (c.cle === "iban") return c.valeur.replace(/\s/g, "");
+  return c.valeur;
+}
+
+function afficher(res){
+  const hote = document.getElementById("champs");
+  hote.innerHTML = "";
+
+  // bouton "tout copier" en tête
+  const barre = document.createElement("div");
+  barre.style.cssText = "grid-column:1/-1;margin-bottom:8px";
+  barre.innerHTML = `<button class="tout-copier" id="toutCopier">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    Tout copier (nom : valeur)</button>`;
+  hote.appendChild(barre);
+
+  res.champs.forEach(c => {
+    const niveau = c.score >= 80 ? "haut" : c.score >= 55 ? "moyen" : "bas";
+    const pleins = Math.round(c.score / 20);
+    const aCopier = valeurACopier(c);
+    const div = document.createElement("div");
+    div.className = "champ";
+    div.innerHTML = `
+      <div class="champ-nom">${c.nom}</div>
+      <div class="champ-val ${c.valeur ? "" : "vide"}">
+        <span>${c.valeur || "non trouvé dans le document"}</span>
+        ${c.valeur ? `<button class="copier" data-copie="${aCopier.replace(/"/g,"&quot;")}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          copier</button>` : ""}
+      </div>
+      ${c.src ? `<div class="champ-src">${c.src}</div>` : `<div class="champ-src"></div>`}
+      <div class="jauge ${niveau}">
+        <b>${c.valeur ? c.score + " %" : "—"}</b>
+        <div class="segments">${[1,2,3,4,5].map(i =>
+          `<i class="${c.valeur && i <= pleins ? "on" : ""}"></i>`).join("")}</div>
+      </div>`;
+    hote.appendChild(div);
+  });
+
+  // câblage des boutons copier par champ
+  hote.querySelectorAll(".copier").forEach(b => {
+    b.addEventListener("click", async () => {
+      await copierTexte(b.dataset.copie);
+      const avant = b.innerHTML;
+      b.classList.add("ok");
+      b.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> copié`;
+      setTimeout(() => { b.classList.remove("ok"); b.innerHTML = avant; }, 1400);
+    });
+  });
+
+  // câblage du "tout copier"
+  document.getElementById("toutCopier").addEventListener("click", async () => {
+    const lignes = res.champs.filter(c => c.valeur)
+      .map(c => `${c.nom} : ${valeurACopier(c)}`).join("\n");
+    await copierTexte(lignes);
+    const b = document.getElementById("toutCopier");
+    const avant = b.innerHTML;
+    b.classList.add("ok");
+    b.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Copié`;
+    setTimeout(() => { b.classList.remove("ok"); b.innerHTML = avant; }, 1400);
+  });
+
+  const t = document.getElementById("zoneTampon");
+  t.innerHTML = res.ibanOk === true
+    ? `<div class="tampon">✓ IBAN vérifié · mod-97</div>`
+    : res.ibanOk === false
+      ? `<div class="tampon ko">✕ IBAN rejeté · mod-97</div>`
+      : `<div class="tampon ko">✕ Aucun IBAN trouvé</div>`;
+
+  document.getElementById("resMeta").textContent =
+    `${fichier.name} · ${MODELE} · ${new Date().toLocaleTimeString("fr-FR")}`;
+  document.getElementById("brut").textContent = texteSource.slice(0, 4000);
+  document.getElementById("resultats").classList.add("visible");
+  document.getElementById("resultats").scrollIntoView({ behavior:"smooth", block:"start" });
+}
+
+/* copie robuste : API moderne, repli sur textarea si besoin (file://, http local) */
+async function copierTexte(texte){
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(texte);
+      return;
+    }
+  } catch (e) { /* on tente le repli */ }
+  const ta = document.createElement("textarea");
+  ta.value = texte;
+  ta.style.cssText = "position:fixed;top:-1000px;left:-1000px";
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand("copy"); } catch (e) {}
+  document.body.removeChild(ta);
+}
+
+/* ============ Export ============ */
+function telecharger(){
+  if (!resultat) return;
+  const donnees = {};
+  resultat.champs.forEach(c => {
+    donnees[c.cle] = {
+      valeur: c.cle === "iban" && c.valeur ? c.valeur.replace(/\s/g,"") : c.valeur,
+      confiance: c.valeur ? c.score : null
+    };
+  });
+  const paquet = {
+    type_document: "rib",
+    source: { fichier: fichier.name, taille_octets: fichier.size },
+    extraction: { modele: MODELE, moteur: "mlx-lm", horodatage: new Date().toISOString() },
+    controles: { iban_mod97: resultat.ibanOk },
+    donnees
+  };
+  const blob = new Blob([JSON.stringify(paquet, null, 2)], { type:"application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fichier.name.replace(/\.[^.]+$/,"") + "-rib.json";
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+}
+document.getElementById("btnJson").addEventListener("click", telecharger);
+document.getElementById("btnRecommencer").addEventListener("click", () => {
+  document.getElementById("resultats").classList.remove("visible");
+  fichier = null; input.value = "";
+  zone.innerHTML = `<div><h3>Glissez votre RIB ici</h3>
+    <p style="margin-top:8px">ou <button class="lien" id="btnParcourir2">choisissez un fichier</button></p></div>`;
+  document.getElementById("btnParcourir2").addEventListener("click", () => input.click());
+  zone.scrollIntoView({ behavior:"smooth", block:"center" });
+});
+
+/* ============ Statut du serveur ============ */
+(async function(){
+  const p = document.getElementById("pastille"), t = document.getElementById("statutTexte");
+  try {
+    const d = await (await fetch("/statut")).json();
+    MODELE = d.modele || MODELE;
+    p.className = "pastille on";
+    t.textContent = d.charge ? "modèle chargé" : "serveur prêt";
+  } catch {
+    p.className = "pastille off";
+    t.textContent = "serveur injoignable";
+  }
+})();
+</script>
