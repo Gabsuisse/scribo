@@ -71,7 +71,10 @@ Un modèle 7B peut se tromper, ou halluciner un caractère. La réponse de Scrib
 
 ## ⚡ Lancer en local, en 3 commandes
 
-> Prérequis : un Mac Apple Silicon (M1+), Python 3.10+. Le modèle (~4 Go) se télécharge à la première extraction.
+> ⚠️ **Plateforme : Mac Apple Silicon uniquement** (puce M1, M2, M3 ou plus récente).
+> Scribo **ne fonctionne pas** sur Windows, Linux, ni sur Mac Intel, car son moteur d'inférence repose sur **MLX**, la bibliothèque d'Apple spécifique à ses puces. Une version portable (via llama.cpp) pourra être envisagée plus tard.
+
+> Prérequis : macOS Apple Silicon (M1+), Python 3.10+. Le modèle (~4 Go) se télécharge à la première extraction.
 
 ```bash
 pip install mlx-lm pdfplumber        # mlx-lm : inférence Mistral sur Apple Silicon
@@ -92,7 +95,20 @@ Déposez un RIB (PDF), cliquez sur **Extraire**, et copiez les champs d'un clic.
 | `extracteur.py` | Serveur local : chargement du modèle (MLX), lecture du document, extraction, contrôles, API `/extract`. |
 | `extractorultimator.html` | Interface : dépôt du document, affichage des champs avec scores, copier-coller. |
 | `scribo.html` | Landing + démo jouable (données fictives) — la vitrine du projet. |
+| `desinstaller.sh` | Retire proprement le modèle en cache et les dépendances, avec confirmation à chaque étape. |
 | `docs/` | Bannière et captures. |
+
+---
+
+## 🧹 Désinstaller
+
+Scribo télécharge un modèle d'environ 4 Go dans `~/.cache/huggingface`. Pour tout nettoyer sans commande manuelle risquée, lancez le désinstallateur fourni :
+
+```bash
+bash desinstaller.sh
+```
+
+Il vous demande confirmation **avant chaque suppression** (modèle en cache, puis dépendances Python une par une) et ne touche à rien sans votre accord. Le dossier du projet lui-même se supprime ensuite à la main, depuis le Finder.
 
 ---
 
