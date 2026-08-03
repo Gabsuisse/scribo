@@ -13,6 +13,19 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
+section[id],header[id]{scroll-margin-top:80px}
+/* sélecteur de langue */
+.lang-dd{position:relative}
+.lang-trigger{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--trait);border-radius:7px;cursor:pointer;padding:6px 9px;font-size:15px;line-height:1;transition:border-color .15s}
+.lang-trigger:hover{border-color:var(--texte-2)}
+.lang-chev{color:var(--texte-2);transition:transform .18s}
+.lang-dd.ouvert .lang-chev{transform:rotate(180deg)}
+.lang-menu{position:absolute;top:calc(100% + 6px);right:0;background:var(--blanc-2);border:1px solid var(--trait);border-radius:8px;padding:5px;min-width:150px;box-shadow:0 12px 30px -10px rgba(0,0,0,.2);opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .16s;z-index:60}
+.lang-dd.ouvert .lang-menu{opacity:1;visibility:visible;transform:translateY(0)}
+.lang-item{display:flex;align-items:center;gap:10px;width:100%;background:transparent;border:0;cursor:pointer;padding:9px 11px;border-radius:5px;font-family:"Clash Display";font-weight:500;font-size:14px;color:var(--texte);text-align:left;transition:background .12s}
+.lang-item:hover{background:var(--blanc)}
+.lang-item.actif{color:var(--corail)}
+.lang-item .lang-flag,.lang-trigger .lang-flag{font-size:16px;line-height:1}
 body{background:var(--blanc);color:var(--texte);font-family:"Clash Display",system-ui,sans-serif;font-weight:400;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
 .wrap{max-width:1100px;margin:0 auto;padding:0 24px}
 h1,h2,h3,h4{font-weight:700;line-height:1.05}
@@ -20,8 +33,21 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
 /* barre haute */
 .bar{position:sticky;top:0;z-index:40;background:rgba(244,243,239,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--trait)}
 .bar-in{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
-.marque{font-family:"Clash Display";font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.01em}
+.marque-logo{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--texte)}
+.logo-svg{width:28px;height:27px;display:block}
+.marque{font-family:"Clash Display";font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.01em;color:var(--texte)}
 .marque span{color:var(--corail)}
+.nav-liens{display:flex;align-items:center;gap:26px}
+.nav-liens>a{color:var(--texte-2);text-decoration:none;font-family:"Clash Display";font-weight:500;font-size:14px;text-transform:uppercase;letter-spacing:.04em;transition:color .15s}
+.nav-liens>a:hover{color:var(--texte)}
+@media(max-width:720px){.nav-liens>a{display:none}}
+
+/* sections */
+.section-extraction{padding-top:56px}
+.extraction-titre{font-family:"Clash Display";font-weight:700;font-size:clamp(26px,4vw,40px);text-transform:uppercase;letter-spacing:-.01em;max-width:20ch;margin-bottom:8px;line-height:1.08}
+.credit{margin-top:24px;font-family:"Clash Display";font-weight:400;font-size:14px;color:var(--texte-2)}
+.credit a{color:var(--corail);text-decoration:none;font-weight:600;border-bottom:1px solid transparent;transition:border-color .15s}
+.credit a:hover{border-color:var(--corail)}
 .statut{display:flex;align-items:center;gap:8px;font-family:"Clash Display";font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--texte-2);border:1px solid var(--trait);border-radius:999px;padding:6px 13px;background:var(--blanc-2)}
 .pastille{width:7px;height:7px;border-radius:50%;background:var(--d-txt-3);flex:none}
 .pastille.on{background:var(--bleu)}
@@ -138,29 +164,52 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
 </style>
 
 <div class="bar"><div class="wrap bar-in">
-  <div class="marque">Scribo</div>
-  <div class="statut"><span class="pastille" id="pastille"></span><span id="statutTexte">connexion au modèle…</span></div>
+  <a href="#extraction" class="marque-logo">
+    <svg viewBox="0 0 49 47" xmlns="http://www.w3.org/2000/svg" aria-label="Scribo" class="logo-svg">
+      <rect width="49" height="47" fill="var(--corail)"/>
+      <path fill="var(--noir)" d="M49 2.96973C48.4378 2.96973 47.7584 2.96999 46.9863 2.97266H49V47.0234H0V44.0537C0.562246 44.0537 1.24159 44.0534 2.01367 44.0508H0V0H49V2.96973ZM11.6992 12.4824C9.98363 14.3252 8.45641 16.5547 6.92969 19.3027C2.64516 27.0149 2.96848 37.9371 2.96875 44.043C7.72119 44.0075 15.1253 43.7994 20.7881 42.5684C22.2137 42.2584 23.538 41.9317 24.7744 41.582C24.7653 41.582 24.7562 41.583 24.7471 41.583H24.2471V27.7207C22.0829 27.7273 19.1258 27.681 16.6025 26.4326C15.145 25.7114 13.8283 24.5915 12.8818 22.8691C11.9387 21.1525 11.3789 18.8672 11.3789 15.8379C11.3789 14.5932 11.4911 13.4791 11.6992 12.4824ZM46.0303 2.97949C41.2778 3.01501 33.8743 3.22315 28.2119 4.4541C27.3047 4.65131 26.4391 4.8573 25.6104 5.06934V18.3105C27.7744 18.304 30.7317 18.3513 33.2549 19.5996C34.7124 20.3208 36.0291 21.4417 36.9756 23.1641C37.9187 24.8806 38.4785 27.1653 38.4785 30.1943C38.4785 31.4489 38.3637 32.5706 38.1523 33.5732C39.5301 31.9295 40.8011 30.0044 42.0703 27.7197C46.3549 20.0073 46.0305 9.08517 46.0303 2.97949Z"/>
+    </svg>
+    <span class="marque">Scribo</span>
+  </a>
+  <nav class="nav-liens">
+    <a href="#extraction" data-i18n="nav_extraction">Extraction</a>
+    <a href="#apropos" data-i18n="nav_apropos">À propos</a>
+    <div class="lang-dd" id="langNav">
+      <button class="lang-trigger" aria-haspopup="true" aria-expanded="false">
+        <span class="lang-flag">🇫🇷</span>
+        <svg class="lang-chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="lang-menu">
+        <button class="lang-item" data-lang="fr"><span class="lang-flag">🇫🇷</span><span>Français</span></button>
+        <button class="lang-item" data-lang="en"><span class="lang-flag">🇬🇧</span><span>English</span></button>
+      </div>
+    </div>
+    <div class="statut"><span class="pastille" id="pastille"></span><span id="statutTexte">connexion au modèle…</span></div>
+  </nav>
 </div></div>
 
-<header class="hero">
+<!-- ===== SECTION EXTRACTION (applicative) ===== -->
+<section id="extraction" class="section-extraction">
+  <div class="wrap">
+    <h1 class="extraction-titre" data-i18n="extraction_titre">Choisissez le type de document dont vous souhaitez extraire des données</h1>
+  </div>
+  <main class="wrap catalogue" id="catalogue"></main>
+</section>
+
+<!-- ===== SECTION À PROPOS (ancien hero) ===== -->
+<header class="hero" id="apropos">
   <svg id="guilloche" preserveAspectRatio="none"></svg>
   <div class="scan"></div>
   <div class="wrap hero-in">
-    <div class="eyebrow">Extraction locale · Mistral 7B</div>
-    <h1>Vos documents ne quittent pas <em>votre machine</em>.</h1>
-    <p>Déposez un document, récupérez un JSON propre et prêt à pré-remplir un formulaire. Le modèle tourne sur votre ordinateur, chaque valeur est recontrôlée par des règles de calcul avant de vous être montrée.</p>
-    <div class="compte">
-      <div><b id="cptActif">1</b><small>document actif</small></div>
-      <div><b id="cptSoon">0</b><small>en préparation</small></div>
-      <div><b>0 €</b><small>par extraction</small></div>
-    </div>
+    <div class="eyebrow" data-i18n="apropos_surtitre">Vos documents ne quittent pas votre machine.</div>
+    <h2 data-i18n="apropos_titre">Extraction d'informations depuis un document en local avec Mistral 7B.</h2>
+    <p data-i18n="apropos_soustitre">Déposez un document, récupérez un JSON propre et prêt à pré-remplir un formulaire. Le modèle tourne sur votre ordinateur, chaque valeur est recontrôlée par des règles de calcul avant de vous être montrée.</p>
+    <p class="credit"><span data-i18n="apropos_credit">Projet créé par Gabriel Danet pour la souveraineté numérique</span> · <a href="https://www.linkedin.com/in/gabrieldanet/" target="_blank" rel="noopener" data-i18n="apropos_lien">LinkedIn</a></p>
   </div>
 </header>
 
-<main class="wrap catalogue" id="catalogue"></main>
-
 <footer class="wrap">
-  Tout se passe en local : l'analyse tourne dans votre process Python, le fichier temporaire est supprimé juste après. Rien ne part ailleurs.
+  <span data-i18n="footer">Tout se passe en local : l'analyse tourne dans votre process Python, le fichier temporaire est supprimé juste après. Rien ne part ailleurs.</span>
 </footer>
 
 <!-- ================= MODALE ================= -->
@@ -216,6 +265,44 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
 </div>
 
 <script>
+/* ═══ i18n FR/EN ═══ */
+const I18N = {
+  fr:{
+    nav_extraction:"Extraction", nav_apropos:"À propos",
+    extraction_titre:"Choisissez le type de document dont vous souhaitez extraire des données",
+    apropos_surtitre:"Vos documents ne quittent pas votre machine.",
+    apropos_titre:"Extraction d'informations depuis un document en local avec Mistral 7B.",
+    apropos_soustitre:"Déposez un document, récupérez un JSON propre et prêt à pré-remplir un formulaire. Le modèle tourne sur votre ordinateur, chaque valeur est recontrôlée par des règles de calcul avant de vous être montrée.",
+    apropos_credit:"Projet créé par Gabriel Danet pour la souveraineté numérique",
+    apropos_lien:"LinkedIn",
+    footer:"Tout se passe en local : l'analyse tourne dans votre process Python, le fichier temporaire est supprimé juste après. Rien ne part ailleurs.",
+  },
+  en:{
+    nav_extraction:"Extraction", nav_apropos:"About",
+    extraction_titre:"Choose the type of document you want to extract data from",
+    apropos_surtitre:"Your documents never leave your machine.",
+    apropos_titre:"Information extraction from a document, locally, with Mistral 7B.",
+    apropos_soustitre:"Drop a document, get a clean JSON ready to pre-fill a form. The model runs on your own computer, and every value is re-checked by computation rules before being shown to you.",
+    apropos_credit:"A project by Gabriel Danet for digital sovereignty",
+    apropos_lien:"LinkedIn",
+    footer:"Everything happens locally: the analysis runs in your Python process, the temporary file is deleted right after. Nothing goes anywhere else.",
+  }
+};
+let LANG = "en";
+function t(key){ const d=I18N[LANG]; return (d&&d[key]!==undefined)?d[key]:(I18N.en[key]||key); }
+const DRAPEAUX = { fr:"🇫🇷", en:"🇬🇧" };
+function appliquerLangue(lang){
+  LANG = lang;
+  const d = I18N[lang];
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const k = el.getAttribute("data-i18n");
+    if(d[k]!==undefined) el.textContent = d[k];
+  });
+  document.querySelectorAll(".lang-trigger .lang-flag").forEach(f=>f.textContent=DRAPEAUX[lang]);
+  document.querySelectorAll(".lang-item").forEach(it=>it.classList.toggle("actif", it.dataset.lang===lang));
+}
+
 /* Le serveur Python sert cette page : même origine, aucun appel externe. */
 let MODELE = "mistral 7b";
 
@@ -292,8 +379,6 @@ const CATALOGUE = [
     });
     hote.appendChild(sec);
   });
-  document.getElementById("cptActif").textContent = actifs;
-  document.getElementById("cptSoon").textContent = soon;
 })();
 
 /* ============ Modale ============ */
@@ -532,15 +617,39 @@ document.getElementById("btnRecommencer").addEventListener("click", () => {
 
 /* ============ Statut du serveur ============ */
 (async function(){
-  const p = document.getElementById("pastille"), t = document.getElementById("statutTexte");
+  const p = document.getElementById("pastille"), txt = document.getElementById("statutTexte");
   try {
     const d = await (await fetch("/statut")).json();
     MODELE = d.modele || MODELE;
     p.className = "pastille on";
-    t.textContent = d.charge ? "modèle chargé" : "serveur prêt";
+    txt.textContent = d.charge ? "modèle chargé" : "serveur prêt";
   } catch {
     p.className = "pastille off";
-    t.textContent = "serveur injoignable";
+    txt.textContent = "serveur injoignable";
   }
 })();
+
+/* ============ Sélecteur de langue ============ */
+document.querySelectorAll(".lang-dd").forEach(dd=>{
+  const trig = dd.querySelector(".lang-trigger");
+  trig.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    const ouvert = dd.classList.contains("ouvert");
+    document.querySelectorAll(".lang-dd").forEach(d=>d.classList.remove("ouvert"));
+    if(!ouvert){ dd.classList.add("ouvert"); trig.setAttribute("aria-expanded","true"); }
+    else trig.setAttribute("aria-expanded","false");
+  });
+  dd.querySelectorAll(".lang-item").forEach(it=>{
+    it.addEventListener("click",(e)=>{
+      e.stopPropagation();
+      appliquerLangue(it.dataset.lang);
+      dd.classList.remove("ouvert"); trig.setAttribute("aria-expanded","false");
+    });
+  });
+});
+document.addEventListener("click",()=>{
+  document.querySelectorAll(".lang-dd").forEach(d=>d.classList.remove("ouvert"));
+});
+// anglais par défaut
+appliquerLangue("en");
 </script>
