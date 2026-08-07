@@ -34,7 +34,7 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
 .bar{position:sticky;top:0;z-index:40;background:rgba(244,243,239,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--trait)}
 .bar-in{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
 .marque-logo{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--texte)}
-.logo-svg{width:28px;height:27px;display:block}
+.logo-svg{width:30px;height:27px;display:block}
 .marque{font-family:"Clash Display";font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.01em;color:var(--texte)}
 .marque span{color:var(--corail)}
 .nav-liens{display:flex;align-items:center;gap:26px}
@@ -48,6 +48,16 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
 .credit{margin-top:24px;font-family:"Clash Display";font-weight:400;font-size:14px;color:var(--texte-2)}
 .credit a{color:var(--corail);text-decoration:none;font-weight:600;border-bottom:1px solid transparent;transition:border-color .15s}
 .credit a:hover{border-color:var(--corail)}
+
+/* jumbotron orange (section à propos) */
+.jumbo{background:var(--corail);color:#fff;text-align:center;padding:120px 0}
+.jumbo-in{max-width:1000px;margin:0 auto}
+.jumbo-titre{font-family:"Clash Display";font-weight:700;font-size:clamp(44px,8vw,96px);line-height:.98;text-transform:uppercase;letter-spacing:-.02em;color:#fff;max-width:16ch;margin:0 auto}
+.jumbo-sous{margin:36px auto 0;max-width:64ch;font-family:"Clash Display";font-weight:400;font-size:19px;line-height:1.5;color:rgba(255,255,255,.9)}
+.jumbo-cta{display:inline-flex;align-items:center;gap:12px;margin-top:44px;background:var(--noir);color:#fff;
+  font-family:"Clash Display";font-weight:600;font-size:15px;padding:16px 26px;border-radius:8px;text-decoration:none;transition:transform .12s,background .15s}
+.jumbo-cta:hover{background:#000;transform:translateY(-2px)}
+.jumbo-cta svg{flex:none}
 .statut{display:flex;align-items:center;gap:8px;font-family:"Clash Display";font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--texte-2);border:1px solid var(--trait);border-radius:999px;padding:6px 13px;background:var(--blanc-2)}
 .pastille{width:7px;height:7px;border-radius:50%;background:var(--d-txt-3);flex:none}
 .pastille.on{background:var(--bleu)}
@@ -82,14 +92,17 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
 
 footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;margin:0 auto;font-family:"Clash Display";font-weight:400;font-size:13px;color:var(--texte-2)}
 
-/* ========== MODALE (dark mode, style démo landing) ========== */
-.modale{position:fixed;inset:0;z-index:100;background:var(--d-surface);overflow-y:auto;display:none}
-.modale.ouverte{display:block}
-.modale-bar{position:sticky;top:0;background:rgba(9,9,11,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--d-bord)}
-.modale-bar .marque{color:var(--d-txt)}
+/* ========== MODALE (dark mode, panneau non-fullscreen + overlay) ========== */
+.modale{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);
+  overflow-y:auto;display:none;padding:40px}
+.modale.ouverte{display:flex;align-items:flex-start;justify-content:center}
+.modale-panneau{background:var(--d-surface);border:1px solid var(--d-bord-fort);border-radius:16px;
+  width:100%;max-width:1000px;margin:auto;position:relative;overflow:hidden;box-shadow:0 40px 100px -20px rgba(0,0,0,.6)}
+.modale-bar{position:sticky;top:0;z-index:5;display:flex;justify-content:flex-end;padding:16px 20px}
 .fermer{background:transparent;border:1px solid var(--d-bord-fort);color:var(--d-txt-2);font-family:"Clash Display";font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.05em;padding:8px 14px;border-radius:6px;cursor:pointer;transition:all .15s}
 .fermer:hover{border-color:var(--corail);color:var(--corail)}
-.modale-corps{padding:48px 24px 80px;color:var(--d-txt)}
+.modale-corps{padding:8px 40px 56px;color:var(--d-txt)}
+@media(max-width:720px){.modale{padding:16px}.modale-corps{padding:8px 22px 40px}}
 .modale-corps h2{font-family:"Clash Display";font-weight:700;font-size:clamp(28px,5vw,44px);text-transform:uppercase;letter-spacing:-.01em;margin-bottom:32px;color:var(--d-txt)}
 .consigne{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:36px}
 @media(max-width:720px){.consigne{grid-template-columns:1fr}}
@@ -105,15 +118,21 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
 .zone h3{font-family:"Clash Display";font-weight:700;font-size:20px;text-transform:uppercase;color:var(--d-txt);margin-bottom:6px}
 .zone p{color:var(--d-txt-2);font-size:15px}
 .lien{background:none;border:0;color:var(--corail);font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+/* état fichier importé */
+.fichier-pret{display:flex;flex-direction:column;gap:22px;align-items:stretch;text-align:left}
+.fichier-ligne{display:flex;align-items:center;gap:14px}
+.fichier-ic{width:34px;height:40px;color:var(--bleu-dark);flex:none}
+.fichier-meta{display:flex;flex-direction:column;gap:3px;min-width:0}
+.fichier-meta b{font-family:"Clash Display";font-weight:600;font-size:17px;color:var(--d-txt);word-break:break-all}
+.fichier-poids{font-family:"Clash Display";font-weight:400;font-size:13px;color:var(--d-txt-2)}
+.fichier-poids .lien{font-size:13px}
+.fichier-pret .cta{align-self:flex-start}
 
-/* loader */
+/* loader — scan style démo landing */
 .loader{text-align:center;padding:56px 24px}
-.barres{display:inline-flex;gap:5px;margin-bottom:20px;height:40px;align-items:flex-end}
-.barres i{width:5px;background:var(--bleu-dark);border-radius:3px;animation:pulse 1.1s ease-in-out infinite}
-.barres i:nth-child(2){animation-delay:.12s}.barres i:nth-child(3){animation-delay:.24s}
-.barres i:nth-child(4){animation-delay:.36s}.barres i:nth-child(5){animation-delay:.48s}
-.barres i:nth-child(6){animation-delay:.6s}
-@keyframes pulse{0%,100%{height:12px}50%{height:40px}}
+.scan-cadre{width:150px;height:94px;border:1px solid var(--d-bord-fort);border-radius:6px;position:relative;overflow:hidden;background:var(--d-carte);margin:0 auto 22px}
+.scan-ligne{position:absolute;left:0;right:0;height:2px;background:var(--bleu-dark);box-shadow:0 0 16px 2px var(--bleu-dark);animation:scanmove 1.3s ease-in-out infinite}
+@keyframes scanmove{0%,100%{top:8%}50%{top:88%}}
 .etape{font-family:"Clash Display";font-weight:400;font-size:14px;color:var(--bleu-dark)}
 
 /* erreur */
@@ -132,23 +151,30 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
 .tout-copier:hover{background:var(--corail);color:#fff}
 .tout-copier.ok{background:var(--corail);color:#fff;border-color:var(--corail)}
 .tout-copier svg{width:13px;height:13px}
-.champ{padding:15px 0;border-bottom:1px solid var(--d-bord)}
-.champ-nom{font-family:"Clash Display";font-weight:600;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--d-txt-2);margin-bottom:6px}
+.champ{padding:16px 0;border-bottom:1px solid var(--d-bord);display:flex;align-items:center;justify-content:space-between;gap:20px}
+.champ-info{min-width:0;flex:1}
+.champ-nom{font-family:"Clash Display";font-weight:600;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--d-txt-2);margin-bottom:6px;display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
 .champ-val{font-family:"Clash Display";font-weight:500;font-size:18px;color:var(--d-txt);display:flex;align-items:center;gap:10px;flex-wrap:wrap;word-break:break-word}
+.champ-val .v-mono{font-variant-numeric:tabular-nums}
 .champ-val.vide span{color:var(--d-txt-3);font-style:italic;font-weight:400}
 .champ-src{font-family:"Clash Display";font-weight:400;font-size:12px;color:var(--d-txt-2);margin-top:4px}
 .copier{border:1px solid var(--d-bord-fort);background:var(--d-carte);color:var(--d-txt-2);font-family:"Clash Display";font-weight:500;font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:5px 9px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .12s;flex:none;border-radius:5px}
 .copier:hover{border-color:var(--corail);color:var(--corail);background:var(--d-hover)}
 .copier.ok{border-color:var(--corail);color:#fff;background:var(--corail)}
 .copier svg{width:11px;height:11px}
-.jauge{display:flex;align-items:center;gap:12px;margin-top:8px}
-.jauge b{font-family:"Clash Display";font-weight:600;font-size:13px}
+/* toggle IBAN with/without spaces */
+.iban-toggle{display:inline-flex;gap:3px;background:var(--d-surface);border:1px solid var(--d-bord);border-radius:6px;padding:2px}
+.mini-seg{border:0;background:transparent;color:var(--d-txt-2);font-family:"Clash Display";font-weight:500;font-size:9px;letter-spacing:.03em;text-transform:uppercase;padding:3px 7px;cursor:pointer;border-radius:4px;transition:all .12s}
+.mini-seg.ok{background:var(--corail);color:#fff}
+/* jauge néon (alignée à droite, centrée verticalement) */
+.jauge{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex:none}
+.jauge b{font-family:"Clash Display";font-weight:600;font-size:15px;font-variant-numeric:tabular-nums}
 .jauge.haut b{color:var(--bleu-dark)}.jauge.moyen b{color:#FBBF24}.jauge.bas b{color:var(--corail)}
-.segments{display:inline-flex;gap:3px}
-.segments i{width:18px;height:4px;border-radius:2px;background:var(--d-bord-fort)}
-.jauge.haut .segments i.on{background:var(--bleu-dark)}
-.jauge.moyen .segments i.on{background:#FBBF24}
-.jauge.bas .segments i.on{background:var(--corail)}
+.segments{display:inline-flex;gap:4px}
+.segments i{width:20px;height:5px;border-radius:3px;background:var(--d-bord-fort);transition:all .2s}
+.jauge.haut .segments i.on{background:var(--bleu-dark);box-shadow:0 0 8px 0 var(--bleu-dark)}
+.jauge.moyen .segments i.on{background:#FBBF24;box-shadow:0 0 8px 0 #FBBF24}
+.jauge.bas .segments i.on{background:var(--corail);box-shadow:0 0 8px 0 var(--corail)}
 .tampon{display:inline-flex;align-items:center;gap:9px;margin-top:20px;border:1px solid rgba(60,201,227,.3);background:#0C2E33;color:#8FE3F0;border-radius:7px;padding:10px 16px;font-family:"Clash Display";font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
 .tampon.ko{border-color:rgba(255,90,60,.3);background:#2E1310;color:#FFB59E}
 .actions{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
@@ -165,10 +191,12 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
 
 <div class="bar"><div class="wrap bar-in">
   <a href="#extraction" class="marque-logo">
-    <svg viewBox="0 0 49 47" xmlns="http://www.w3.org/2000/svg" aria-label="Scribo" class="logo-svg">
-      <rect width="49" height="47" fill="var(--corail)"/>
-      <path fill="var(--noir)" d="M49 2.96973C48.4378 2.96973 47.7584 2.96999 46.9863 2.97266H49V47.0234H0V44.0537C0.562246 44.0537 1.24159 44.0534 2.01367 44.0508H0V0H49V2.96973ZM11.6992 12.4824C9.98363 14.3252 8.45641 16.5547 6.92969 19.3027C2.64516 27.0149 2.96848 37.9371 2.96875 44.043C7.72119 44.0075 15.1253 43.7994 20.7881 42.5684C22.2137 42.2584 23.538 41.9317 24.7744 41.582C24.7653 41.582 24.7562 41.583 24.7471 41.583H24.2471V27.7207C22.0829 27.7273 19.1258 27.681 16.6025 26.4326C15.145 25.7114 13.8283 24.5915 12.8818 22.8691C11.9387 21.1525 11.3789 18.8672 11.3789 15.8379C11.3789 14.5932 11.4911 13.4791 11.6992 12.4824ZM46.0303 2.97949C41.2778 3.01501 33.8743 3.22315 28.2119 4.4541C27.3047 4.65131 26.4391 4.8573 25.6104 5.06934V18.3105C27.7744 18.304 30.7317 18.3513 33.2549 19.5996C34.7124 20.3208 36.0291 21.4417 36.9756 23.1641C37.9187 24.8806 38.4785 27.1653 38.4785 30.1943C38.4785 31.4489 38.3637 32.5706 38.1523 33.5732C39.5301 31.9295 40.8011 30.0044 42.0703 27.7197C46.3549 20.0073 46.0305 9.08517 46.0303 2.97949Z"/>
-    </svg>
+    <svg viewBox="0 0 181 161" xmlns="http://www.w3.org/2000/svg" class="logo-svg" aria-label="Scribo"><rect width="181" height="161" fill="var(--corail)"/><path d="M180.735 54.6261L180.735 155.205L174.639 155.205C174.639 147.077 174.742 127.028 171.591 112.535C166.512 89.1683 159.4 79.0089 141.113 68.8494C125.276 60.0512 102.846 60.7218 90.3156 60.7218L90.3156 54.6261L180.735 54.6261Z" fill="var(--noir)"/>
+<path d="M0.000168753 105.942L0.000190735 5.36302L6.09587 5.36302C6.09587 13.4906 5.99307 33.5399 9.14371 48.0328C14.2234 71.3995 21.3351 81.559 39.6221 91.7185C55.4587 100.517 77.8894 99.8461 90.4194 99.8461L90.4194 105.942L0.000168753 105.942Z" fill="var(--noir)"/>
+<path d="M174.639 55.1592C174.639 47.0317 174.742 26.9821 171.592 12.4893C170.58 7.83762 169.488 3.70904 168.244 -5.45965e-07L180.734 0L180.734 55.1592L174.639 55.1592Z" fill="var(--noir)"/>
+<path d="M6.0957 105.526C6.0957 113.653 5.99306 133.703 9.14355 148.195C10.1548 152.847 11.2468 156.976 12.4912 160.685L0 160.685L6.57767e-07 105.526L6.0957 105.526Z" fill="var(--noir)"/>
+<rect width="90.8406" height="5.67754" fill="var(--noir)"/>
+<rect x="89.8945" y="155.068" width="90.8406" height="5.67754" fill="var(--noir)"/></svg>
     <span class="marque">Scribo</span>
   </a>
   <nav class="nav-liens">
@@ -184,7 +212,7 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
         <button class="lang-item" data-lang="en"><span class="lang-flag">🇬🇧</span><span>English</span></button>
       </div>
     </div>
-    <div class="statut"><span class="pastille" id="pastille"></span><span id="statutTexte">connexion au modèle…</span></div>
+    <div class="statut"><span class="pastille" id="pastille"></span><span id="statutTexte" data-i18n="st_connexion">connexion au modèle…</span></div>
   </nav>
 </div></div>
 
@@ -197,16 +225,16 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
 </section>
 
 <!-- ===== SECTION À PROPOS (ancien hero) ===== -->
-<header class="hero" id="apropos">
-  <svg id="guilloche" preserveAspectRatio="none"></svg>
-  <div class="scan"></div>
-  <div class="wrap hero-in">
-    <div class="eyebrow" data-i18n="apropos_surtitre">Vos documents ne quittent pas votre machine.</div>
-    <h2 data-i18n="apropos_titre">Extraction d'informations depuis un document en local avec Mistral 7B.</h2>
-    <p data-i18n="apropos_soustitre">Déposez un document, récupérez un JSON propre et prêt à pré-remplir un formulaire. Le modèle tourne sur votre ordinateur, chaque valeur est recontrôlée par des règles de calcul avant de vous être montrée.</p>
-    <p class="credit"><span data-i18n="apropos_credit">Projet créé par Gabriel Danet pour la souveraineté numérique</span> · <a href="https://www.linkedin.com/in/gabrieldanet/" target="_blank" rel="noopener" data-i18n="apropos_lien">LinkedIn</a></p>
+<section class="jumbo" id="apropos">
+  <div class="wrap jumbo-in">
+    <h2 class="jumbo-titre" data-i18n="jumbo_titre">L'extraction qui n'a besoin de la confiance de personne.</h2>
+    <p class="jumbo-sous" data-i18n="jumbo_sous">Extraction d'informations depuis un document, en local, avec Mistral 7B. Déposez un document, récupérez un JSON propre et prêt à pré-remplir un formulaire. Le modèle tourne sur votre ordinateur, chaque valeur est recontrôlée par des règles de calcul avant de vous être montrée.</p>
+    <a class="jumbo-cta" href="https://www.linkedin.com/in/gabrieldanet/" target="_blank" rel="noopener">
+      <span data-i18n="jumbo_credit">Projet créé par Gabriel Danet pour la souveraineté numérique : LinkedIn</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
   </div>
-</header>
+</section>
 
 <footer class="wrap">
   <span data-i18n="footer">Tout se passe en local : l'analyse tourne dans votre process Python, le fichier temporaire est supprimé juste après. Rien ne part ailleurs.</span>
@@ -214,23 +242,23 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
 
 <!-- ================= MODALE ================= -->
 <div class="modale" id="modale" role="dialog" aria-modal="true" aria-labelledby="modaleTitre">
-  <div class="modale-bar"><div class="wrap bar-in">
-    <div class="marque">Scribo</div>
-    <button class="fermer" id="btnFermer">Fermer ✕</button>
-  </div></div>
+  <div class="modale-panneau">
+    <div class="modale-bar">
+      <button class="fermer" id="btnFermer">Fermer ✕</button>
+    </div>
 
-  <div class="wrap modale-corps">
-    <h2 id="modaleTitre">Relevé d'identité bancaire</h2>
+    <div class="modale-corps">
+    <h2 id="modaleTitre" data-i18n="m_titre">Relevé d'identité bancaire</h2>
 
     <div class="consigne">
       <div>
-        <h4>Ce que le système va lire</h4>
-        <p>Le titulaire, l'IBAN, le BIC et la domiciliation. Le code banque, le code guichet, le numéro de compte et la clé RIB sont ensuite recalculés à partir de l'IBAN, ils ne sont pas devinés.</p>
+        <h4 data-i18n="m_lira_t">Ce que le système va lire</h4>
+        <p data-i18n="m_lira_p">Le titulaire, l'IBAN, le BIC et la domiciliation. Le code banque, le code guichet, le numéro de compte et la clé RIB sont ensuite recalculés à partir de l'IBAN, ils ne sont pas devinés.</p>
       </div>
       <div>
-        <h4>Formats acceptés</h4>
+        <h4 data-i18n="m_formats_t">Formats acceptés</h4>
         <ul><li>PDF</li><li>PNG</li><li>JPG</li><li>WEBP</li></ul>
-        <p style="margin-top:10px">Un PDF avec texte est lu directement. Une image ou un PDF scanné passe par la reconnaissance de caractères, c'est plus lent.</p>
+        <p style="margin-top:10px" data-i18n="m_formats_p">Un PDF avec texte est lu directement. Une image ou un PDF scanné passe par la reconnaissance de caractères, c'est plus lent.</p>
       </div>
     </div>
 
@@ -239,8 +267,8 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
         <svg class="zone-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 14px">
           <path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M12 17v-6"/><path d="m9.5 13.5 2.5-2.5 2.5 2.5"/>
         </svg>
-        <h3>Glissez votre RIB ici</h3>
-        <p>ou <button class="lien" id="btnParcourir">choisissez un fichier</button></p>
+        <h3 data-i18n="m_glissez">Glissez votre RIB ici</h3>
+        <p><span data-i18n="m_ou">ou</span> <button class="lien" id="btnParcourir" data-i18n="m_parcourir">choisissez un fichier</button></p>
       </div>
       <input type="file" id="input" accept=".pdf,.png,.jpg,.jpeg,.webp" hidden>
     </div>
@@ -249,18 +277,18 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
 
     <section class="resultats" id="resultats">
       <div class="res-tete">
-        <h3>Données extraites</h3>
-        <p id="resMeta"></p>
+        <h3 data-i18n="res_titre">Données extraites</h3>
+        <div id="zoneTampon"></div>
       </div>
       <div id="champs"></div>
-      <div id="zoneTampon"></div>
       <div class="actions">
-        <button class="cta secondaire" id="btnJson">Télécharger le JSON</button>
-        <button class="cta" id="btnRecommencer" style="background:transparent;color:var(--encre);border:1px solid var(--trait)">Extraire un autre RIB</button>
+        <button class="cta secondaire" id="btnJson" data-i18n="dl_json">Télécharger le JSON</button>
+        <button class="cta" id="btnRecommencer" style="background:transparent;color:var(--encre);border:1px solid var(--trait)" data-i18n="m_autre">Extraire un autre RIB</button>
       </div>
-      <p class="note">Le pourcentage n'est pas déclaré par le modèle, il est calculé ici : 50 % de base, +30 si la valeur se retrouve telle quelle dans le texte source, +20 si elle passe son contrôle de forme (clé mod-97 pour l'IBAN, format pour le BIC). Les champs sous 80 % méritent un coup d'œil avant d'être injectés dans un formulaire.</p>
-      <details class="brut"><summary>Voir le texte source lu dans le document</summary><pre id="brut"></pre></details>
+      <p class="note" data-i18n="m_note">Le pourcentage n'est pas déclaré par le modèle, il est calculé ici : 50 % de base, +30 si la valeur se retrouve telle quelle dans le texte source, +20 si elle passe son contrôle de forme (clé mod-97 pour l'IBAN, format pour le BIC). Les champs sous 80 % méritent un coup d'œil avant d'être injectés dans un formulaire.</p>
+      <details class="brut"><summary data-i18n="m_brut">Voir le texte source lu dans le document</summary><pre id="brut"></pre></details>
     </section>
+  </div>
   </div>
 </div>
 
@@ -270,21 +298,45 @@ const I18N = {
   fr:{
     nav_extraction:"Extraction", nav_apropos:"À propos",
     extraction_titre:"Choisissez le type de document dont vous souhaitez extraire des données",
-    apropos_surtitre:"Vos documents ne quittent pas votre machine.",
-    apropos_titre:"Extraction d'informations depuis un document en local avec Mistral 7B.",
-    apropos_soustitre:"Déposez un document, récupérez un JSON propre et prêt à pré-remplir un formulaire. Le modèle tourne sur votre ordinateur, chaque valeur est recontrôlée par des règles de calcul avant de vous être montrée.",
-    apropos_credit:"Projet créé par Gabriel Danet pour la souveraineté numérique",
-    apropos_lien:"LinkedIn",
+    jumbo_titre:"L'extraction qui n'a besoin de la confiance de personne.",
+    jumbo_sous:"Extraction d'informations depuis un document, en local, avec Mistral 7B. Déposez un document, récupérez un JSON propre et prêt à pré-remplir un formulaire. Le modèle tourne sur votre ordinateur, chaque valeur est recontrôlée par des règles de calcul avant de vous être montrée.",
+    jumbo_credit:"Projet créé par Gabriel Danet pour la souveraineté numérique : LinkedIn",
+    changer_fichier:"Changer de fichier", extraire_btn:"Extraire les informations",
+    lu_fini:"lu · extraction terminée, les données sont plus bas.", dl_json:"Télécharger le JSON",
+    res_titre:"Données extraites", non_trouve:"non trouvé dans le document",
+    avec_espaces:"avec espaces", sans_espaces:"sans espaces", copier:"copier", copie_ok:"copié",
+    m_titre:"Relevé d'identité bancaire",
+    m_lira_t:"Ce que le système va lire",
+    m_lira_p:"Le titulaire, l'IBAN, le BIC et la domiciliation. Le code banque, le code guichet, le numéro de compte et la clé RIB sont ensuite recalculés à partir de l'IBAN, ils ne sont pas devinés.",
+    m_formats_t:"Formats acceptés",
+    m_formats_p:"Un PDF avec texte est lu directement. Une image ou un PDF scanné passe par la reconnaissance de caractères, c'est plus lent.",
+    m_glissez:"Glissez votre RIB ici", m_ou:"ou", m_parcourir:"choisissez un fichier",
+    m_autre:"Extraire un autre RIB", m_tout_copier:"Tout copier (nom : valeur)",
+    m_note:"Le pourcentage n'est pas déclaré par le modèle, il est calculé ici : 50 % de base, +30 si la valeur se retrouve telle quelle dans le texte source, +20 si elle passe son contrôle de forme (clé mod-97 pour l'IBAN, format pour le BIC). Les champs sous 80 % méritent un coup d'œil avant d'être injectés dans un formulaire.",
+    m_brut:"Voir le texte source lu dans le document",
+    e_envoi:"Envoi du document…", e_lecture:"Lecture du document…", e_analyse:"Analyse par Mistral 7B…", e_charge:"Le modèle se charge en mémoire, c'est plus long au premier document…", e_toujours:"Toujours en cours, ne fermez pas la page…",
     footer:"Tout se passe en local : l'analyse tourne dans votre process Python, le fichier temporaire est supprimé juste après. Rien ne part ailleurs.",
   },
   en:{
     nav_extraction:"Extraction", nav_apropos:"About",
     extraction_titre:"Choose the type of document you want to extract data from",
-    apropos_surtitre:"Your documents never leave your machine.",
-    apropos_titre:"Information extraction from a document, locally, with Mistral 7B.",
-    apropos_soustitre:"Drop a document, get a clean JSON ready to pre-fill a form. The model runs on your own computer, and every value is re-checked by computation rules before being shown to you.",
-    apropos_credit:"A project by Gabriel Danet for digital sovereignty",
-    apropos_lien:"LinkedIn",
+    jumbo_titre:"Extraction that needs no one's trust.",
+    jumbo_sous:"Information extraction from a document, locally, with Mistral 7B. Drop a document, get a clean JSON ready to pre-fill a form. The model runs on your own computer, and every value is re-checked by computation rules before being shown to you.",
+    jumbo_credit:"A project by Gabriel Danet for digital sovereignty: LinkedIn",
+    changer_fichier:"Change file", extraire_btn:"Extract the information",
+    lu_fini:"read · extraction complete, the data is below.", dl_json:"Download the JSON",
+    res_titre:"Extracted data", non_trouve:"not found in the document",
+    avec_espaces:"with spaces", sans_espaces:"without spaces", copier:"copy", copie_ok:"copied",
+    m_titre:"Bank details (RIB)",
+    m_lira_t:"What the system will read",
+    m_lira_p:"The account holder, the IBAN, the BIC and the branch. The bank code, branch code, account number and check digits are then recalculated from the IBAN — they are not guessed.",
+    m_formats_t:"Accepted formats",
+    m_formats_p:"A PDF with text is read directly. An image or a scanned PDF goes through character recognition, which is slower.",
+    m_glissez:"Drop your bank details here", m_ou:"or", m_parcourir:"choose a file",
+    m_autre:"Extract another document", m_tout_copier:"Copy all (name: value)",
+    m_note:"The percentage is not declared by the model, it is computed here: 50% base, +30 if the value appears verbatim in the source text, +20 if it passes its format check (mod-97 checksum for the IBAN, format for the BIC). Fields below 80% deserve a look before being injected into a form.",
+    m_brut:"View the source text read from the document",
+    e_envoi:"Sending the document…", e_lecture:"Reading the document…", e_analyse:"Analysis by Mistral 7B…", e_charge:"The model is loading into memory, it takes longer for the first document…", e_toujours:"Still running, don't close the page…",
     footer:"Everything happens locally: the analysis runs in your Python process, the temporary file is deleted right after. Nothing goes anywhere else.",
   }
 };
@@ -301,6 +353,8 @@ function appliquerLangue(lang){
   });
   document.querySelectorAll(".lang-trigger .lang-flag").forEach(f=>f.textContent=DRAPEAUX[lang]);
   document.querySelectorAll(".lang-item").forEach(it=>it.classList.toggle("actif", it.dataset.lang===lang));
+  if(typeof rendreCatalogue==="function") rendreCatalogue();
+  if(typeof appliquerLangueModale==="function") appliquerLangueModale();
 }
 
 /* Le serveur Python sert cette page : même origine, aucun appel externe. */
@@ -309,6 +363,7 @@ let MODELE = "mistral 7b";
 /* ============ Guilloche ============ */
 (function(){
   const svg = document.getElementById("guilloche");
+  if(!svg) return;
   const W = 1200, H = 520;
   svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   let d = "";
@@ -321,65 +376,70 @@ let MODELE = "mistral 7b";
 
 /* ============ Catalogue ============ */
 const CATALOGUE = [
-  { fam:"Finance & banque", docs:[
-    { id:"rib", nom:"RIB", desc:"IBAN, BIC, titulaire, domiciliation", actif:true },
-    { id:"avis", nom:"Avis d'imposition", desc:"Revenus, parts fiscales, adresse fiscale" },
-    { id:"paie", nom:"Bulletin de salaire", desc:"Salaire net, employeur, type de contrat" },
-    { id:"releve", nom:"Relevé de compte", desc:"Soldes, période, mouvements" },
+  { fam:"Finance & banque", fam_en:"Finance & banking", docs:[
+    { id:"rib", nom:"RIB", nom_en:"Bank details (RIB)", desc:"IBAN, BIC, titulaire, domiciliation", desc_en:"IBAN, BIC, account holder, branch", actif:true },
+    { id:"avis", nom:"Avis d'imposition", nom_en:"Tax notice", desc:"Revenus, parts fiscales, adresse fiscale", desc_en:"Income, tax shares, tax address" },
+    { id:"paie", nom:"Bulletin de salaire", nom_en:"Payslip", desc:"Salaire net, employeur, type de contrat", desc_en:"Net pay, employer, contract type" },
+    { id:"releve", nom:"Relevé de compte", nom_en:"Bank statement", desc:"Soldes, période, mouvements", desc_en:"Balances, period, transactions" },
   ]},
-  { fam:"Identité & administratif", docs:[
-    { id:"cni", nom:"Carte d'identité", desc:"État civil lu depuis la bande MRZ" },
-    { id:"passeport", nom:"Passeport", desc:"État civil, numéro, validité" },
-    { id:"sejour", nom:"Titre de séjour", desc:"Statut, dates de validité" },
-    { id:"famille", nom:"Livret de famille", desc:"Composition du foyer, enfants" },
+  { fam:"Identité & administratif", fam_en:"Identity & administrative", docs:[
+    { id:"cni", nom:"Carte d'identité", nom_en:"ID card", desc:"État civil lu depuis la bande MRZ", desc_en:"Civil status read from the MRZ" },
+    { id:"passeport", nom:"Passeport", nom_en:"Passport", desc:"État civil, numéro, validité", desc_en:"Civil status, number, validity" },
+    { id:"sejour", nom:"Titre de séjour", nom_en:"Residence permit", desc:"Statut, dates de validité", desc_en:"Status, validity dates" },
+    { id:"famille", nom:"Livret de famille", nom_en:"Family record book", desc:"Composition du foyer, enfants", desc_en:"Household composition, children" },
   ]},
-  { fam:"Logement", docs:[
-    { id:"domicile", nom:"Justificatif de domicile", desc:"Adresse, fournisseur, date d'émission" },
-    { id:"quittance", nom:"Quittance de loyer", desc:"Loyer, charges, bailleur" },
-    { id:"dpe", nom:"Diagnostic énergétique", desc:"Classe, surface, consommation" },
+  { fam:"Logement", fam_en:"Housing", docs:[
+    { id:"domicile", nom:"Justificatif de domicile", nom_en:"Proof of address", desc:"Adresse, fournisseur, date d'émission", desc_en:"Address, provider, issue date" },
+    { id:"quittance", nom:"Quittance de loyer", nom_en:"Rent receipt", desc:"Loyer, charges, bailleur", desc_en:"Rent, charges, landlord" },
+    { id:"dpe", nom:"Diagnostic énergétique", nom_en:"Energy performance", desc:"Classe, surface, consommation", desc_en:"Rating, area, consumption" },
   ]},
-  { fam:"Véhicule", docs:[
-    { id:"grise", nom:"Carte grise", desc:"Immatriculation, modèle, mise en circulation" },
-    { id:"permis", nom:"Permis de conduire", desc:"Catégories, date d'obtention" },
+  { fam:"Véhicule", fam_en:"Vehicle", docs:[
+    { id:"grise", nom:"Carte grise", nom_en:"Vehicle registration", desc:"Immatriculation, modèle, mise en circulation", desc_en:"Plate, model, first registration" },
+    { id:"permis", nom:"Permis de conduire", nom_en:"Driving licence", desc:"Catégories, date d'obtention", desc_en:"Categories, date obtained" },
   ]},
-  { fam:"Santé", docs:[
-    { id:"vitale", nom:"Attestation de droits", desc:"Numéro de sécurité sociale, ayants droit" },
-    { id:"mutuelle", nom:"Carte de mutuelle", desc:"Organisme, garanties, numéro d'adhérent" },
+  { fam:"Santé", fam_en:"Health", docs:[
+    { id:"vitale", nom:"Attestation de droits", nom_en:"Health coverage statement", desc:"Numéro de sécurité sociale, ayants droit", desc_en:"Social security number, dependents" },
+    { id:"mutuelle", nom:"Carte de mutuelle", nom_en:"Health insurance card", desc:"Organisme, garanties, numéro d'adhérent", desc_en:"Provider, coverage, member number" },
   ]},
-  { fam:"Entreprise", docs:[
-    { id:"kbis", nom:"Extrait Kbis", desc:"Raison sociale, SIREN, forme juridique" },
-    { id:"statuts", nom:"Statuts de société", desc:"Capital, objet social, associés" },
+  { fam:"Entreprise", fam_en:"Business", docs:[
+    { id:"kbis", nom:"Extrait Kbis", nom_en:"Company registration (Kbis)", desc:"Raison sociale, SIREN, forme juridique", desc_en:"Company name, SIREN, legal form" },
+    { id:"statuts", nom:"Statuts de société", nom_en:"Articles of association", desc:"Capital, objet social, associés", desc_en:"Capital, purpose, shareholders" },
   ]},
-  { fam:"Emploi & formation", docs:[
-    { id:"contrat", nom:"Contrat de travail", desc:"Poste, rémunération, date d'entrée" },
-    { id:"cv", nom:"CV", desc:"Expériences, formations, compétences" },
-    { id:"diplome", nom:"Diplôme", desc:"Intitulé, établissement, année" },
+  { fam:"Emploi & formation", fam_en:"Employment & education", docs:[
+    { id:"contrat", nom:"Contrat de travail", nom_en:"Employment contract", desc:"Poste, rémunération, date d'entrée", desc_en:"Role, salary, start date" },
+    { id:"cv", nom:"CV", nom_en:"Resume", desc:"Expériences, formations, compétences", desc_en:"Experience, education, skills" },
+    { id:"diplome", nom:"Diplôme", nom_en:"Diploma", desc:"Intitulé, établissement, année", desc_en:"Title, institution, year" },
   ]},
 ];
 
-(function(){
+function rendreCatalogue(){
   const hote = document.getElementById("catalogue");
-  let actifs = 0, soon = 0;
+  hote.innerHTML = "";
   CATALOGUE.forEach(fam => {
     const dispo = fam.docs.filter(d => d.actif).length;
+    const famNom = (LANG==="en" && fam.fam_en) ? fam.fam_en : fam.fam;
+    const dispoTxt = LANG==="en" ? `${dispo}/${fam.docs.length} available` : `${dispo}/${fam.docs.length} disponible${dispo>1?"s":""}`;
     const sec = document.createElement("section");
     sec.className = "fam";
-    sec.innerHTML = `<div class="fam-tete"><h2>${fam.fam}</h2>
-      <span>${dispo}/${fam.docs.length} disponible${dispo>1?"s":""}</span></div>
+    sec.innerHTML = `<div class="fam-tete"><h2>${famNom}</h2>
+      <span>${dispoTxt}</span></div>
       <div class="grille"></div>`;
     const grille = sec.querySelector(".grille");
     fam.docs.forEach(doc => {
-      doc.actif ? actifs++ : soon++;
+      const nom = (LANG==="en" && doc.nom_en) ? doc.nom_en : doc.nom;
+      const desc = (LANG==="en" && doc.desc_en) ? doc.desc_en : doc.desc;
+      const etat = doc.actif ? (LANG==="en" ? "Extract →" : "Extraire →") : (LANG==="en" ? "Soon" : "Bientôt");
       const el = document.createElement(doc.actif ? "button" : "div");
       el.className = "carte" + (doc.actif ? " actif" : "");
-      el.innerHTML = `<h3>${doc.nom}</h3><p>${doc.desc}</p>
-        <div class="etat">${doc.actif ? "Extraire →" : "Bientôt"}</div>`;
+      el.innerHTML = `<h3>${nom}</h3><p>${desc}</p>
+        <div class="etat">${etat}</div>`;
       if (doc.actif) el.addEventListener("click", ouvrir);
       grille.appendChild(el);
     });
     hote.appendChild(sec);
   });
-})();
+}
+rendreCatalogue();
 
 /* ============ Modale ============ */
 const modale = document.getElementById("modale");
@@ -390,6 +450,8 @@ function fermer(){ modale.classList.remove("ouverte"); document.body.style.overf
   if (dernierFocus) dernierFocus.focus(); }
 document.getElementById("btnFermer").addEventListener("click", fermer);
 document.addEventListener("keydown", e => { if (e.key === "Escape" && modale.classList.contains("ouverte")) fermer(); });
+// fermeture au clic sur l'overlay (en dehors du panneau)
+modale.addEventListener("mousedown", e => { if (e.target === modale) fermer(); });
 
 /* ============ État de la zone ============ */
 const zone = document.getElementById("zone");
@@ -413,25 +475,39 @@ function recevoir(f){
 
 function etatPret(){
   zone.innerHTML = `
-    <div class="fichier"><b>${fichier.name}</b><small>${(fichier.size/1024).toFixed(0)} Ko</small></div>
-    <button class="cta" id="btnExtraire">Extraire les informations</button>
-    <button class="lien" id="btnAutre">Changer de fichier</button>`;
+    <div class="fichier-pret">
+      <div class="fichier-ligne">
+        <svg class="fichier-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></svg>
+        <div class="fichier-meta">
+          <b>${fichier.name}</b>
+          <span class="fichier-poids">${(fichier.size/1024).toFixed(0)} Ko · <button class="lien" id="btnAutre">${t("changer_fichier")}</button></span>
+        </div>
+      </div>
+      <button class="cta" id="btnExtraire">${t("extraire_btn")}</button>
+    </div>`;
   document.getElementById("btnExtraire").addEventListener("click", lancer);
   document.getElementById("btnAutre").addEventListener("click", () => { input.value=""; input.click(); });
 }
 
 function etatChargement(msg){
   zone.innerHTML = `<div class="loader">
-    <div class="barres"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="scan-cadre"><div class="scan-ligne"></div></div>
     <div class="etape" id="etape">${msg}</div></div>`;
 }
 function etape(m){ const el = document.getElementById("etape"); if (el) el.textContent = m; }
 
 function etatFini(){
   zone.innerHTML = `
-    <div class="fichier"><b>${fichier.name}</b><small>lu</small></div>
-    <p style="font-size:14px;color:var(--encre-doux)">Extraction terminée, les données sont plus bas.</p>
-    <button class="cta secondaire" id="btnJson2">Télécharger le JSON</button>`;
+    <div class="fichier-pret">
+      <div class="fichier-ligne">
+        <svg class="fichier-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></svg>
+        <div class="fichier-meta">
+          <b>${fichier.name}</b>
+          <span class="fichier-poids">${t("lu_fini")}</span>
+        </div>
+      </div>
+      <button class="cta secondaire" id="btnJson2" style="margin-top:24px">${t("dl_json")}</button>
+    </div>`;
   document.getElementById("btnJson2").addEventListener("click", telecharger);
 }
 
@@ -447,13 +523,13 @@ function cacherErreur(){ document.getElementById("erreur").hidden = true; }
 async function lancer(){
   cacherErreur();
   document.getElementById("resultats").classList.remove("visible");
-  etatChargement("Envoi du document…");
+  etatChargement(t("e_envoi"));
 
   const minuteur = [
-    [1200, "Lecture du document…"],
-    [3500, "Analyse par Mistral 7B…"],
-    [12000, "Le modèle se charge en mémoire, c'est plus long au premier document…"],
-    [30000, "Toujours en cours, ne fermez pas la page…"],
+    [1200, t("e_lecture")],
+    [3500, t("e_analyse")],
+    [12000, t("e_charge")],
+    [30000, t("e_toujours")],
   ].map(([d, m]) => setTimeout(() => etape(m), d));
 
   try {
@@ -481,10 +557,17 @@ async function lancer(){
   }
 }
 
+let avecEspaces = true;
+function formatIban(v){
+  const brut = (v||"").replace(/\s/g,"");
+  if(!avecEspaces) return brut;
+  return brut.replace(/(.{4})/g,"$1 ").trim();
+}
 function valeurACopier(c){
-  // règle par champ : IBAN et codes → brut sans espaces ; le reste → tel quel
+  // règle par champ : IBAN respecte le toggle espaces ; le reste → tel quel
   if (!c.valeur) return "";
-  if (c.cle === "iban") return c.valeur.replace(/\s/g, "");
+  const estIban = /iban/i.test(c.cle||"") || /iban/i.test(c.nom||"");
+  if (estIban) return formatIban(c.valeur);
   return c.valeur;
 }
 
@@ -498,29 +581,38 @@ function afficher(res){
   barre.innerHTML = `<button class="tout-copier" id="toutCopier">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-    Tout copier (nom : valeur)</button>`;
+    ${t("m_tout_copier")}</button>`;
   hote.appendChild(barre);
 
   res.champs.forEach(c => {
     const niveau = c.score >= 80 ? "haut" : c.score >= 55 ? "moyen" : "bas";
     const pleins = Math.round(c.score / 20);
     const aCopier = valeurACopier(c);
+    const estIban = /iban/i.test(c.cle||"") || /iban/i.test(c.nom||"");
     const div = document.createElement("div");
     div.className = "champ";
+    if(estIban) div.dataset.iban = "1";
+    const valAff = estIban && c.valeur ? formatIban(c.valeur) : c.valeur;
+    const toggleIban = estIban && c.valeur ? `<span class="iban-toggle">
+        <button class="mini-seg${avecEspaces?' ok':''}" data-esp="oui">${t("avec_espaces")}</button>
+        <button class="mini-seg${avecEspaces?'':' ok'}" data-esp="non">${t("sans_espaces")}</button>
+      </span>` : "";
     div.innerHTML = `
-      <div class="champ-nom">${c.nom}</div>
-      <div class="champ-val ${c.valeur ? "" : "vide"}">
-        <span>${c.valeur || "non trouvé dans le document"}</span>
-        ${c.valeur ? `<button class="copier" data-copie="${aCopier.replace(/"/g,"&quot;")}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          copier</button>` : ""}
+      <div class="champ-info">
+        <div class="champ-nom">${c.nom}${toggleIban}</div>
+        <div class="champ-val ${c.valeur ? "" : "vide"}">
+          <span class="v-mono">${valAff || t("non_trouve")}</span>
+          ${c.valeur ? `<button class="copier" data-copie="${aCopier.replace(/"/g,"&quot;")}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            ${t("copier")}</button>` : ""}
+        </div>
+        ${c.src ? `<div class="champ-src">${c.src}</div>` : ""}
       </div>
-      ${c.src ? `<div class="champ-src">${c.src}</div>` : `<div class="champ-src"></div>`}
       <div class="jauge ${niveau}">
-        <b>${c.valeur ? c.score + " %" : "—"}</b>
         <div class="segments">${[1,2,3,4,5].map(i =>
           `<i class="${c.valeur && i <= pleins ? "on" : ""}"></i>`).join("")}</div>
+        <b>${c.valeur ? c.score + " %" : "—"}</b>
       </div>`;
     hote.appendChild(div);
   });
@@ -531,9 +623,25 @@ function afficher(res){
       await copierTexte(b.dataset.copie);
       const avant = b.innerHTML;
       b.classList.add("ok");
-      b.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> copié`;
+      b.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> ${t("copie_ok")}`;
       setTimeout(() => { b.classList.remove("ok"); b.innerHTML = avant; }, 1400);
     });
+  });
+
+  // câblage du toggle IBAN with/without spaces (met à jour SEULEMENT la ligne IBAN)
+  function majLigneIban(){
+    const ligne = hote.querySelector('.champ[data-iban="1"]');
+    if(!ligne) return;
+    const ibanChamp = res.champs.find(c => /iban/i.test(c.cle||"") || /iban/i.test(c.nom||""));
+    if(!ibanChamp) return;
+    const span = ligne.querySelector('.champ-val .v-mono');
+    if(span) span.textContent = formatIban(ibanChamp.valeur);
+    const btnCop = ligne.querySelector('.copier');
+    if(btnCop) btnCop.dataset.copie = formatIban(ibanChamp.valeur);
+    ligne.querySelectorAll('.mini-seg').forEach(b => b.classList.toggle('ok', (b.dataset.esp==="oui")===avecEspaces));
+  }
+  hote.querySelectorAll('.mini-seg').forEach(b => {
+    b.addEventListener("click", () => { avecEspaces = (b.dataset.esp==="oui"); majLigneIban(); });
   });
 
   // câblage du "tout copier"
@@ -544,19 +652,17 @@ function afficher(res){
     const b = document.getElementById("toutCopier");
     const avant = b.innerHTML;
     b.classList.add("ok");
-    b.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Copié`;
+    b.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> ${t("copie_ok")}`;
     setTimeout(() => { b.classList.remove("ok"); b.innerHTML = avant; }, 1400);
   });
 
-  const t = document.getElementById("zoneTampon");
-  t.innerHTML = res.ibanOk === true
+  const zt = document.getElementById("zoneTampon");
+  zt.innerHTML = res.ibanOk === true
     ? `<div class="tampon">✓ IBAN vérifié · mod-97</div>`
     : res.ibanOk === false
       ? `<div class="tampon ko">✕ IBAN rejeté · mod-97</div>`
       : `<div class="tampon ko">✕ Aucun IBAN trouvé</div>`;
 
-  document.getElementById("resMeta").textContent =
-    `${fichier.name} · ${MODELE} · ${new Date().toLocaleTimeString("fr-FR")}`;
   document.getElementById("brut").textContent = texteSource.slice(0, 4000);
   document.getElementById("resultats").classList.add("visible");
   document.getElementById("resultats").scrollIntoView({ behavior:"smooth", block:"start" });
@@ -622,10 +728,10 @@ document.getElementById("btnRecommencer").addEventListener("click", () => {
     const d = await (await fetch("/statut")).json();
     MODELE = d.modele || MODELE;
     p.className = "pastille on";
-    txt.textContent = d.charge ? "modèle chargé" : "serveur prêt";
+    txt.textContent = d.charge ? t("st_charge") : t("st_pret");
   } catch {
     p.className = "pastille off";
-    txt.textContent = "serveur injoignable";
+    txt.textContent = t("st_injoignable");
   }
 })();
 
