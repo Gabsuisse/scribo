@@ -25,6 +25,23 @@ C'est un prototype produit : il fonctionne de bout en bout, mais il est volontai
 
 ---
 
+## ⚡ Lancer en local, en 3 commandes
+
+> ⚠️ **Plateforme : Mac Apple Silicon uniquement** (puce M1, M2, M3 ou plus récente).
+> Scribo **ne fonctionne pas** sur Windows, Linux, ni sur Mac Intel, car son moteur d'inférence repose sur **MLX**, la bibliothèque d'Apple spécifique à ses puces. Une version portable (via llama.cpp) pourra être envisagée plus tard.
+
+> Prérequis : macOS Apple Silicon (M1+), Python 3.10+. Le modèle (~4 Go) se télécharge à la première extraction.
+
+```bash
+pip install mlx-lm pdfplumber ocrmac pymupdf   # inférence + lecture PDF texte, images & scans (OCR)
+python3 extracteur.py                  # démarre le serveur local + précharge le modèle
+# puis ouvrir http://localhost:8000/extractorultimator.html
+```
+
+Déposez un document — **PDF ou image, Scribo s'adapte tout seul** — cliquez sur **Extraire**, et copiez les champs d'un clic. Rien ne part sur le réseau : vous pouvez couper le Wi-Fi et vérifier.
+
+---
+
 ## 🎯 Le problème produit
 
 Remplir à la main les champs d'un formulaire de souscription à partir d'un document (recopier un IBAN de 27 caractères, un BIC, un titulaire) est lent et source d'erreurs. Des outils existent pour automatiser ça — mais presque tous **envoient le document vers un serveur distant** pour l'analyser.
@@ -69,24 +86,6 @@ Un modèle 7B peut se tromper, ou halluciner un caractère. La réponse de Scrib
 
 ---
 
-## ⚡ Lancer en local, en 3 commandes
-
-> ⚠️ **Plateforme : Mac Apple Silicon uniquement** (puce M1, M2, M3 ou plus récente).
-> Scribo **ne fonctionne pas** sur Windows, Linux, ni sur Mac Intel, car son moteur d'inférence repose sur **MLX**, la bibliothèque d'Apple spécifique à ses puces. Une version portable (via llama.cpp) pourra être envisagée plus tard.
-
-> Prérequis : macOS Apple Silicon (M1+), Python 3.10+. Le modèle (~4 Go) se télécharge à la première extraction.
-
-```bash
-pip install mlx-lm pdfplumber        # mlx-lm : inférence Mistral sur Apple Silicon
-python3 extracteur.py                # démarre le serveur local + précharge le modèle
-# puis ouvrir http://localhost:8000/extractorultimator.html
-```
-
-Déposez un RIB (PDF), cliquez sur **Extraire**, et copiez les champs d'un clic. Rien ne part sur le réseau — vous pouvez couper le Wi-Fi et vérifier.
-
-*(Pour lire des scans/images plutôt que des PDF texte : `pip install ocrmac`.)*
-
----
 
 ## 🗂️ Structure du dépôt
 

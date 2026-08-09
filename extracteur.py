@@ -10,8 +10,9 @@ Lancement :
     → http://localhost:8000
 
 Dépendances :
-    pip install mlx-lm pdfplumber
-    pip install ocrmac          (facultatif, pour les images et PDF scannés)
+    python3 -m pip install mlx-lm pdfplumber ocrmac pymupdf
+    (mlx-lm : inférence Mistral · pdfplumber : PDF texte ·
+     ocrmac : OCR des images · pymupdf : rasterisation des PDF scannés)
 """
 
 import http.server
@@ -56,27 +57,66 @@ def lire_pdf(chemin):
         return "\n".join((p.extract_text() or "") for p in pdf.pages[:3])
 
 
-def lire_image(chemin):
-    try:
-        from ocrmac import ocrmac
-    except ImportError:
-        raise RuntimeError(
-            "La lecture d'images demande ocrmac. Installez-le avec "
-            "pip install ocrmac, ou déposez un PDF."
-        )
-    resultats = ocrmac.OCR(chemin, language_preference=["fr-FR"]).recognize()
+def _ocr_image(chemin):
+    """OCR d'un fichier image via ocrmac (moteur Vision d'Apple)."""
+    from ocrmac import ocrmac
+    resultats = ocrmac.OCR(chemin, language_preference=["fr-FR", "en-US"]).recognize()
     return "\n".join(r[0] for r in resultats)
 
 
+def lire_image(chemin):
+    try:
+        return _ocr_image(chemin)
+    except ImportError:
+        raise RuntimeError(
+            "La lecture d'images demande ocrmac. Installez-le avec : "
+            "python3 -m pip install ocrmac"
+        )
+
+
+def _ocr_pdf_scanne(chemin):
+    """Rasterise chaque page d'un PDF scanné en image, puis l'OCR.
+    Utilise PyMuPDF (fitz), pur-Python, pas de dépendance système."""
+    import fitz  # PyMuPDF
+
+    morceaux = []
+    with fitz.open(chemin) as doc:
+        for page in doc[:3]:  # 3 premières pages suffisent pour un RIB
+            pix = page.get_pixmap(dpi=200)  # 200 dpi : bon compromis netteté/vitesse
+            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+                pix.save(tmp.name)
+                chemin_img = tmp.name
+            try:
+                morceaux.append(_ocr_image(chemin_img))
+            finally:
+                os.unlink(chemin_img)
+    return "\n".join(morceaux)
+
+
 def lire_document(chemin, nom):
+    """Lit un document quel que soit son type, de façon transparente.
+    PDF avec texte → lecture directe. PDF scanné ou image → OCR automatique.
+    L'utilisateur n'a jamais à choisir : il dépose, on lui rend le texte."""
     if nom.lower().endswith(".pdf"):
         texte = lire_pdf(chemin)
+        # assez de texte réel → PDF numérique, on le lit directement
         if len(re.sub(r"\s", "", texte)) > 40:
             return texte
+        # sinon c'est un scan : on bascule sur l'OCR, sans rien demander
+        try:
+            texte_ocr = _ocr_pdf_scanne(chemin)
+        except ImportError:
+            raise RuntimeError(
+                "Ce PDF est un scan ; sa lecture demande PyMuPDF et ocrmac. "
+                "Installez-les avec : python3 -m pip install pymupdf ocrmac"
+            )
+        if len(re.sub(r"\s", "", texte_ocr)) > 20:
+            return texte_ocr
         raise RuntimeError(
-            "Ce PDF ne contient pas de couche texte, c'est un scan. "
-            "Exportez-le en image puis redéposez-le, ou utilisez le PDF d'origine."
+            "Document illisible : ni couche texte, ni caractères reconnus par l'OCR. "
+            "Vérifiez que le document est net et bien cadré."
         )
+    # tout le reste (png, jpg, jpeg, webp…) passe par l'OCR
     return lire_image(chemin)
 
 

@@ -119,14 +119,14 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
 .zone p{color:var(--d-txt-2);font-size:15px}
 .lien{background:none;border:0;color:var(--corail);font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 /* état fichier importé */
-.fichier-pret{display:flex;flex-direction:column;gap:22px;align-items:stretch;text-align:left}
-.fichier-ligne{display:flex;align-items:center;gap:14px}
+.fichier-pret{display:flex;flex-direction:column;gap:22px;align-items:center;text-align:center}
+.fichier-ligne{display:flex;align-items:center;gap:14px;justify-content:center;text-align:left}
 .fichier-ic{width:34px;height:40px;color:var(--bleu-dark);flex:none}
 .fichier-meta{display:flex;flex-direction:column;gap:3px;min-width:0}
 .fichier-meta b{font-family:"Clash Display";font-weight:600;font-size:17px;color:var(--d-txt);word-break:break-all}
 .fichier-poids{font-family:"Clash Display";font-weight:400;font-size:13px;color:var(--d-txt-2)}
 .fichier-poids .lien{font-size:13px}
-.fichier-pret .cta{align-self:flex-start}
+.fichier-pret .cta{align-self:center}
 
 /* loader — scan style démo landing */
 .loader{text-align:center;padding:56px 24px}
@@ -151,16 +151,20 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
 .tout-copier:hover{background:var(--corail);color:#fff}
 .tout-copier.ok{background:var(--corail);color:#fff;border-color:var(--corail)}
 .tout-copier svg{width:13px;height:13px}
-.champ{padding:16px 0;border-bottom:1px solid var(--d-bord);display:flex;align-items:center;justify-content:space-between;gap:20px}
+.champ{padding:16px 12px;margin:0 -12px;border-bottom:1px solid var(--d-bord);display:flex;align-items:center;justify-content:space-between;gap:20px;cursor:pointer;border-radius:8px;transition:background .12s}
+.champ.copiable:hover{background:var(--d-hover)}
+.champ.copiable:hover .copier:not(.ok){border-color:var(--corail);color:var(--corail)}
+.champ.copie-flash{background:rgba(255,90,60,.12)}
 .champ-info{min-width:0;flex:1}
 .champ-nom{font-family:"Clash Display";font-weight:600;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--d-txt-2);margin-bottom:6px;display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
 .champ-val{font-family:"Clash Display";font-weight:500;font-size:18px;color:var(--d-txt);display:flex;align-items:center;gap:10px;flex-wrap:wrap;word-break:break-word}
 .champ-val .v-mono{font-variant-numeric:tabular-nums}
 .champ-val.vide span{color:var(--d-txt-3);font-style:italic;font-weight:400}
 .champ-src{font-family:"Clash Display";font-weight:400;font-size:12px;color:var(--d-txt-2);margin-top:4px}
-.copier{border:1px solid var(--d-bord-fort);background:var(--d-carte);color:var(--d-txt-2);font-family:"Clash Display";font-weight:500;font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:5px 9px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .12s;flex:none;border-radius:5px}
-.copier:hover{border-color:var(--corail);color:var(--corail);background:var(--d-hover)}
-.copier.ok{border-color:var(--corail);color:#fff;background:var(--corail)}
+.copier{border:1px solid var(--d-bord-fort);background:var(--d-carte);color:var(--d-txt-2);font-family:"Clash Display";font-weight:500;font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:5px 9px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:border-color .12s,color .12s;flex:none;border-radius:5px}
+.copier:hover:not(.ok){border-color:var(--corail);color:var(--corail);background:var(--d-hover)}
+.copier.ok,.champ.copiable:hover .copier.ok{background:var(--corail);color:#fff;border-color:var(--corail);transition:none}
+.copier.ok svg{stroke:#fff}
 .copier svg{width:11px;height:11px}
 /* toggle IBAN with/without spaces */
 .iban-toggle{display:inline-flex;gap:3px;background:var(--d-surface);border:1px solid var(--d-bord);border-radius:6px;padding:2px}
@@ -229,7 +233,7 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
   <div class="wrap jumbo-in">
     <h2 class="jumbo-titre" data-i18n="jumbo_titre">L'extraction qui n'a besoin de la confiance de personne.</h2>
     <p class="jumbo-sous" data-i18n="jumbo_sous">Extraction d'informations depuis un document, en local, avec Mistral 7B. Déposez un document, récupérez un JSON propre et prêt à pré-remplir un formulaire. Le modèle tourne sur votre ordinateur, chaque valeur est recontrôlée par des règles de calcul avant de vous être montrée.</p>
-    <a class="jumbo-cta" href="https://www.linkedin.com/in/gabrieldanet/" target="_blank" rel="noopener">
+    <a class="jumbo-cta" href="https://www.linkedin.com/in/gabrieldanet-designer/" target="_blank" rel="noopener">
       <span data-i18n="jumbo_credit">Projet créé par Gabriel Danet pour la souveraineté numérique : LinkedIn</span>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
@@ -590,8 +594,9 @@ function afficher(res){
     const aCopier = valeurACopier(c);
     const estIban = /iban/i.test(c.cle||"") || /iban/i.test(c.nom||"");
     const div = document.createElement("div");
-    div.className = "champ";
+    div.className = "champ" + (c.valeur ? " copiable" : "");
     if(estIban) div.dataset.iban = "1";
+    if(c.valeur) div.dataset.copieLigne = aCopier;
     const valAff = estIban && c.valeur ? formatIban(c.valeur) : c.valeur;
     const toggleIban = estIban && c.valeur ? `<span class="iban-toggle">
         <button class="mini-seg${avecEspaces?' ok':''}" data-esp="oui">${t("avec_espaces")}</button>
@@ -619,12 +624,33 @@ function afficher(res){
 
   // câblage des boutons copier par champ
   hote.querySelectorAll(".copier").forEach(b => {
-    b.addEventListener("click", async () => {
+    b.addEventListener("click", async (e) => {
+      e.stopPropagation();
       await copierTexte(b.dataset.copie);
       const avant = b.innerHTML;
       b.classList.add("ok");
       b.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> ${t("copie_ok")}`;
       setTimeout(() => { b.classList.remove("ok"); b.innerHTML = avant; }, 1400);
+    });
+  });
+
+  // clic sur TOUTE la ligne = copier la donnée (sauf clic sur le toggle IBAN)
+  hote.querySelectorAll(".champ.copiable").forEach(ligne => {
+    ligne.addEventListener("click", async (e) => {
+      // ne pas déclencher si on clique dans le toggle with/without spaces
+      if (e.target.closest(".iban-toggle")) return;
+      const val = ligne.dataset.copieLigne;
+      if (!val) return;
+      await copierTexte(val);
+      ligne.classList.add("copie-flash");
+      const btn = ligne.querySelector(".copier");
+      if (btn) {
+        const avant = btn.innerHTML;
+        btn.classList.add("ok");
+        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> ${t("copie_ok")}`;
+        setTimeout(() => { btn.classList.remove("ok"); btn.innerHTML = avant; }, 1400);
+      }
+      setTimeout(() => ligne.classList.remove("copie-flash"), 1400);
     });
   });
 
@@ -638,10 +664,11 @@ function afficher(res){
     if(span) span.textContent = formatIban(ibanChamp.valeur);
     const btnCop = ligne.querySelector('.copier');
     if(btnCop) btnCop.dataset.copie = formatIban(ibanChamp.valeur);
+    ligne.dataset.copieLigne = formatIban(ibanChamp.valeur);
     ligne.querySelectorAll('.mini-seg').forEach(b => b.classList.toggle('ok', (b.dataset.esp==="oui")===avecEspaces));
   }
   hote.querySelectorAll('.mini-seg').forEach(b => {
-    b.addEventListener("click", () => { avecEspaces = (b.dataset.esp==="oui"); majLigneIban(); });
+    b.addEventListener("click", (e) => { e.stopPropagation(); avecEspaces = (b.dataset.esp==="oui"); majLigneIban(); });
   });
 
   // câblage du "tout copier"
