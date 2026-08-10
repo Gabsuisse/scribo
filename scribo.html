@@ -34,10 +34,21 @@
   --d-txt-2:#A1A1AA;
   --d-txt-3:#71717A;
 }
+/* ═══ MODE SOMBRE : inverse le fond clair, laisse les zones déjà sombres ═══ */
+html[data-theme="dark"]{
+  --blanc:#0E0E0F;      /* fond de page : crème → noir */
+  --blanc-2:#161618;    /* surfaces claires → sombres */
+  --texte:#FAFAFA;      /* texte principal : noir → clair */
+  --texte-2:#A1A1AA;    /* texte secondaire */
+  --trait:#2C2C30;      /* filets/bordures clairs → sombres */
+  --gris:#8A8A8E;
+  --gris-clair:#3F3F46;
+  --noir-2:#F4F3EF;     /* rares usages de noir-2 sur fond clair → inversés */
+}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-section[id],header[id]{scroll-margin-top:82px}
-body{background:var(--blanc);color:var(--texte);
+section[id],header[id]{scroll-margin-top:24px}
+body{background:var(--blanc);color:var(--texte);transition:background .3s ease,color .3s ease;
   font-family:"Clash Display",system-ui,sans-serif;font-weight:400;
   font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
 .wrap{max-width:1180px;margin:0 auto;padding:0 32px}
@@ -52,21 +63,54 @@ h1,h2,h3{line-height:1;font-weight:700}
 .bloc-blanc{background:var(--blanc);color:var(--texte)}
 
 /* ── nav ── */
-.nav{position:sticky;top:0;z-index:50;background:rgba(244,243,239,.86);
-  backdrop-filter:blur(12px);border-bottom:1px solid var(--trait)}
-.nav-in{display:flex;align-items:center;justify-content:space-between;height:70px}
+/* logo flottant en haut à gauche */
+.logo-flottant{position:fixed;top:40px;left:40px;z-index:60;display:flex;align-items:center;gap:13px;text-decoration:none;color:var(--texte);transition:opacity .3s ease,transform .3s ease}
+.logo-flottant.cache{opacity:0;transform:translateY(-12px);pointer-events:none}
 .logo{display:flex;align-items:center;gap:13px;text-decoration:none;color:var(--texte)}
-.logo svg{width:30px;height:29px;display:block}
+.logo svg{width:31px;height:28px;display:block}
 .logo-txt{font-family:"Clash Display";font-weight:700;font-size:25px;text-transform:uppercase;letter-spacing:.01em}
-.nav-liens{display:flex;gap:32px;align-items:center}
-.nav-liens a{color:var(--texte-2);text-decoration:none;font-size:14px;font-weight:500;
-  text-transform:uppercase;letter-spacing:.03em;transition:color .15s}
-.nav-liens a:hover{color:var(--texte)}
-.nav-cta{background:var(--corail)!important;color:#fff!important;padding:11px 20px;
-  font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.03em;
-  display:inline-flex;align-items:center;gap:8px}
-.nav-cta:hover{background:var(--corail-fonce)!important}
-@media(max-width:760px){.nav-liens a:not(.nav-cta){display:none}}
+
+/* pill flottante en bas au centre */
+.pill{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);z-index:60;
+  display:flex;align-items:center;gap:4px;background:var(--noir);
+  border-radius:999px;padding:7px 8px;box-shadow:0 12px 40px -8px rgba(0,0,0,.35);
+  transition:opacity .3s ease,transform .3s ease,background .3s ease}
+.pill-glisseur{position:absolute;top:7px;left:0;height:calc(100% - 14px);border-radius:999px;
+  background:var(--blanc);transition:transform .28s cubic-bezier(.4,0,.2,1),width .28s cubic-bezier(.4,0,.2,1);
+  z-index:0;width:0;opacity:0}
+.pill.cache{opacity:0;transform:translateX(-50%) translateY(20px);pointer-events:none}
+.pill.pret .pill-glisseur{opacity:1}
+/* items : blancs par défaut, noirs quand le glisseur est dessous (actif ou survolé) */
+.pill-item{position:relative;z-index:1;color:var(--blanc);text-decoration:none;
+  font-family:"Clash Display";font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.04em;
+  padding:10px 18px;border-radius:999px;transition:color .2s;white-space:nowrap}
+.pill-item.actif{color:var(--noir)}
+/* survol d'un AUTRE item : l'actif repasse blanc ; mais si on survole l'actif lui-même, il reste noir */
+.pill:hover .pill-item.actif:not(:hover){color:var(--blanc)}
+.pill-item:hover{color:var(--noir)}
+.pill-cta{position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px;
+  background:transparent;color:var(--corail);text-decoration:none;
+  font-family:"Clash Display";font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.04em;
+  padding:10px 18px;border-radius:999px;transition:color .2s;white-space:nowrap}
+.pill-cta:hover{color:var(--noir)}
+.pill-cta:hover svg{stroke:var(--noir)}
+/* quand on survole le CTA, l'item actif repasse blanc (le glisseur est parti sous le CTA) */
+.pill:has(.pill-cta:hover) .pill-item.actif{color:var(--blanc)}
+.pill-theme{position:relative;z-index:1;background:transparent;border:0;cursor:pointer;
+  color:var(--blanc);padding:8px;border-radius:999px;display:inline-flex;transition:color .2s,background .2s}
+.pill-theme:hover{color:var(--noir);background:var(--blanc)}
+/* dark mode : pill grise, glisseur noir, textes restent blancs / noirs sur glisseur */
+html[data-theme="dark"] .pill{background:#2C2C2C}
+html[data-theme="dark"] .pill-glisseur{background:#0E0E0F}
+html[data-theme="dark"] .pill-item{color:#FAFAFA}
+html[data-theme="dark"] .pill-item.actif{color:#FAFAFA}
+html[data-theme="dark"] .pill:hover .pill-item.actif:not(:hover){color:#FAFAFA}
+html[data-theme="dark"] .pill-item:hover{color:#FAFAFA}
+html[data-theme="dark"] .pill-theme{color:#FAFAFA}
+html[data-theme="dark"] .pill-theme:hover{color:#0E0E0F;background:#FAFAFA}
+html[data-theme="dark"] .pill-cta:hover{color:#FAFAFA}
+html[data-theme="dark"] .pill-cta:hover svg{stroke:#FAFAFA}
+html[data-theme="dark"] .pill:has(.pill-cta:hover) .pill-item.actif{color:#FAFAFA}
 .lang-dd{position:relative}
 .lang-trigger{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--trait);
   border-radius:7px;cursor:pointer;padding:7px 10px;font-size:16px;line-height:1;transition:border-color .15s}
@@ -85,6 +129,10 @@ h1,h2,h3{line-height:1;font-weight:700}
 .lang-item.actif{color:var(--corail)}
 .lang-item .lang-flag{font-size:17px;line-height:1}
 .lang-trigger .lang-flag{font-size:17px}
+/* sélecteur de langue dans la pill (fond noir) */
+.pill .lang-trigger{border-color:rgba(255,255,255,.18);padding:8px 12px;border-radius:100px}
+.pill .lang-trigger:hover{border-color:rgba(255,255,255,.4)}
+.pill .lang-chev{color:var(--d-txt-2)}
 /* footer : adapter au fond sombre */
 .lang-dd-foot .lang-trigger{border-color:var(--d-bord-fort)}
 .lang-dd-foot .lang-trigger:hover{border-color:var(--d-txt-2)}
@@ -111,7 +159,7 @@ h1,h2,h3{line-height:1;font-weight:700}
 .hero-req::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--bleu);flex:none}
 .btn{display:inline-flex;align-items:center;gap:9px;padding:16px 28px;font-weight:600;
   font-size:15px;text-transform:uppercase;letter-spacing:.02em;text-decoration:none;cursor:pointer;
-  border:0;font-family:inherit;transition:transform .12s,background .15s,color .15s}
+  border:0;font-family:inherit;border-radius:2px;transition:transform .12s,background .15s,color .15s}
 .btn-corail{background:var(--corail);color:#fff}
 .btn-corail:hover{background:var(--corail-fonce);transform:translateY(-2px)}
 .btn-ligne{background:transparent;color:var(--texte);border:1.5px solid var(--trait)}
@@ -134,6 +182,12 @@ h1,h2,h3{line-height:1;font-weight:700}
 
 /* ── sections ── */
 .section{padding:104px 0}
+@media(max-width:760px){
+  .section{padding:64px 0!important}
+  .hero{padding:56px 0 0}
+  .marquee{margin-top:48px}
+  #demo.section{padding-top:0!important}
+}
 .eyebrow{margin-bottom:22px;display:flex;align-items:center;gap:12px;color:var(--bleu);
   font-family:"Clash Display";font-weight:500;letter-spacing:.1em;text-transform:uppercase;font-size:13px}
 .eyebrow .n{color:var(--texte-2)}
@@ -184,7 +238,7 @@ h1,h2,h3{line-height:1;font-weight:700}
 .demo-perim{display:flex;align-items:center;gap:9px;color:var(--bleu-dark);font-family:"Clash Display";
   font-weight:500;letter-spacing:.08em;text-transform:uppercase;font-size:11px}
 .demo-corps{padding:36px;display:grid;grid-template-columns:320px 1fr;gap:32px;min-height:460px}
-@media(max-width:860px){.demo-corps{grid-template-columns:1fr}}
+@media(max-width:860px){.demo-corps{grid-template-columns:1fr;gap:0;min-height:0;padding-bottom:0}}
 .demo-corps h4{font-family:"Clash Display";font-weight:500;font-size:11px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--d-txt-2);margin-bottom:18px}
 #echantillons{border-radius:10px}
@@ -196,7 +250,7 @@ h1,h2,h3{line-height:1;font-weight:700}
   100%{box-shadow:0 0 0 0 rgba(255,90,60,0);border-color:var(--d-bord)}
 }
 .echantillon{width:100%;text-align:left;background:var(--d-carte);border:1px solid var(--d-bord);
-  border-radius:8px;padding:16px;margin-bottom:12px;cursor:pointer;color:var(--d-txt);font-family:inherit;
+  border-radius:2px;padding:16px;margin-bottom:12px;cursor:pointer;color:var(--d-txt);font-family:inherit;
   display:flex;gap:14px;align-items:center;transition:all .15s}
 .echantillon:hover{border-color:var(--d-bord-fort);background:var(--d-hover)}
 .echantillon.actif{border-color:var(--corail);background:var(--d-hover);box-shadow:0 0 0 1px var(--corail)}
@@ -205,12 +259,14 @@ h1,h2,h3{line-height:1;font-weight:700}
   box-shadow:0 6px 0 var(--d-txt-3),0 12px 0 var(--d-txt-3),0 20px 0 var(--bleu-dark);opacity:.8}
 .ech-nom{font-weight:600;font-size:15px;color:var(--d-txt)}
 .ech-desc{font-family:"Clash Display";font-weight:300;font-size:12px;color:var(--d-txt-2);margin-top:3px;letter-spacing:.02em}
-.lancer{width:100%;margin-top:8px;background:var(--corail);color:#fff;border:0;border-radius:8px;padding:15px;
+.lancer{width:100%;margin-top:8px;background:var(--corail);color:#fff;border:0;border-radius:2px;padding:15px;
   font-family:"Clash Display";font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;transition:background .15s}
 .lancer:hover{background:var(--corail-fonce)}
 .lancer:disabled{background:var(--d-hover);color:var(--d-txt-3);cursor:not-allowed}
 .sortie{border-left:1px solid var(--d-bord);padding-left:32px}
-@media(max-width:860px){.sortie{border-left:0;padding-left:0;border-top:1px solid var(--d-bord);padding-top:26px}}
+.sortie:empty{border:0;padding:0}
+@media(max-width:860px){.sortie{border-left:0;padding-left:0;border-top:1px solid var(--d-bord);padding-top:26px}
+  .sortie:empty{border-top:0;padding-top:0}}
 .attente{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;
   min-height:340px;text-align:center;color:var(--d-txt-3);gap:14px}
 .attente svg{width:40px;height:40px;opacity:.5}
@@ -278,11 +334,11 @@ h1,h2,h3{line-height:1;font-weight:700}
 .final .btn-noir{margin-top:40px;background:var(--noir);color:#fff}
 .final .btn-noir:hover{background:#000;transform:translateY(-2px)}
 
-footer{background:var(--noir);border-top:1px solid var(--d-bord-fort);padding:48px 0 40px;color:var(--d-txt-2)}
+footer{background:var(--noir);border-top:1px solid var(--d-bord-fort);padding:40px 0;color:var(--d-txt-2)}
 .foot-in{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
 .foot-in .logo{color:#fff}
 .foot-in .logo-txt{font-size:22px;color:#fff}
-.foot-liens{display:flex;gap:24px}
+.foot-liens{display:flex;gap:24px;align-items:center}
 .foot-liens a{color:var(--d-txt-2);text-decoration:none;font-size:14px;font-weight:500;text-transform:uppercase;letter-spacing:.03em;transition:color .15s}
 .foot-liens a:hover{color:var(--corail)}
 .avert{margin-top:32px;padding-top:24px;border-top:1px solid var(--d-bord-fort);
@@ -293,40 +349,39 @@ footer{background:var(--noir);border-top:1px solid var(--d-bord-fort);padding:48
   .scan-ligne{top:48%}.champ{opacity:1;transform:none}.tampon{opacity:1}.marquee-track{animation:none}}
 </style>
 
-<div class="nav"><div class="wrap nav-in">
-  <a href="#top" class="logo">
-    <svg viewBox="0 0 49 47" xmlns="http://www.w3.org/2000/svg" aria-label="Scribo">
-      <rect width="49" height="47" fill="var(--corail)"/>
-      <path fill="var(--noir)" d="M49 2.96973C48.4378 2.96973 47.7584 2.96999 46.9863 2.97266H49V47.0234H0V44.0537C0.562246 44.0537 1.24159 44.0534 2.01367 44.0508H0V0H49V2.96973ZM11.6992 12.4824C9.98363 14.3252 8.45641 16.5547 6.92969 19.3027C2.64516 27.0149 2.96848 37.9371 2.96875 44.043C7.72119 44.0075 15.1253 43.7994 20.7881 42.5684C22.2137 42.2584 23.538 41.9317 24.7744 41.582C24.7653 41.582 24.7562 41.583 24.7471 41.583H24.2471V27.7207C22.0829 27.7273 19.1258 27.681 16.6025 26.4326C15.145 25.7114 13.8283 24.5915 12.8818 22.8691C11.9387 21.1525 11.3789 18.8672 11.3789 15.8379C11.3789 14.5932 11.4911 13.4791 11.6992 12.4824ZM46.0303 2.97949C41.2778 3.01501 33.8743 3.22315 28.2119 4.4541C27.3047 4.65131 26.4391 4.8573 25.6104 5.06934V18.3105C27.7744 18.304 30.7317 18.3513 33.2549 19.5996C34.7124 20.3208 36.0291 21.4417 36.9756 23.1641C37.9187 24.8806 38.4785 27.1653 38.4785 30.1943C38.4785 31.4489 38.3637 32.5706 38.1523 33.5732C39.5301 31.9295 40.8011 30.0044 42.0703 27.7197C46.3549 20.0073 46.0305 9.08517 46.0303 2.97949Z"/>
-    </svg>
-    <span class="logo-txt">Scribo</span>
-  </a>
-  <nav class="nav-liens">
-    <a href="#principe" data-i18n="nav_principe">Principe</a>
-    <a href="#demo" data-i18n="nav_demo">Démo</a>
-    <div class="lang-dd" id="langNav">
-      <button class="lang-trigger" aria-haspopup="true" aria-expanded="false">
-        <span class="lang-flag">🇫🇷</span>
-        <svg class="lang-chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
-      <div class="lang-menu">
-        <button class="lang-item" data-lang="fr"><span class="lang-flag">🇫🇷</span><span>Français</span></button>
-        <button class="lang-item" data-lang="en"><span class="lang-flag">🇬🇧</span><span>English</span></button>
-      </div>
+<a href="#top" class="logo logo-flottant">
+  <svg viewBox="0 0 181 161" xmlns="http://www.w3.org/2000/svg" aria-label="Scribo"><path d="M180.735 54.6261L180.735 155.205L174.639 155.205C174.639 147.077 174.742 127.028 171.591 112.535C166.512 89.1683 159.4 79.0089 141.113 68.8494C125.276 60.0512 102.846 60.7218 90.3156 60.7218L90.3156 54.6261L180.735 54.6261Z" fill="var(--noir)"/><path d="M0.000168753 105.942L0.000190735 5.36302L6.09587 5.36302C6.09587 13.4906 5.99307 33.5399 9.14371 48.0328C14.2234 71.3995 21.3351 81.559 39.6221 91.7185C55.4587 100.517 77.8894 99.8461 90.4194 99.8461L90.4194 105.942L0.000168753 105.942Z" fill="var(--noir)"/><path d="M174.639 55.1592C174.639 47.0317 174.742 26.9821 171.591 12.4893C170.58 7.83762 169.488 3.70904 168.244 -5.45965e-07L180.734 0L180.734 55.1592L174.639 55.1592Z" fill="var(--noir)"/><path d="M6.0957 105.526C6.0957 113.653 5.99306 133.703 9.14355 148.195C10.1548 152.847 11.2468 156.976 12.4912 160.685L0 160.685L6.57767e-07 105.526L6.0957 105.526Z" fill="var(--noir)"/><rect width="90.8406" height="5.67754" fill="var(--noir)"/><rect x="89.8945" y="155.068" width="90.8406" height="5.67754" fill="var(--noir)"/></svg>
+  <span class="logo-txt">Scribo</span>
+</a>
+
+<nav class="pill" id="pill">
+  <span class="pill-glisseur" id="pillGlisseur"></span>
+  <a href="#top" class="pill-item actif" data-pill data-i18n="nav_home">Accueil</a>
+  <a href="#principe" class="pill-item" data-pill data-i18n="nav_principe">Principe</a>
+  <a href="#demo" class="pill-item" data-pill data-i18n="nav_demo">Démo</a>
+  <div class="lang-dd" id="langNav">
+    <button class="lang-trigger" aria-haspopup="true" aria-expanded="false">
+      <span class="lang-flag">🇫🇷</span>
+      <svg class="lang-chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="lang-menu lang-menu-up">
+      <button class="lang-item" data-lang="fr"><span class="lang-flag">🇫🇷</span><span>Français</span></button>
+      <button class="lang-item" data-lang="en"><span class="lang-flag">🇬🇧</span><span>English</span></button>
     </div>
-    <a href="https://github.com/Gabsuisse/scribo" class="nav-cta" target="_blank" rel="noopener" data-i18n="cta_tester">Tester le projet →</a>
-  </nav>
-</div></div>
+  </div>
+  <a href="https://github.com/Gabsuisse/scribo" class="pill-cta" target="_blank" rel="noopener"><span data-i18n="cta_tester">Tester le projet</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+  <button class="pill-theme" id="btnTheme" aria-label="Thème" title="Mode sombre (bientôt)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</nav>
 
 <header class="hero bloc-blanc" id="top"><div class="wrap">
-  <div class="hero-kick tag" data-i18n="hero_kick">Extraction locale · Mistral 7B</div>
   <h1 class="display">
-    <span class="ligne" data-i18n="hero_l1">Le document</span>
-    <span class="ligne" data-i18n="hero_l2">ne quitte</span>
-    <span class="ligne"><span data-i18n="hero_l3a">jamais la </span><span class="corail" data-i18n="hero_l3b">machine.</span></span>
+    <span class="ligne" data-i18n="hero_l1">Extraction de documents</span>
+    <span class="ligne"><span data-i18n="hero_l2">en </span><span class="corail" data-i18n="hero_l3b">local.</span></span>
   </h1>
   <div class="hero-bas">
-    <p class="hero-sous" data-i18n="hero_sous">Scribo lit un RIB, une pièce, un justificatif, et en extrait les champs pour pré-remplir vos formulaires. <b>Le traitement s'exécute sur votre poste. Rien n'est transmis, hébergé, ni copié ailleurs.</b></p>
+    <p class="hero-sous" data-i18n="hero_sous">Extraction par Mistral 7B, vérifiée par le calcul. <b>Votre document ne quitte jamais votre machine.</b></p>
     <div class="hero-actions">
       <a href="https://github.com/Gabsuisse/scribo" class="btn btn-corail" target="_blank" rel="noopener" data-i18n="cta_tester">Tester le projet →</a>
       <a href="#demo" class="btn btn-ligne" data-i18n="cta_voir_demo">Voir la démo</a>
@@ -421,14 +476,7 @@ footer{background:var(--noir);border-top:1px solid var(--d-bord-fort);padding:48
         <div id="echantillons"></div>
         <button class="lancer" id="lancer" data-i18n="lancer_ext">Lancer l'extraction</button>
       </div>
-      <div class="sortie" id="sortie">
-        <div class="attente" id="attente">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-            <rect x="4" y="3" width="16" height="18"/><path d="M8 8h8M8 12h8M8 16h5" stroke-linecap="round"/>
-          </svg>
-          <div class="tag" data-i18n="demo_attente">Les champs extraits apparaîtront ici.</div>
-        </div>
-      </div>
+      <div class="sortie" id="sortie"></div>
     </div>
     <div class="demo-pied">
       <span class="pt">●</span> <span data-i18n="demo_pied">Démo scénarisée sur données fictives — aucun modèle appelé, aucune donnée transmise.</span>
@@ -467,9 +515,7 @@ footer{background:var(--noir);border-top:1px solid var(--d-bord-fort);padding:48
 <footer><div class="wrap">
   <div class="foot-in">
     <a href="#top" class="logo">
-      <svg viewBox="0 0 49 47" xmlns="http://www.w3.org/2000/svg" aria-label="Scribo">
-      <path fill="#fff" d="M49 2.96973C48.4378 2.96973 47.7584 2.96999 46.9863 2.97266H49V47.0234H0V44.0537C0.562246 44.0537 1.24159 44.0534 2.01367 44.0508H0V0H49V2.96973ZM11.6992 12.4824C9.98363 14.3252 8.45641 16.5547 6.92969 19.3027C2.64516 27.0149 2.96848 37.9371 2.96875 44.043C7.72119 44.0075 15.1253 43.7994 20.7881 42.5684C22.2137 42.2584 23.538 41.9317 24.7744 41.582C24.7653 41.582 24.7562 41.583 24.7471 41.583H24.2471V27.7207C22.0829 27.7273 19.1258 27.681 16.6025 26.4326C15.145 25.7114 13.8283 24.5915 12.8818 22.8691C11.9387 21.1525 11.3789 18.8672 11.3789 15.8379C11.3789 14.5932 11.4911 13.4791 11.6992 12.4824ZM46.0303 2.97949C41.2778 3.01501 33.8743 3.22315 28.2119 4.4541C27.3047 4.65131 26.4391 4.8573 25.6104 5.06934V18.3105C27.7744 18.304 30.7317 18.3513 33.2549 19.5996C34.7124 20.3208 36.0291 21.4417 36.9756 23.1641C37.9187 24.8806 38.4785 27.1653 38.4785 30.1943C38.4785 31.4489 38.3637 32.5706 38.1523 33.5732C39.5301 31.9295 40.8011 30.0044 42.0703 27.7197C46.3549 20.0073 46.0305 9.08517 46.0303 2.97949Z"/>
-    </svg>
+      <svg viewBox="0 0 181 161" xmlns="http://www.w3.org/2000/svg" aria-label="Scribo"><path d="M180.735 54.6261L180.735 155.205L174.639 155.205C174.639 147.077 174.742 127.028 171.591 112.535C166.512 89.1683 159.4 79.0089 141.113 68.8494C125.276 60.0512 102.846 60.7218 90.3156 60.7218L90.3156 54.6261L180.735 54.6261Z" fill="#fff"/><path d="M0.000168753 105.942L0.000190735 5.36302L6.09587 5.36302C6.09587 13.4906 5.99307 33.5399 9.14371 48.0328C14.2234 71.3995 21.3351 81.559 39.6221 91.7185C55.4587 100.517 77.8894 99.8461 90.4194 99.8461L90.4194 105.942L0.000168753 105.942Z" fill="#fff"/><path d="M174.639 55.1592C174.639 47.0317 174.742 26.9821 171.591 12.4893C170.58 7.83762 169.488 3.70904 168.244 -5.45965e-07L180.734 0L180.734 55.1592L174.639 55.1592Z" fill="#fff"/><path d="M6.0957 105.526C6.0957 113.653 5.99306 133.703 9.14355 148.195C10.1548 152.847 11.2468 156.976 12.4912 160.685L0 160.685L6.57767e-07 105.526L6.0957 105.526Z" fill="#fff"/><rect width="90.8406" height="5.67754" fill="#fff"/><rect x="89.8945" y="155.068" width="90.8406" height="5.67754" fill="#fff"/></svg>
       <span class="logo-txt">Scribo</span>
     </a>
     <div class="foot-liens">
@@ -495,10 +541,10 @@ footer{background:var(--noir);border-top:1px solid var(--d-bord-fort);padding:48
 /* ═══ i18n : dictionnaire FR/EN + moteur ═══ */
 const I18N = {
   fr:{
-    nav_principe:"Principe", nav_demo:"Démo", cta_tester:"Tester le projet →",
+    nav_home:"Accueil", nav_principe:"Principe", nav_demo:"Démo", cta_tester:"Tester le projet",
     hero_kick:"Extraction locale · Mistral 7B",
-    hero_l1:"Le document", hero_l2:"ne quitte", hero_l3a:"jamais la ", hero_l3b:"machine.",
-    hero_sous:"Scribo lit un RIB, une pièce, un justificatif, et en extrait les champs pour pré-remplir vos formulaires. <b>Le traitement s'exécute sur votre poste. Rien n'est transmis, hébergé, ni copié ailleurs.</b>",
+    hero_l1:"Extraction de documents", hero_l2:"en ", hero_l3a:"", hero_l3b:"local.",
+    hero_sous:"Extraction par Mistral 7B, vérifiée par le calcul. <b>Votre document ne quitte jamais votre machine.</b>",
     cta_voir_demo:"Voir la démo",
     hero_req:"Requiert un Mac Apple Silicon (M1 ou plus récent) pour le moment.",
     eb_principe:"Le principe", h_principe:"La donnée ne voyage pas.",
@@ -515,7 +561,7 @@ const I18N = {
     pil_c_t:"Aucun coût au dossier",
     pil_c_p:"Le traitement ne consomme aucun serveur distant. Il n'y a rien à facturer à l'extraction : le nombre d'extractions est illimité.",
     eb_demo:"Démonstration", h_demo:"Regardez-la lire.",
-    lead_demo:"Choisissez un RIB d'exemple ci-dessous — les données sont fictives. Scribo le lit, en extrait les champs et vérifie les clés, sous vos yeux. Chaque champ se copie ensuite d'un clic, prêt à coller dans un formulaire.",
+    lead_demo:"Scribo lit un RIB, une pièce d'identité, un justificatif de domicile, et en extrait les champs pour pré-remplir vos formulaires. Le traitement s'exécute sur votre machine. Rien n'est transmis, hébergé, ni copié ailleurs.",
     demo_tete:"scribo · démonstration", demo_perim:"périmètre local — aucune sortie réseau",
     demo_col1:"1 · Document d'exemple", btn_choisir:"Choisissez un exemple",
     demo_attente:"Les champs extraits apparaîtront ici.",
@@ -540,10 +586,10 @@ const I18N = {
     src:{"Clé mod-97 vérifiée":"Clé mod-97 vérifiée","Calculé depuis l'IBAN":"Calculé depuis l'IBAN","Adresse du titulaire retirée":"Adresse du titulaire retirée"},
   },
   en:{
-    nav_principe:"Principle", nav_demo:"Demo", cta_tester:"Try the project →",
+    nav_home:"Home", nav_principe:"Principle", nav_demo:"Demo", cta_tester:"Try the project",
     hero_kick:"Local extraction · Mistral 7B",
-    hero_l1:"The document", hero_l2:"never leaves", hero_l3a:"your ", hero_l3b:"machine.",
-    hero_sous:"Scribo reads a bank details form, an ID, a proof of address, and extracts the fields to pre-fill your forms. <b>Processing runs on your own machine. Nothing is transmitted, hosted, or copied anywhere else.</b>",
+    hero_l1:"Local-first", hero_l2:"document ", hero_l3a:"", hero_l3b:"extraction.",
+    hero_sous:"Extracted by Mistral 7B, verified by computation. <b>Your document never leaves your machine.</b>",
     cta_voir_demo:"See the demo",
     hero_req:"Requires a Mac with Apple Silicon (M1 or later) for now.",
     eb_principe:"The principle", h_principe:"Data does not travel.",
@@ -560,7 +606,7 @@ const I18N = {
     pil_c_t:"No per-document cost",
     pil_c_p:"Processing uses no remote server. There is nothing to bill per extraction: the number of extractions is unlimited.",
     eb_demo:"Demonstration", h_demo:"Watch it read.",
-    lead_demo:"Pick a sample bank details form below — the data is fictional. Scribo reads it, extracts the fields and verifies the checksums, right before your eyes. Each field then copies with one click, ready to paste into a form.",
+    lead_demo:"Scribo reads a bank details form, an ID, a proof of address, and extracts the fields to pre-fill your forms. Processing runs on your own machine. Nothing is transmitted, hosted, or copied anywhere else.",
     demo_tete:"scribo · demonstration", demo_perim:"local perimeter — no network egress",
     demo_col1:"1 · Sample document", btn_choisir:"Choose a sample",
     demo_attente:"Extracted fields will appear here.",
@@ -781,6 +827,7 @@ const DRAPEAUX = { fr:"🇫🇷", en:"🇬🇧" };
 function majDrapeaux(lang){
   document.querySelectorAll(".lang-trigger .lang-flag").forEach(f=>f.textContent=DRAPEAUX[lang]);
   document.querySelectorAll(".lang-item").forEach(it=>it.classList.toggle("actif", it.dataset.lang===lang));
+  if(typeof window.__replacerPill === "function") requestAnimationFrame(window.__replacerPill);
 }
 document.querySelectorAll(".lang-dd").forEach(dd=>{
   const trig = dd.querySelector(".lang-trigger");
@@ -805,6 +852,108 @@ document.addEventListener("click",()=>{
   document.querySelectorAll(".lang-trigger").forEach(t=>t.setAttribute("aria-expanded","false"));
 });
 // langue par défaut : anglais
+/* ═══ pill flottante : glisseur qui suit l'élément actif ═══ */
+(function(){
+  const pill = document.getElementById("pill");
+  if(!pill) return;
+  const glisseur = document.getElementById("pillGlisseur");
+  const items = [...pill.querySelectorAll(".pill-item")];
+
+  function placer(el, animer){
+    if(!el) return;
+    if(!animer) glisseur.style.transition = "none";
+    glisseur.style.width = el.offsetWidth + "px";
+    glisseur.style.transform = "translateX(" + el.offsetLeft + "px)";
+    if(!animer){ void glisseur.offsetWidth; glisseur.style.transition = ""; }
+  }
+  function activer(el, animer){
+    items.forEach(i => i.classList.toggle("actif", i === el));
+    placer(el, animer);
+  }
+
+  // position initiale sur l'item actif
+  requestAnimationFrame(() => {
+    const actif = pill.querySelector(".pill-item.actif") || items[0];
+    placer(actif, false);
+    pill.classList.add("pret");
+  });
+
+  // clic : active l'item (sauf ancres externes gérées par le scroll)
+  items.forEach(el => {
+    el.addEventListener("click", () => activer(el, true));
+  });
+
+  // hover : le glisseur suit temporairement, revient à l'actif au mouseleave
+  items.forEach(el => {
+    el.addEventListener("mouseenter", () => placer(el, true));
+  });
+  // le CTA "Try the project" partage le même comportement de survol
+  const cta = pill.querySelector(".pill-cta");
+  if(cta) cta.addEventListener("mouseenter", () => placer(cta, true));
+  pill.addEventListener("mouseleave", () => {
+    const actif = pill.querySelector(".pill-item.actif");
+    placer(actif, true);
+  });
+
+  // scrollspy : active la section visible
+  const sections = items.map(el => {
+    const href = el.getAttribute("href");
+    return href && href.startsWith("#") ? document.querySelector(href) : null;
+  });
+  const logoFlottant = document.querySelector(".logo-flottant");
+  const footerEl = document.querySelector("footer");
+  function majScroll(){
+    let idx = 0;
+    const y = window.scrollY + window.innerHeight * 0.35;
+    sections.forEach((sec, i) => { if(sec && sec.offsetTop <= y) idx = i; });
+    const actif = pill.querySelector(".pill-item.actif");
+    if(items[idx] !== actif) activer(items[idx], true);
+
+    // logo : disparaît dès qu'on scrolle un peu
+    if(logoFlottant) logoFlottant.classList.toggle("cache", window.scrollY > 80);
+
+    // pill : disparaît quand le footer entre dans la zone basse de l'écran
+    if(footerEl){
+      const footTop = footerEl.getBoundingClientRect().top;
+      // la pill est à ~40px du bas ; on la cache dès que le footer approche cette zone
+      pill.classList.toggle("cache", footTop < window.innerHeight - 80);
+    }
+  }
+  window.addEventListener("scroll", majScroll, {passive:true});
+  window.addEventListener("resize", () => {
+    const actif = pill.querySelector(".pill-item.actif");
+    placer(actif, false);
+  });
+  // recalcul après changement de langue (largeur des items change)
+  window.__replacerPill = () => {
+    const actif = pill.querySelector(".pill-item.actif");
+    placer(actif, false);
+  };
+})();
+
+/* ═══ dark / light mode ═══ */
+(function(){
+  const btn = document.getElementById("btnTheme");
+  if(!btn) return;
+  const ICONE_LUNE = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  const ICONE_SOLEIL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
+  function appliquer(theme){
+    document.documentElement.setAttribute("data-theme", theme);
+    btn.innerHTML = theme === "dark" ? ICONE_SOLEIL : ICONE_LUNE;
+    btn.title = theme === "dark" ? "Mode clair" : "Mode sombre";
+    try { localStorage.setItem("scribo-theme", theme); } catch(e){}
+  }
+  // choix mémorisé, sinon clair par défaut
+  let theme = "light";
+  try { theme = localStorage.getItem("scribo-theme") || "light"; } catch(e){}
+  appliquer(theme);
+  btn.addEventListener("click", () => {
+    const actuel = document.documentElement.getAttribute("data-theme");
+    appliquer(actuel === "dark" ? "light" : "dark");
+    if(typeof window.__replacerPill === "function") requestAnimationFrame(window.__replacerPill);
+  });
+})();
+
 appliquerLangue("en");
 </script>
 </html>
