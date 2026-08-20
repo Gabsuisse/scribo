@@ -176,6 +176,11 @@ html[data-theme="dark"] .pill-theme:hover{color:#0E0E0F;background:#FAFAFA}
 /* variables du menu plein écran : blanc en clair, noir en sombre */
 :root{--menu-bg:#F4F3EF;--menu-txt:#0E0E0F;--menu-bord:#DCDAD2}
 html[data-theme="dark"]{--menu-bg:#0E0E0F;--menu-txt:#FAFAFA;--menu-bord:#2C2C30}
+/* en dark : burger gris + icône blanche, logo mobile blanc pour être visible */
+html[data-theme="dark"] .burger{background:#2C2C2C;color:#FAFAFA}
+html[data-theme="dark"] .nav-mobile-logo svg path,
+html[data-theme="dark"] .nav-mobile-logo svg rect{fill:#FAFAFA}
+html[data-theme="dark"] .nav-mobile-logo .logo-txt{color:#FAFAFA}
 .pill .lang-trigger:hover{border-color:rgba(255,255,255,.4)}
 .pill .lang-chev{color:var(--d-txt-2)}
 /* footer : adapter au fond sombre */
@@ -230,8 +235,13 @@ html[data-theme="dark"]{--menu-bg:#0E0E0F;--menu-txt:#FAFAFA;--menu-bord:#2C2C30
 @media(max-width:760px){
   .section{padding:64px 0!important}
   .hero{padding:104px 0 0}
+  .hero h1{font-size:clamp(38px,12vw,56px)}
   .marquee{margin-top:48px}
   #demo.section{padding-top:0!important}
+  /* démo : en-tête en colonne (périmètre sous le titre) */
+  .demo-tete{flex-direction:column;align-items:flex-start;gap:8px}
+  /* démo : le CTA lancer a la même marge en haut que l'en-tête */
+  .lancer{margin-top:24px!important}
 }
 .eyebrow{margin-bottom:22px;display:flex;align-items:center;gap:12px;color:var(--bleu);
   font-family:"Clash Display";font-weight:500;letter-spacing:.1em;text-transform:uppercase;font-size:13px}
@@ -572,18 +582,7 @@ footer .wrap{padding:0;max-width:none}
 
 <section class="section bloc-blanc"><div class="wrap">
   <div class="eyebrow"><span class="n">03</span> <span data-i18n="eb_tech">Le cœur technique</span></div>
-  <h2 class="h-sec display" data-i18n="h_tech">Vérifier, pas faire confiance.</h2>
   <div class="valid-grille">
-    <div class="valid-code">
-<span class="c-com"># le champ extrait par le modèle…</span>
-<span class="c-key">def</span> iban_valide(iban):
-    perm = iban[4:] + iban[:4]
-    n = <span class="c-com">…lettres → chiffres…</span>
-    <span class="c-key">return</span> int(n) % 97 == 1
-<span class="c-com"># …passe la clé mod-97, ou il est rejeté.</span>
-
-<span class="c-ok">✓ FR76 1751 5900 … 4602 404  → valide</span>
-    </div>
     <div class="valid-txt">
       <h3 data-i18n="tech_h3">Le modèle propose,<br>l'arithmétique dispose</h3>
       <p data-i18n="tech_p">Pour un RIB par exemple, une fois l'IBAN validé par sa clé mod-97, le code banque, le guichet, le compte et la clé RIB ne sont plus lus : ils sont <b>découpés depuis l'IBAN</b>. Quatre champs qui ne peuvent structurellement pas être faux.</p>
@@ -634,7 +633,7 @@ const I18N = {
     cta_voir_demo:"Voir la démo",
     hero_req:"Requiert un Mac Apple Silicon (M1 ou plus récent) pour le moment.",
     eb_principe:"Le principe", h_principe:"La donnée ne voyage pas.",
-    lead_principe:"Les outils classiques envoient vos documents vers un serveur distant pour les analyser. Scribo fait l'inverse : le modèle vient au document, jamais le contraire.",
+    lead_principe:"Les outils classiques envoient vos documents vers un serveur distant pour les analyser. Scribo utilise un modèle IA en local pour analyser votre document sur votre machine.",
     duo_eux:"Les services en ligne", enc_eux:"Votre machine",
     n_document:"Document", n_serveur:"Serveur tiers", n_champs:"Champs", n_modele:"Modèle local",
     p_eux:"Le document sensible transite par une infrastructure tierce. Il faut un contrat de sous-traitance, une base légale de transfert, et faire confiance à la politique de rétention du prestataire.",
@@ -646,10 +645,10 @@ const I18N = {
     pil_b_p:"Chaque champ extrait est recontrôlé par sa clé mathématique quand elle existe. Une valeur validée par le calcul ne peut pas être une hallucination du modèle.",
     pil_c_t:"Aucun coût au dossier",
     pil_c_p:"Le traitement ne consomme aucun serveur distant. Il n'y a rien à facturer à l'extraction : le nombre d'extractions est illimité.",
-    eb_demo:"Démonstration", h_demo:"Regardez-la lire.",
+    eb_demo:"Démonstration", h_demo:"À quoi ça ressemble ?",
     lead_demo:"Scribo lit un RIB, une pièce d'identité, un justificatif de domicile, et en extrait les champs pour pré-remplir vos formulaires. Le traitement s'exécute sur votre machine. Rien n'est transmis, hébergé, ni copié ailleurs.",
     demo_tete:"scribo · démonstration", demo_perim:"périmètre local — aucune sortie réseau",
-    demo_col1:"1 · Document d'exemple", btn_choisir:"Choisissez un exemple",
+    demo_col1:"Sélectionnez un document exemple", btn_choisir:"Choisissez un exemple",
     demo_attente:"Les champs extraits apparaîtront ici.",
     demo_pied:"Démo scénarisée sur données fictives — aucun modèle appelé, aucune donnée transmise.",
     eb_tech:"Le cœur technique", h_tech:"Vérifier, pas faire confiance.",
@@ -679,7 +678,7 @@ const I18N = {
     cta_voir_demo:"See the demo",
     hero_req:"Requires a Mac with Apple Silicon (M1 or later) for now.",
     eb_principe:"The principle", h_principe:"Data does not travel.",
-    lead_principe:"Traditional tools send your documents to a remote server to analyze them. Scribo does the opposite: the model comes to the document, never the other way around.",
+    lead_principe:"Traditional tools send your documents to a remote server to analyze them. Scribo uses a local AI model to analyze your document on your own machine.",
     duo_eux:"Online services", enc_eux:"Your machine",
     n_document:"Document", n_serveur:"Third-party server", n_champs:"Fields", n_modele:"Local model",
     p_eux:"The sensitive document passes through third-party infrastructure. It requires a data-processing agreement, a legal basis for transfer, and trust in the provider's retention policy.",
@@ -691,10 +690,10 @@ const I18N = {
     pil_b_p:"Every extracted field is re-checked against its mathematical checksum when one exists. A value validated by computation cannot be a model hallucination.",
     pil_c_t:"No per-document cost",
     pil_c_p:"Processing uses no remote server. There is nothing to bill per extraction: the number of extractions is unlimited.",
-    eb_demo:"Demonstration", h_demo:"Watch it read.",
+    eb_demo:"Demonstration", h_demo:"What does it look like?",
     lead_demo:"Scribo reads a bank details form, an ID, a proof of address, and extracts the fields to pre-fill your forms. Processing runs on your own machine. Nothing is transmitted, hosted, or copied anywhere else.",
     demo_tete:"scribo · demonstration", demo_perim:"local perimeter — no network egress",
-    demo_col1:"1 · Sample document", btn_choisir:"Choose a sample",
+    demo_col1:"Select a sample document", btn_choisir:"Choose a sample",
     demo_attente:"Extracted fields will appear here.",
     demo_pied:"Scripted demo on fictional data — no model called, no data transmitted.",
     eb_tech:"The technical core", h_tech:"Verify, don't trust.",
