@@ -1,0 +1,12 @@
+[project]
+name = "scribo"
+version = "0.1.0"
+description = "Extraction locale de documents — Mistral 7B, vérifié par le calcul, rien ne quitte la machine."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mlx-lm",       # inférence de Mistral 7B sur Apple Silicon
+    "pdfplumber",   # lecture des PDF avec couche texte
+    "ocrmac",       # OCR natif des images (moteur Vision d'Apple)
+    "pymupdf",      # rasterisation des PDF scannés pour l'OCR
+]

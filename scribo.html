@@ -66,14 +66,6 @@ h1,h2,h3{line-height:1;font-weight:700}
 /* logo flottant en haut à gauche */
 .logo-flottant{position:fixed;top:40px;left:40px;z-index:60;display:flex;align-items:center;gap:13px;text-decoration:none;color:var(--texte);transition:opacity .3s ease,transform .3s ease}
 .logo-flottant.cache{opacity:0;transform:translateY(-12px);pointer-events:none}
-/* CTA flottant en haut à droite, pendant du logo */
-.cta-flottant{position:fixed;top:40px;right:40px;z-index:60;display:inline-flex;align-items:center;gap:8px;
-  text-decoration:none;color:var(--texte);
-  font-family:"Clash Display";font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.03em;
-  transition:opacity .3s ease,transform .3s ease,color .2s ease}
-.cta-flottant:hover{color:#FB6E57}
-.cta-flottant.cache{opacity:0;transform:translateY(-12px);pointer-events:none}
-html[data-theme="dark"] .cta-flottant{color:var(--texte)}
 /* en dark mode, le logo (noir par défaut) doit passer clair pour être visible */
 html[data-theme="dark"] .logo-flottant svg path,
 html[data-theme="dark"] .logo-flottant svg rect{fill:#FAFAFA!important}
@@ -99,7 +91,7 @@ html[data-theme="dark"] .logo-flottant .logo-txt{color:#FAFAFA}
 /* l'élément SOUS le glisseur (posé par le JS) est noir ; tous les autres restent blancs */
 .pill-item.sous-glisseur{color:var(--noir)}
 .pill-cta{position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px;
-  background:transparent;color:#FB6E57;text-decoration:none;
+  background:transparent;color:var(--corail);text-decoration:none;
   font-family:"Clash Display";font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.04em;
   padding:10px 18px;border-radius:999px;transition:color .2s;white-space:nowrap}
 .pill-cta.sous-glisseur{color:var(--noir)}
@@ -112,8 +104,8 @@ html[data-theme="dark"] .pill{background:#2C2C2C}
 html[data-theme="dark"] .pill-glisseur{background:#0E0E0F}
 html[data-theme="dark"] .pill-item{color:#FAFAFA}
 html[data-theme="dark"] .pill-item.sous-glisseur{color:#FAFAFA}
-html[data-theme="dark"] .pill-cta.sous-glisseur{color:#FB6E57}
-html[data-theme="dark"] .pill-cta.sous-glisseur svg{stroke:#FB6E57}
+html[data-theme="dark"] .pill-cta.sous-glisseur{color:#FF5A3C}
+html[data-theme="dark"] .pill-cta.sous-glisseur svg{stroke:#FF5A3C}
 html[data-theme="dark"] .pill-theme{color:#FAFAFA}
 html[data-theme="dark"] .pill-theme:hover{color:#0E0E0F;background:#FAFAFA}
 .lang-dd{position:relative}
@@ -144,7 +136,6 @@ html[data-theme="dark"] .pill-theme:hover{color:#0E0E0F;background:#FAFAFA}
   /* on cache la pill et le logo flottant desktop */
   .pill{display:none!important}
   .logo-flottant{display:none!important}
-  .cta-flottant{display:none!important}
 
   /* navbar mobile transparente en haut */
   .nav-mobile{display:flex;align-items:center;justify-content:space-between;
@@ -185,11 +176,6 @@ html[data-theme="dark"] .pill-theme:hover{color:#0E0E0F;background:#FAFAFA}
 /* variables du menu plein écran : blanc en clair, noir en sombre */
 :root{--menu-bg:#F4F3EF;--menu-txt:#0E0E0F;--menu-bord:#DCDAD2}
 html[data-theme="dark"]{--menu-bg:#0E0E0F;--menu-txt:#FAFAFA;--menu-bord:#2C2C30}
-/* en dark : burger gris + icône blanche, logo mobile blanc pour être visible */
-html[data-theme="dark"] .burger{background:#2C2C2C;color:#FAFAFA}
-html[data-theme="dark"] .nav-mobile-logo svg path,
-html[data-theme="dark"] .nav-mobile-logo svg rect{fill:#FAFAFA}
-html[data-theme="dark"] .nav-mobile-logo .logo-txt{color:#FAFAFA}
 .pill .lang-trigger:hover{border-color:rgba(255,255,255,.4)}
 .pill .lang-chev{color:var(--d-txt-2)}
 /* footer : adapter au fond sombre */
@@ -202,9 +188,9 @@ html[data-theme="dark"] .nav-mobile-logo .logo-txt{color:#FAFAFA}
 .lang-dd-foot .lang-item.actif{color:var(--corail)}
 
 /* ── hero (blanc) ── */
-.hero{padding:140px 0 0;position:relative;overflow:hidden}
+.hero{padding:88px 0 0;position:relative;overflow:hidden}
 .hero-kick{display:inline-flex;align-items:center;gap:12px;margin-bottom:32px;color:var(--bleu)}
-.hero h1{font-size:clamp(56px,9.5vw,118px);margin-bottom:0;color:var(--texte)}
+.hero h1{font-size:clamp(56px,11vw,138px);margin-bottom:0;color:var(--texte)}
 .hero h1 .ligne{display:block}
 .hero h1 .corail{background:linear-gradient(100deg,var(--corail) 0%,var(--corail) 30%,var(--bleu) 100%);
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--corail);
@@ -244,13 +230,8 @@ html[data-theme="dark"] .nav-mobile-logo .logo-txt{color:#FAFAFA}
 @media(max-width:760px){
   .section{padding:64px 0!important}
   .hero{padding:104px 0 0}
-  .hero h1{font-size:clamp(38px,12vw,56px)}
   .marquee{margin-top:48px}
   #demo.section{padding-top:0!important}
-  /* démo : en-tête en colonne (périmètre sous le titre) */
-  .demo-tete{flex-direction:column;align-items:flex-start;gap:8px}
-  /* démo : le CTA lancer a la même marge en haut que l'en-tête */
-  .lancer{margin-top:24px!important}
 }
 .eyebrow{margin-bottom:22px;display:flex;align-items:center;gap:12px;color:var(--bleu);
   font-family:"Clash Display";font-weight:500;letter-spacing:.1em;text-transform:uppercase;font-size:13px}
@@ -302,7 +283,7 @@ html[data-theme="dark"] .nav-mobile-logo .logo-txt{color:#FAFAFA}
 .demo-perim{display:flex;align-items:center;gap:9px;color:var(--bleu-dark);font-family:"Clash Display";
   font-weight:500;letter-spacing:.08em;text-transform:uppercase;font-size:11px}
 .demo-corps{padding:36px;display:grid;grid-template-columns:320px 1fr;gap:32px;min-height:460px}
-@media(max-width:860px){.demo-corps{grid-template-columns:1fr;gap:0;min-height:0;padding-bottom:24px}}
+@media(max-width:860px){.demo-corps{grid-template-columns:1fr;gap:0;min-height:0;padding-bottom:0}}
 .demo-corps h4{font-family:"Clash Display";font-weight:500;font-size:11px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--d-txt-2);margin-bottom:18px}
 #echantillons{border-radius:10px}
@@ -378,13 +359,17 @@ html[data-theme="dark"] .nav-mobile-logo .logo-txt{color:#FAFAFA}
 .demo-pied .pt{color:var(--bleu-dark)}
 
 /* ── coeur technique (blanc) ── */
-.tech-grille{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
-@media(max-width:860px){.tech-grille{grid-template-columns:1fr;gap:28px}}
-.tech-titre{font-size:clamp(30px,3.6vw,52px);line-height:1.02;letter-spacing:-.02em;margin-top:20px;color:var(--texte)}
-.tech-droite{padding-top:8px}
-.tech-droite p{font-size:17px;color:var(--texte-2);line-height:1.65;margin-bottom:20px;font-weight:400}
-.tech-droite .cite{border-left:3px solid var(--bleu);padding-left:20px;font-size:19px;color:var(--texte);font-weight:600;margin-bottom:0}
-.tech-droite b{font-weight:600;color:var(--texte)}
+.valid-grille{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:56px;align-items:center}
+@media(max-width:860px){.valid-grille{grid-template-columns:1fr;gap:32px}}
+.valid-code{background:var(--noir);color:var(--blanc);padding:32px;border-radius:6px;
+  font-family:"Clash Display";font-weight:400;font-size:14px;line-height:1.9;overflow-x:auto;letter-spacing:.01em}
+.valid-code .c-key{color:var(--bleu-dark)}
+.valid-code .c-com{color:var(--gris)}
+.valid-code .c-ok{color:var(--bleu-dark);font-weight:600}
+.valid-txt h3{font-weight:700;font-size:26px;text-transform:uppercase;margin-bottom:16px;letter-spacing:-.01em}
+.valid-txt p{font-size:16px;color:var(--texte-2);line-height:1.6;margin-bottom:16px;font-weight:400}
+.valid-txt .cite{border-left:3px solid var(--bleu);padding-left:18px;font-size:17px;color:var(--texte);font-weight:600}
+.valid-txt b{font-weight:600;color:var(--texte)}
 
 /* ── final (orange branding) ── */
 .final{background:var(--corail);color:#fff;text-align:center}
@@ -404,7 +389,7 @@ footer .wrap{padding:0;max-width:none}
 .foot-liens a{color:var(--d-txt-2);text-decoration:none;font-size:14px;font-weight:500;text-transform:uppercase;letter-spacing:.03em;transition:color .15s}
 .foot-liens a:hover{color:var(--corail)}
 .avert{margin-top:32px;padding-top:24px;border-top:1px solid var(--d-bord-fort);
-  font-family:"Clash Display";font-weight:400;font-size:11px;color:var(--d-txt-3);line-height:1.7;max-width:90ch;letter-spacing:.01em}
+  font-family:"Clash Display";font-weight:300;font-size:11px;color:var(--d-txt-3);line-height:1.7;max-width:90ch;letter-spacing:.01em}
 
 :focus-visible{outline:2px solid var(--corail);outline-offset:3px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}
@@ -414,11 +399,6 @@ footer .wrap{padding:0;max-width:none}
 <a href="#top" class="logo logo-flottant">
   <svg viewBox="0 0 181 161" xmlns="http://www.w3.org/2000/svg" aria-label="Scribo"><path d="M180.735 54.6261L180.735 155.205L174.639 155.205C174.639 147.077 174.742 127.028 171.591 112.535C166.512 89.1683 159.4 79.0089 141.113 68.8494C125.276 60.0512 102.846 60.7218 90.3156 60.7218L90.3156 54.6261L180.735 54.6261Z" fill="var(--noir)"/><path d="M0.000168753 105.942L0.000190735 5.36302L6.09587 5.36302C6.09587 13.4906 5.99307 33.5399 9.14371 48.0328C14.2234 71.3995 21.3351 81.559 39.6221 91.7185C55.4587 100.517 77.8894 99.8461 90.4194 99.8461L90.4194 105.942L0.000168753 105.942Z" fill="var(--noir)"/><path d="M174.639 55.1592C174.639 47.0317 174.742 26.9821 171.591 12.4893C170.58 7.83762 169.488 3.70904 168.244 -5.45965e-07L180.734 0L180.734 55.1592L174.639 55.1592Z" fill="var(--noir)"/><path d="M6.0957 105.526C6.0957 113.653 5.99306 133.703 9.14355 148.195C10.1548 152.847 11.2468 156.976 12.4912 160.685L0 160.685L6.57767e-07 105.526L6.0957 105.526Z" fill="var(--noir)"/><rect width="90.8406" height="5.67754" fill="var(--noir)"/><rect x="89.8945" y="155.068" width="90.8406" height="5.67754" fill="var(--noir)"/></svg>
   <span class="logo-txt">Scribo</span>
-</a>
-
-<a href="https://github.com/Gabsuisse/scribo" class="cta-flottant" id="ctaFlottant" target="_blank" rel="noopener">
-  <span data-i18n="cta_github">Tester le projet sur GitHub</span>
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
 </a>
 
 <nav class="pill" id="pill">
@@ -496,14 +476,14 @@ footer .wrap{padding:0;max-width:none}
   </div>
 </div>
 <div class="marquee"><div class="marquee-track">
-  <span><span class="pt">↓</span> <span data-i18n="marq_1">zéro transfert</span></span><span>·</span>
-  <span><span class="pt">✓</span> <span data-i18n="marq_2">champs vérifiés par le calcul</span></span><span>·</span>
-  <span><span class="pt">∞</span> <span data-i18n="marq_3">extractions illimitées</span></span><span>·</span>
-  <span><span class="pt">⚡</span> <span data-i18n="marq_4">mistral 7b en local</span></span><span>·</span>
-  <span><span class="pt">↓</span> <span data-i18n="marq_1">zéro transfert</span></span><span>·</span>
-  <span><span class="pt">✓</span> <span data-i18n="marq_2">champs vérifiés par le calcul</span></span><span>·</span>
-  <span><span class="pt">∞</span> <span data-i18n="marq_3">extractions illimitées</span></span><span>·</span>
-  <span><span class="pt">⚡</span> <span data-i18n="marq_4">mistral 7b en local</span></span><span>·</span>
+  <span><span class="pt">↓</span> zéro transfert</span><span>·</span>
+  <span><span class="pt">✓</span> champs vérifiés par le calcul</span><span>·</span>
+  <span><span class="pt">∞</span> extractions illimitées</span><span>·</span>
+  <span><span class="pt">⚡</span> mistral 7b en local</span><span>·</span>
+  <span><span class="pt">↓</span> zéro transfert</span><span>·</span>
+  <span><span class="pt">✓</span> champs vérifiés par le calcul</span><span>·</span>
+  <span><span class="pt">∞</span> extractions illimitées</span><span>·</span>
+  <span><span class="pt">⚡</span> mistral 7b en local</span><span>·</span>
 </div></div>
 </header>
 
@@ -591,12 +571,21 @@ footer .wrap{padding:0;max-width:none}
 </div></section>
 
 <section class="section bloc-blanc"><div class="wrap">
-  <div class="tech-grille">
-    <div class="tech-gauche">
-      <div class="eyebrow"><span class="n">03</span> <span data-i18n="eb_tech">Le cœur technique</span></div>
-      <h2 class="tech-titre display" data-i18n="tech_h3">Le modèle propose,<br>l'arithmétique dispose.</h2>
+  <div class="eyebrow"><span class="n">03</span> <span data-i18n="eb_tech">Le cœur technique</span></div>
+  <h2 class="h-sec display" data-i18n="h_tech">Vérifier, pas faire confiance.</h2>
+  <div class="valid-grille">
+    <div class="valid-code">
+<span class="c-com"># le champ extrait par le modèle…</span>
+<span class="c-key">def</span> iban_valide(iban):
+    perm = iban[4:] + iban[:4]
+    n = <span class="c-com">…lettres → chiffres…</span>
+    <span class="c-key">return</span> int(n) % 97 == 1
+<span class="c-com"># …passe la clé mod-97, ou il est rejeté.</span>
+
+<span class="c-ok">✓ FR76 1751 5900 … 4602 404  → valide</span>
     </div>
-    <div class="tech-droite">
+    <div class="valid-txt">
+      <h3 data-i18n="tech_h3">Le modèle propose,<br>l'arithmétique dispose</h3>
       <p data-i18n="tech_p">Pour un RIB par exemple, une fois l'IBAN validé par sa clé mod-97, le code banque, le guichet, le compte et la clé RIB ne sont plus lus : ils sont <b>découpés depuis l'IBAN</b>. Quatre champs qui ne peuvent structurellement pas être faux.</p>
       <p class="cite" data-i18n="tech_cite">Une valeur validée par le calcul ne peut pas être une hallucination.</p>
     </div>
@@ -645,8 +634,7 @@ const I18N = {
     cta_voir_demo:"Voir la démo",
     hero_req:"Requiert un Mac Apple Silicon (M1 ou plus récent) pour le moment.",
     eb_principe:"Le principe", h_principe:"La donnée ne voyage pas.",
-    lead_principe:"Les outils classiques envoient vos documents vers un serveur distant pour les analyser. Scribo utilise un modèle IA en local pour analyser votre document sur votre machine.",
-    marq_1:"zéro transfert", marq_2:"champs vérifiés par le calcul", marq_3:"extractions illimitées", marq_4:"mistral 7b en local",
+    lead_principe:"Les outils classiques envoient vos documents vers un serveur distant pour les analyser. Scribo fait l'inverse : le modèle vient au document, jamais le contraire.",
     duo_eux:"Les services en ligne", enc_eux:"Votre machine",
     n_document:"Document", n_serveur:"Serveur tiers", n_champs:"Champs", n_modele:"Modèle local",
     p_eux:"Le document sensible transite par une infrastructure tierce. Il faut un contrat de sous-traitance, une base légale de transfert, et faire confiance à la politique de rétention du prestataire.",
@@ -658,10 +646,10 @@ const I18N = {
     pil_b_p:"Chaque champ extrait est recontrôlé par sa clé mathématique quand elle existe. Une valeur validée par le calcul ne peut pas être une hallucination du modèle.",
     pil_c_t:"Aucun coût au dossier",
     pil_c_p:"Le traitement ne consomme aucun serveur distant. Il n'y a rien à facturer à l'extraction : le nombre d'extractions est illimité.",
-    eb_demo:"Démonstration", h_demo:"À quoi ça ressemble ?",
+    eb_demo:"Démonstration", h_demo:"Regardez-la lire.",
     lead_demo:"Scribo lit un RIB, une pièce d'identité, un justificatif de domicile, et en extrait les champs pour pré-remplir vos formulaires. Le traitement s'exécute sur votre machine. Rien n'est transmis, hébergé, ni copié ailleurs.",
     demo_tete:"scribo · démonstration", demo_perim:"périmètre local — aucune sortie réseau",
-    demo_col1:"Sélectionnez un document exemple", btn_choisir:"Choisissez un exemple",
+    demo_col1:"1 · Document d'exemple", btn_choisir:"Choisissez un exemple",
     demo_attente:"Les champs extraits apparaîtront ici.",
     demo_pied:"Démo scénarisée sur données fictives — aucun modèle appelé, aucune donnée transmise.",
     eb_tech:"Le cœur technique", h_tech:"Vérifier, pas faire confiance.",
@@ -670,7 +658,7 @@ const I18N = {
     tech_cite:"Une valeur validée par le calcul ne peut pas être une hallucination.",
     final_h:"L'extraction qui n'a besoin de la confiance de personne.",
     final_p:"Parce que vos documents ne partent nulle part.",
-    final_cta:"Tester le projet sur GitHub →", cta_github:"Tester le projet sur GitHub",
+    final_cta:"Tester le projet sur GitHub →",
     avert:"Démonstration à but d'illustration. Les documents d'exemple et leurs données sont entièrement fictifs. Scribo est un projet en cours ; le nom et les caractéristiques sont susceptibles d'évoluer. Aucune certification (HDS, SecNumCloud) n'est revendiquée à ce stade — la valeur décrite relève de l'architecture de traitement local.",
     // démo dynamique
     res_titre:"2 · Champs extraits", non_trouve:"non trouvé dans le document",
@@ -691,8 +679,7 @@ const I18N = {
     cta_voir_demo:"See the demo",
     hero_req:"Requires a Mac with Apple Silicon (M1 or later) for now.",
     eb_principe:"The principle", h_principe:"Data does not travel.",
-    lead_principe:"Traditional tools send your documents to a remote server to analyze them. Scribo uses a local AI model to analyze your document on your own machine.",
-    marq_1:"zero transfer", marq_2:"fields verified by computation", marq_3:"unlimited extractions", marq_4:"mistral 7b, local",
+    lead_principe:"Traditional tools send your documents to a remote server to analyze them. Scribo does the opposite: the model comes to the document, never the other way around.",
     duo_eux:"Online services", enc_eux:"Your machine",
     n_document:"Document", n_serveur:"Third-party server", n_champs:"Fields", n_modele:"Local model",
     p_eux:"The sensitive document passes through third-party infrastructure. It requires a data-processing agreement, a legal basis for transfer, and trust in the provider's retention policy.",
@@ -704,10 +691,10 @@ const I18N = {
     pil_b_p:"Every extracted field is re-checked against its mathematical checksum when one exists. A value validated by computation cannot be a model hallucination.",
     pil_c_t:"No per-document cost",
     pil_c_p:"Processing uses no remote server. There is nothing to bill per extraction: the number of extractions is unlimited.",
-    eb_demo:"Demonstration", h_demo:"What does it look like?",
+    eb_demo:"Demonstration", h_demo:"Watch it read.",
     lead_demo:"Scribo reads a bank details form, an ID, a proof of address, and extracts the fields to pre-fill your forms. Processing runs on your own machine. Nothing is transmitted, hosted, or copied anywhere else.",
     demo_tete:"scribo · demonstration", demo_perim:"local perimeter — no network egress",
-    demo_col1:"Select a sample document", btn_choisir:"Choose a sample",
+    demo_col1:"1 · Sample document", btn_choisir:"Choose a sample",
     demo_attente:"Extracted fields will appear here.",
     demo_pied:"Scripted demo on fictional data — no model called, no data transmitted.",
     eb_tech:"The technical core", h_tech:"Verify, don't trust.",
@@ -716,7 +703,7 @@ const I18N = {
     tech_cite:"A value validated by computation cannot be a hallucination.",
     final_h:"Extraction that needs no one's trust.",
     final_p:"Because your documents go nowhere.",
-    final_cta:"Try the project on GitHub →", cta_github:"Try the project on GitHub",
+    final_cta:"Try the project on GitHub →",
     avert:"Illustrative demonstration. The sample documents and their data are entirely fictional. Scribo is a work in progress; the name and features may change. No certification (HDS, SecNumCloud) is claimed at this stage — the value described stems from the local-processing architecture.",
     res_titre:"2 · Extracted fields", non_trouve:"not found in the document",
     avec_espaces:"with spaces", sans_espaces:"without spaces", copier:"copy", copie_ok:"copied",
@@ -1022,11 +1009,8 @@ document.addEventListener("click",()=>{
     const actif = pill.querySelector(".pill-item.actif");
     if(items[idx] !== actif) activer(items[idx], true);
 
-    // logo et CTA flottant : disparaissent dès qu'on scrolle un peu
-    const scrolle = window.scrollY > 80;
-    if(logoFlottant) logoFlottant.classList.toggle("cache", scrolle);
-    const ctaFlottant = document.getElementById("ctaFlottant");
-    if(ctaFlottant) ctaFlottant.classList.toggle("cache", scrolle);
+    // logo : disparaît dès qu'on scrolle un peu
+    if(logoFlottant) logoFlottant.classList.toggle("cache", window.scrollY > 80);
 
     // pill : disparaît quand le footer entre dans la zone basse de l'écran
     if(footerEl){

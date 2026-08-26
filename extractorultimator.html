@@ -60,8 +60,14 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
 .jumbo-cta svg{flex:none}
 .statut{display:flex;align-items:center;gap:8px;font-family:"Clash Display";font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--texte-2);border:1px solid var(--trait);border-radius:999px;padding:6px 13px;background:var(--blanc-2)}
 .pastille{width:7px;height:7px;border-radius:50%;background:var(--d-txt-3);flex:none}
-.pastille.on{background:var(--bleu)}
-.pastille.off{background:var(--corail)}
+.pastille.pret{background:#22C55E}          /* vert : serveur prêt */
+.pastille.injoignable{background:var(--corail)} /* rouge : injoignable */
+/* loader animé pour l'état "chargement du modèle" */
+.pastille.charge{background:transparent;width:11px;height:11px;border:2px solid var(--trait);border-top-color:var(--bleu);border-radius:50%;animation:tourne .7s linear infinite}
+@keyframes tourne{to{transform:rotate(360deg)}}
+/* bouton "learn more" dans la pastille injoignable */
+.statut-aide{background:none;border:0;cursor:pointer;color:var(--corail);font-family:inherit;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;text-decoration:underline;padding:0;margin-left:2px}
+.statut-aide:hover{color:var(--corail-fonce)}
 
 /* hero */
 .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--trait)}
@@ -90,7 +96,7 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
 .carte .etat{margin-top:16px;font-family:"Clash Display";font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--corail)}
 .carte:not(.actif) .etat{color:var(--d-txt-3)}
 
-footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;margin:0 auto;font-family:"Clash Display";font-weight:400;font-size:13px;color:var(--texte-2)}
+
 
 /* ========== MODALE (dark mode, panneau non-fullscreen + overlay) ========== */
 .modale{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);
@@ -195,7 +201,7 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
 
 <div class="bar"><div class="wrap bar-in">
   <a href="#extraction" class="marque-logo">
-    <svg viewBox="0 0 181 161" xmlns="http://www.w3.org/2000/svg" class="logo-svg" aria-label="Scribo"><rect width="181" height="161" fill="var(--corail)"/><path d="M180.735 54.6261L180.735 155.205L174.639 155.205C174.639 147.077 174.742 127.028 171.591 112.535C166.512 89.1683 159.4 79.0089 141.113 68.8494C125.276 60.0512 102.846 60.7218 90.3156 60.7218L90.3156 54.6261L180.735 54.6261Z" fill="var(--noir)"/>
+    <svg viewBox="0 0 181 161" xmlns="http://www.w3.org/2000/svg" class="logo-svg" aria-label="Scribo"><path d="M180.735 54.6261L180.735 155.205L174.639 155.205C174.639 147.077 174.742 127.028 171.591 112.535C166.512 89.1683 159.4 79.0089 141.113 68.8494C125.276 60.0512 102.846 60.7218 90.3156 60.7218L90.3156 54.6261L180.735 54.6261Z" fill="var(--noir)"/>
 <path d="M0.000168753 105.942L0.000190735 5.36302L6.09587 5.36302C6.09587 13.4906 5.99307 33.5399 9.14371 48.0328C14.2234 71.3995 21.3351 81.559 39.6221 91.7185C55.4587 100.517 77.8894 99.8461 90.4194 99.8461L90.4194 105.942L0.000168753 105.942Z" fill="var(--noir)"/>
 <path d="M174.639 55.1592C174.639 47.0317 174.742 26.9821 171.592 12.4893C170.58 7.83762 169.488 3.70904 168.244 -5.45965e-07L180.734 0L180.734 55.1592L174.639 55.1592Z" fill="var(--noir)"/>
 <path d="M6.0957 105.526C6.0957 113.653 5.99306 133.703 9.14355 148.195C10.1548 152.847 11.2468 156.976 12.4912 160.685L0 160.685L6.57767e-07 105.526L6.0957 105.526Z" fill="var(--noir)"/>
@@ -216,7 +222,7 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
         <button class="lang-item" data-lang="en"><span class="lang-flag">🇬🇧</span><span>English</span></button>
       </div>
     </div>
-    <div class="statut"><span class="pastille" id="pastille"></span><span id="statutTexte" data-i18n="st_connexion">connexion au modèle…</span></div>
+    <div class="statut"><span class="pastille" id="pastille"></span><span id="statutTexte" data-i18n="st_connexion">connexion au modèle…</span><button class="statut-aide" id="statutAide" data-i18n="st_aide" style="display:none">En savoir plus</button></div>
   </nav>
 </div></div>
 
@@ -239,10 +245,6 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
     </a>
   </div>
 </section>
-
-<footer class="wrap">
-  <span data-i18n="footer">Tout se passe en local : l'analyse tourne dans votre process Python, le fichier temporaire est supprimé juste après. Rien ne part ailleurs.</span>
-</footer>
 
 <!-- ================= MODALE ================= -->
 <div class="modale" id="modale" role="dialog" aria-modal="true" aria-labelledby="modaleTitre">
@@ -296,6 +298,20 @@ footer{border-top:1px solid var(--trait);padding:32px 24px;max-width:1100px;marg
   </div>
 </div>
 
+<!-- Modale d'aide : serveur injoignable -->
+<div class="modale" id="modaleAide" role="dialog" aria-modal="true" aria-labelledby="aideTitre">
+  <div class="modale-panneau">
+    <div class="modale-bar">
+      <button class="fermer" id="aideFermer" data-i18n="aide_fermer">Fermer ✕</button>
+    </div>
+    <div class="modale-corps">
+      <h2 id="aideTitre" data-i18n="aide_titre">Scribo est injoignable</h2>
+      <p style="font-size:16px;line-height:1.6;color:var(--d-txt-2);max-width:52ch;margin-bottom:28px" data-i18n="aide_corps">Le serveur local d'extraction ne répond pas. Vérifiez qu'il est bien lancé dans le Terminal (sur un Mac Apple Silicon), puis rechargez cette page.</p>
+      <a href="https://github.com/Gabsuisse/scribo#-lancer-en-local" target="_blank" rel="noopener" class="cta" data-i18n="aide_lien">Voir les instructions sur GitHub</a>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ═══ i18n FR/EN ═══ */
 const I18N = {
@@ -319,7 +335,8 @@ const I18N = {
     m_note:"Le pourcentage n'est pas déclaré par le modèle, il est calculé ici : 50 % de base, +30 si la valeur se retrouve telle quelle dans le texte source, +20 si elle passe son contrôle de forme (clé mod-97 pour l'IBAN, format pour le BIC). Les champs sous 80 % méritent un coup d'œil avant d'être injectés dans un formulaire.",
     m_brut:"Voir le texte source lu dans le document",
     e_envoi:"Envoi du document…", e_lecture:"Lecture du document…", e_analyse:"Analyse par Mistral 7B…", e_charge:"Le modèle se charge en mémoire, c'est plus long au premier document…", e_toujours:"Toujours en cours, ne fermez pas la page…",
-    footer:"Tout se passe en local : l'analyse tourne dans votre process Python, le fichier temporaire est supprimé juste après. Rien ne part ailleurs.",
+    st_connexion:"Connexion au serveur…", st_pret:"Scribo prêt", st_charge:"Chargement du modèle…", st_injoignable:"Scribo injoignable", st_aide:"En savoir plus",
+    aide_titre:"Scribo est injoignable", aide_corps:"Le serveur local d'extraction ne répond pas. Vérifiez qu'il est bien lancé dans le Terminal (sur un Mac Apple Silicon), puis rechargez cette page.", aide_lien:"Voir les instructions sur GitHub", aide_fermer:"Fermer",
   },
   en:{
     nav_extraction:"Extraction", nav_apropos:"About",
@@ -341,7 +358,8 @@ const I18N = {
     m_note:"The percentage is not declared by the model, it is computed here: 50% base, +30 if the value appears verbatim in the source text, +20 if it passes its format check (mod-97 checksum for the IBAN, format for the BIC). Fields below 80% deserve a look before being injected into a form.",
     m_brut:"View the source text read from the document",
     e_envoi:"Sending the document…", e_lecture:"Reading the document…", e_analyse:"Analysis by Mistral 7B…", e_charge:"The model is loading into memory, it takes longer for the first document…", e_toujours:"Still running, don't close the page…",
-    footer:"Everything happens locally: the analysis runs in your Python process, the temporary file is deleted right after. Nothing goes anywhere else.",
+    st_connexion:"Connecting to the server…", st_pret:"Scribo ready", st_charge:"Loading the model…", st_injoignable:"Scribo unreachable", st_aide:"Learn more",
+    aide_titre:"Scribo is unreachable", aide_corps:"The local extraction server isn't responding. Make sure it's running in the Terminal (on an Apple Silicon Mac), then reload this page.", aide_lien:"See the instructions on GitHub", aide_fermer:"Close",
   }
 };
 let LANG = "en";
@@ -748,18 +766,55 @@ document.getElementById("btnRecommencer").addEventListener("click", () => {
   zone.scrollIntoView({ behavior:"smooth", block:"center" });
 });
 
-/* ============ Statut du serveur ============ */
-(async function(){
-  const p = document.getElementById("pastille"), txt = document.getElementById("statutTexte");
-  try {
-    const d = await (await fetch("/statut")).json();
-    MODELE = d.modele || MODELE;
-    p.className = "pastille on";
-    txt.textContent = d.charge ? t("st_charge") : t("st_pret");
-  } catch {
-    p.className = "pastille off";
-    txt.textContent = t("st_injoignable");
+/* ============ Statut du serveur (3 états) ============ */
+(function(){
+  const p = document.getElementById("pastille");
+  const txt = document.getElementById("statutTexte");
+  const aide = document.getElementById("statutAide");
+  let timer = null;
+
+  async function verifier(){
+    try {
+      const d = await (await fetch("/statut")).json();
+      MODELE = d.modele || MODELE;
+      aide.style.display = "none";
+      if (d.charge) {
+        p.className = "pastille pret";
+        txt.textContent = t("st_pret");
+        if(timer){ clearInterval(timer); timer = null; }  // prêt : on arrête de sonder
+      } else {
+        p.className = "pastille charge";
+        txt.textContent = t("st_charge");
+        // le modèle charge encore : on re-vérifie régulièrement jusqu'à "prêt"
+        if(!timer) timer = setInterval(verifier, 2000);
+      }
+    } catch {
+      p.className = "pastille injoignable";
+      txt.textContent = t("st_injoignable");
+      aide.style.display = "";
+      if(timer){ clearInterval(timer); timer = null; }
+    }
   }
+  verifier();
+  // expose pour rafraîchir après un changement de langue
+  window.__majStatut = () => { const cur = document.getElementById("pastille").className;
+    // on ne refait pas d'appel réseau, on retraduit juste le texte courant
+    if(cur.includes("pret")) txt.textContent = t("st_pret");
+    else if(cur.includes("charge")) txt.textContent = t("st_charge");
+    else if(cur.includes("injoignable")) txt.textContent = t("st_injoignable");
+  };
+})();
+
+/* modale d'aide (serveur injoignable) */
+(function(){
+  const modale = document.getElementById("modaleAide");
+  const ouvrir = document.getElementById("statutAide");
+  const fermer = document.getElementById("aideFermer");
+  if(!modale || !ouvrir) return;
+  ouvrir.addEventListener("click", () => modale.classList.add("ouverte"));
+  fermer.addEventListener("click", () => modale.classList.remove("ouverte"));
+  modale.addEventListener("click", e => { if(e.target === modale) modale.classList.remove("ouverte"); });
+  document.addEventListener("keydown", e => { if(e.key==="Escape") modale.classList.remove("ouverte"); });
 })();
 
 /* ============ Sélecteur de langue ============ */

@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="#-lancer-en-local-en-3-commandes">Lancer en local</a> ·
+  <a href="#-lancer-en-local">Lancer en local</a> ·
   <a href="#-le-problème-produit">Le problème</a> ·
   <a href="#-larchitecture">Architecture</a> ·
   <a href="#-décisions-techniques">Décisions</a> ·
@@ -25,20 +25,46 @@ C'est un prototype produit : il fonctionne de bout en bout, mais il est volontai
 
 ---
 
-## ⚡ Lancer en local, en 3 commandes
+## ⚡ Lancer en local
 
 > ⚠️ **Plateforme : Mac Apple Silicon uniquement** (puce M1, M2, M3 ou plus récente).
 > Scribo **ne fonctionne pas** sur Windows, Linux, ni sur Mac Intel, car son moteur d'inférence repose sur **MLX**, la bibliothèque d'Apple spécifique à ses puces. Une version portable (via llama.cpp) pourra être envisagée plus tard.
 
-> Prérequis : macOS Apple Silicon (M1+), Python 3.10+. Le modèle (~4 Go) se télécharge à la première extraction.
+Scribo s'installe avec **[uv](https://docs.astral.sh/uv/)**, qui gère tout pour vous : il installe la bonne version de Python si elle manque, crée un environnement isolé et télécharge les dépendances — le tout automatiquement. **Pas besoin d'avoir Python au préalable.**
+
+**1. Installez `uv`** (une seule fois, si vous ne l'avez pas déjà) :
 
 ```bash
-pip install mlx-lm pdfplumber ocrmac pymupdf   # inférence + lecture PDF texte, images & scans (OCR)
-python3 extracteur.py                  # démarre le serveur local + précharge le modèle
-# puis ouvrir http://localhost:8000/extractorultimator.html
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
+**2. Récupérez Scribo**, au choix :
+
+```bash
+# avec git
+git clone https://github.com/Gabsuisse/scribo.git
+cd scribo
+```
+
+*Ou sans git : téléchargez le ZIP depuis la page GitHub (bouton vert **Code → Download ZIP**), décompressez-le, et ouvrez le dossier dans le Terminal.*
+
+**3. Lancez Scribo** — cette seule commande installe Python si besoin, toutes les dépendances, puis démarre le serveur :
+
+```bash
+uv run extracteur.py
+```
+
+Puis ouvrez **http://localhost:8000/extractorultimator.html** dans votre navigateur.
+
+> À la première extraction, le modèle (~4 Go) se télécharge une fois. Ensuite, tout est local.
+
 Déposez un document — **PDF ou image, Scribo s'adapte tout seul** — cliquez sur **Extraire**, et copiez les champs d'un clic. Rien ne part sur le réseau : vous pouvez couper le Wi-Fi et vérifier.
+
+---
+
+## 🗺️ Évolution envisagée
+
+Une **application Mac double-cliquable** (`.app`, sans terminal) est à l'étude pour un usage grand public — elle demande une étape de packaging et de signature Apple, réservée à un futur lancement. En attendant, `uv` offre le parcours le plus simple : une commande, aucun prérequis Python.
 
 ---
 

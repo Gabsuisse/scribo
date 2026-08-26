@@ -5,14 +5,17 @@ extracteur.py — serveur local d'extraction de documents.
 Charge Mistral 7B via mlx-lm (même approche que Mistico), lit le document,
 extrait les champs, puis recontrôle chaque valeur par des règles de calcul.
 
-Lancement :
-    python3 extracteur.py
+Lancement (recommandé, avec uv — installe Python + dépendances tout seul) :
+    uv run extracteur.py
     → http://localhost:8000
 
-Dépendances :
+Alternative (si Python 3.10+ est déjà installé) :
     python3 -m pip install mlx-lm pdfplumber ocrmac pymupdf
-    (mlx-lm : inférence Mistral · pdfplumber : PDF texte ·
-     ocrmac : OCR des images · pymupdf : rasterisation des PDF scannés)
+    python3 extracteur.py
+
+Dépendances (déclarées dans pyproject.toml) :
+    mlx-lm : inférence Mistral · pdfplumber : PDF texte ·
+    ocrmac : OCR des images · pymupdf : rasterisation des PDF scannés
 """
 
 import http.server
