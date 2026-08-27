@@ -125,12 +125,12 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
 .zone p{color:var(--d-txt-2);font-size:15px}
 .lien{background:none;border:0;color:var(--corail);font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 /* état fichier importé */
-.fichier-pret{display:flex;flex-direction:column;gap:22px;align-items:center;text-align:center}
+.fichier-pret{display:flex;flex-direction:column;gap:24px;align-items:center;text-align:center}
 .fichier-ligne{display:flex;align-items:center;gap:14px;justify-content:center;text-align:left}
 .fichier-ic{width:34px;height:40px;color:var(--bleu-dark);flex:none}
-.fichier-meta{display:flex;flex-direction:column;gap:3px;min-width:0}
-.fichier-meta b{font-family:"Clash Display";font-weight:600;font-size:17px;color:var(--d-txt);word-break:break-all}
-.fichier-poids{font-family:"Clash Display";font-weight:400;font-size:13px;color:var(--d-txt-2)}
+.fichier-meta{display:flex;flex-direction:column;gap:1px;min-width:0}
+.fichier-meta b{font-family:"Clash Display";font-weight:600;font-size:17px;color:var(--d-txt);word-break:break-all;line-height:1.2}
+.fichier-poids{font-family:"Clash Display";font-weight:400;font-size:13px;color:var(--d-txt-2);line-height:1.2}
 .fichier-poids .lien{font-size:13px}
 .fichier-pret .cta{align-self:center}
 
@@ -153,7 +153,9 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
 .res-tete h3{font-family:"Clash Display";font-weight:700;font-size:22px;text-transform:uppercase;color:var(--d-txt)}
 .res-tete p{font-family:"Clash Display";font-weight:400;font-size:12px;color:var(--d-txt-3)}
 #champs{display:block}
-.tout-copier{display:inline-flex;align-items:center;gap:8px;margin-bottom:16px;border:1px solid var(--corail);background:transparent;color:var(--corail);font-family:"Clash Display";font-weight:600;font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:9px 14px;cursor:pointer;border-radius:6px;transition:all .12s}
+.tout-copier{display:inline-flex;align-items:center;gap:8px;margin-bottom:16px;border:1px solid var(--corail);background:transparent;color:var(--corail);font-family:"Clash Display";font-weight:600;font-size:14px;letter-spacing:.03em;text-transform:uppercase;padding:14px 20px;cursor:pointer;border-radius:7px;transition:all .12s}
+.dl-json{display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;border:1px solid var(--d-bord-fort);background:var(--d-carte);color:var(--d-txt);font-family:"Clash Display";font-weight:600;font-size:14px;letter-spacing:.03em;text-transform:uppercase;padding:14px 24px;cursor:pointer;border-radius:7px;transition:all .12s}
+.dl-json:hover{border-color:var(--d-txt-2);color:#fff}
 .tout-copier:hover{background:var(--corail);color:#fff}
 .tout-copier.ok{background:var(--corail);color:#fff;border-color:var(--corail)}
 .tout-copier svg{width:13px;height:13px}
@@ -186,7 +188,11 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
 .jauge.moyen .segments i.on{background:#FBBF24;box-shadow:0 0 8px 0 #FBBF24}
 .jauge.bas .segments i.on{background:var(--corail);box-shadow:0 0 8px 0 var(--corail)}
 .tampon{display:inline-flex;align-items:center;gap:9px;margin-top:20px;border:1px solid rgba(60,201,227,.3);background:#0C2E33;color:#8FE3F0;border-radius:7px;padding:10px 16px;font-family:"Clash Display";font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
-.tampon.ko{border-color:rgba(255,90,60,.3);background:#2E1310;color:#FFB59E}
+/* tag d'alerte — status alerte du design system Scribo */
+.tag-alerte{display:inline-flex;align-items:center;gap:8px;margin-top:20px;border:0;
+  background:#F8DEDE;color:#FF1F2E;border-radius:4px;padding:9px 14px;
+  font-family:"Clash Display";font-weight:500;font-size:14px;letter-spacing:.01em;text-transform:none}
+.tag-alerte svg{width:16px;height:16px;flex:none;stroke:#FF1F2E}
 .actions{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
 .cta{font-family:"Clash Display";font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.03em;padding:14px 24px;border-radius:7px;cursor:pointer;border:0;background:var(--corail);color:#fff;transition:all .15s}
 .cta:hover{background:var(--corail-fonce)}
@@ -254,12 +260,12 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
     </div>
 
     <div class="modale-corps">
-    <h2 id="modaleTitre" data-i18n="m_titre">Relevé d'identité bancaire</h2>
+    <h2 id="modaleTitre">Relevé d'identité bancaire</h2>
 
     <div class="consigne">
       <div>
         <h4 data-i18n="m_lira_t">Ce que le système va lire</h4>
-        <p data-i18n="m_lira_p">Le titulaire, l'IBAN, le BIC et la domiciliation. Le code banque, le code guichet, le numéro de compte et la clé RIB sont ensuite recalculés à partir de l'IBAN, ils ne sont pas devinés.</p>
+        <p class="m_lira_p">Le titulaire, l'IBAN, le BIC et la domiciliation. Le code banque, le code guichet, le numéro de compte et la clé RIB sont ensuite recalculés à partir de l'IBAN, ils ne sont pas devinés.</p>
       </div>
       <div>
         <h4 data-i18n="m_formats_t">Formats acceptés</h4>
@@ -288,7 +294,6 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
       </div>
       <div id="champs"></div>
       <div class="actions">
-        <button class="cta secondaire" id="btnJson" data-i18n="dl_json">Télécharger le JSON</button>
         <button class="cta" id="btnRecommencer" style="background:transparent;color:var(--encre);border:1px solid var(--trait)" data-i18n="m_autre">Extraire un autre RIB</button>
       </div>
       <p class="note" data-i18n="m_note">Le pourcentage n'est pas déclaré par le modèle, il est calculé ici : 50 % de base, +30 si la valeur se retrouve telle quelle dans le texte source, +20 si elle passe son contrôle de forme (clé mod-97 pour l'IBAN, format pour le BIC). Les champs sous 80 % méritent un coup d'œil avant d'être injectés dans un formulaire.</p>
@@ -330,6 +335,8 @@ const I18N = {
     m_lira_p:"Le titulaire, l'IBAN, le BIC et la domiciliation. Le code banque, le code guichet, le numéro de compte et la clé RIB sont ensuite recalculés à partir de l'IBAN, ils ne sont pas devinés.",
     m_formats_t:"Formats acceptés",
     m_formats_p:"Un PDF avec texte est lu directement. Une image ou un PDF scanné passe par la reconnaissance de caractères, c'est plus lent.",
+    iban_ok:"IBAN vérifié · mod-97", iban_ko:"IBAN rejeté · mod-97", iban_absent:"Aucun IBAN trouvé",
+    mrz_ok:"Clés MRZ vérifiées", mrz_ko:"Clés MRZ invalides", mrz_absent:"Aucun numéro de passeport trouvé",
     m_glissez:"Glissez votre RIB ici", m_ou:"ou", m_parcourir:"choisissez un fichier",
     m_autre:"Extraire un autre RIB", m_tout_copier:"Tout copier (nom : valeur)",
     m_note:"Le pourcentage n'est pas déclaré par le modèle, il est calculé ici : 50 % de base, +30 si la valeur se retrouve telle quelle dans le texte source, +20 si elle passe son contrôle de forme (clé mod-97 pour l'IBAN, format pour le BIC). Les champs sous 80 % méritent un coup d'œil avant d'être injectés dans un formulaire.",
@@ -353,6 +360,8 @@ const I18N = {
     m_lira_p:"The account holder, the IBAN, the BIC and the branch. The bank code, branch code, account number and check digits are then recalculated from the IBAN — they are not guessed.",
     m_formats_t:"Accepted formats",
     m_formats_p:"A PDF with text is read directly. An image or a scanned PDF goes through character recognition, which is slower.",
+    iban_ok:"IBAN verified · mod-97", iban_ko:"IBAN rejected · mod-97", iban_absent:"No IBAN found",
+    mrz_ok:"MRZ keys verified", mrz_ko:"MRZ keys invalid", mrz_absent:"No passport number found",
     m_glissez:"Drop your bank details here", m_ou:"or", m_parcourir:"choose a file",
     m_autre:"Extract another document", m_tout_copier:"Copy all (name: value)",
     m_note:"The percentage is not declared by the model, it is computed here: 50% base, +30 if the value appears verbatim in the source text, +20 if it passes its format check (mod-97 checksum for the IBAN, format for the BIC). Fields below 80% deserve a look before being injected into a form.",
@@ -377,6 +386,7 @@ function appliquerLangue(lang){
   document.querySelectorAll(".lang-item").forEach(it=>it.classList.toggle("actif", it.dataset.lang===lang));
   if(typeof rendreCatalogue==="function") rendreCatalogue();
   if(typeof appliquerLangueModale==="function") appliquerLangueModale();
+  if(typeof majEnteteModale==="function" && DOC_COURANT) majEnteteModale(DOC_COURANT);
 }
 
 /* Le serveur Python sert cette page : même origine, aucun appel externe. */
@@ -399,14 +409,20 @@ let MODELE = "mistral 7b";
 /* ============ Catalogue ============ */
 const CATALOGUE = [
   { fam:"Finance & banque", fam_en:"Finance & banking", docs:[
-    { id:"rib", nom:"RIB", nom_en:"Bank details (RIB)", desc:"IBAN, BIC, titulaire, domiciliation", desc_en:"IBAN, BIC, account holder, branch", actif:true },
+    { id:"rib", nom:"RIB", nom_en:"Bank details (RIB)", desc:"IBAN, BIC, titulaire, domiciliation", desc_en:"IBAN, BIC, account holder, branch", actif:true,
+      titreModale:"Relevé d'identité bancaire", titreModale_en:"Bank details (RIB)",
+      lira:"Le titulaire, l'IBAN, le BIC et la domiciliation. Le code banque, le code guichet, le numéro de compte et la clé RIB sont ensuite recalculés à partir de l'IBAN, ils ne sont pas devinés.",
+      lira_en:"The account holder, the IBAN, the BIC and the branch. The bank code, branch code, account number and check digits are then recalculated from the IBAN — they are not guessed." },
     { id:"avis", nom:"Avis d'imposition", nom_en:"Tax notice", desc:"Revenus, parts fiscales, adresse fiscale", desc_en:"Income, tax shares, tax address" },
     { id:"paie", nom:"Bulletin de salaire", nom_en:"Payslip", desc:"Salaire net, employeur, type de contrat", desc_en:"Net pay, employer, contract type" },
     { id:"releve", nom:"Relevé de compte", nom_en:"Bank statement", desc:"Soldes, période, mouvements", desc_en:"Balances, period, transactions" },
   ]},
   { fam:"Identité & administratif", fam_en:"Identity & administrative", docs:[
     { id:"cni", nom:"Carte d'identité", nom_en:"ID card", desc:"État civil lu depuis la bande MRZ", desc_en:"Civil status read from the MRZ" },
-    { id:"passeport", nom:"Passeport", nom_en:"Passport", desc:"État civil, numéro, validité", desc_en:"Civil status, number, validity" },
+    { id:"passeport", nom:"Passeport", nom_en:"Passport", desc:"État civil, numéro, validité", desc_en:"Civil status, number, validity", actif:true,
+      titreModale:"Passeport", titreModale_en:"Passport",
+      lira:"Le nom, les prénoms, le numéro du passeport, la nationalité, la date de naissance, le sexe et la date d'expiration. Le numéro, la date de naissance et la date d'expiration sont vérifiés par les clés de contrôle de la bande MRZ, ils ne sont pas devinés.",
+      lira_en:"The surname, given names, passport number, nationality, date of birth, sex and expiry date. The number, date of birth and expiry date are checked against the MRZ control digits — they are not guessed." },
     { id:"sejour", nom:"Titre de séjour", nom_en:"Residence permit", desc:"Statut, dates de validité", desc_en:"Status, validity dates" },
     { id:"famille", nom:"Livret de famille", nom_en:"Family record book", desc:"Composition du foyer, enfants", desc_en:"Household composition, children" },
   ]},
@@ -453,6 +469,7 @@ function rendreCatalogue(){
       const etat = doc.actif ? (LANG==="en" ? "Extract →" : "Extraire →") : (LANG==="en" ? "Soon" : "Bientôt");
       const el = document.createElement(doc.actif ? "button" : "div");
       el.className = "carte" + (doc.actif ? " actif" : "");
+      el.dataset.docId = doc.id;
       el.innerHTML = `<h3>${nom}</h3><p>${desc}</p>
         <div class="etat">${etat}</div>`;
       if (doc.actif) el.addEventListener("click", ouvrir);
@@ -466,7 +483,30 @@ rendreCatalogue();
 /* ============ Modale ============ */
 const modale = document.getElementById("modale");
 let dernierFocus = null;
-function ouvrir(e){ dernierFocus = e.currentTarget; modale.classList.add("ouverte");
+let DOC_ACTIF = "rib";  // type du document choisi, envoyé au serveur (indication)
+let DOC_COURANT = null; // objet doc courant, pour re-traduire l'entête
+
+function trouverDoc(id){
+  for(const fam of CATALOGUE){
+    const d = fam.docs.find(x => x.id === id);
+    if(d) return d;
+  }
+  return null;
+}
+function majEnteteModale(doc){
+  if(!doc) return;
+  DOC_COURANT = doc;
+  const titre = (LANG==="en" && doc.titreModale_en) ? doc.titreModale_en : (doc.titreModale || doc.nom);
+  const lira = (LANG==="en" && doc.lira_en) ? doc.lira_en : doc.lira;
+  const elTitre = document.getElementById("modaleTitre");
+  const elLira = document.querySelector("#modale .m_lira_p");
+  if(elTitre && titre) elTitre.textContent = titre;
+  if(elLira && lira) elLira.textContent = lira;
+}
+function ouvrir(e){ dernierFocus = e.currentTarget;
+  DOC_ACTIF = e.currentTarget.dataset.docId || "rib";
+  majEnteteModale(trouverDoc(DOC_ACTIF));
+  modale.classList.add("ouverte");
   document.body.style.overflow = "hidden"; document.getElementById("btnFermer").focus(); }
 function fermer(){ modale.classList.remove("ouverte"); document.body.style.overflow = "";
   if (dernierFocus) dernierFocus.focus(); }
@@ -528,9 +568,9 @@ function etatFini(){
           <span class="fichier-poids">${t("lu_fini")}</span>
         </div>
       </div>
-      <button class="cta secondaire" id="btnJson2" style="margin-top:24px">${t("dl_json")}</button>
+      <button class="cta secondaire" id="btnAutreDoc">${t("m_autre")}</button>
     </div>`;
-  document.getElementById("btnJson2").addEventListener("click", telecharger);
+  document.getElementById("btnAutreDoc").addEventListener("click", () => { input.value=""; input.click(); });
 }
 
 function montrerErreur(titre, texte, code){
@@ -557,7 +597,10 @@ async function lancer(){
   try {
     const reponse = await fetch("/extract", {
       method: "POST",
-      headers: { "X-Nom-Fichier": encodeURIComponent(fichier.name).replace(/%20/g, " ") },
+      headers: {
+        "X-Nom-Fichier": encodeURIComponent(fichier.name).replace(/%20/g, " "),
+        "X-Type-Document": DOC_ACTIF
+      },
       body: fichier
     });
     const charge = await reponse.json();
@@ -597,14 +640,16 @@ function afficher(res){
   const hote = document.getElementById("champs");
   hote.innerHTML = "";
 
-  // bouton "tout copier" en tête
+  // barre d'actions : "tout copier" + "télécharger le JSON" côte à côte
   const barre = document.createElement("div");
-  barre.style.cssText = "grid-column:1/-1;margin-bottom:8px";
+  barre.style.cssText = "grid-column:1/-1;margin-bottom:8px;display:flex;gap:12px;align-items:stretch;flex-wrap:wrap";
   barre.innerHTML = `<button class="tout-copier" id="toutCopier">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-    ${t("m_tout_copier")}</button>`;
+    ${t("m_tout_copier")}</button>
+    <button class="dl-json" id="dlJson">${t("dl_json")}</button>`;
   hote.appendChild(barre);
+  document.getElementById("dlJson").addEventListener("click", telecharger);
 
   res.champs.forEach(c => {
     const niveau = c.score >= 80 ? "haut" : c.score >= 55 ? "moyen" : "bas";
@@ -702,11 +747,22 @@ function afficher(res){
   });
 
   const zt = document.getElementById("zoneTampon");
-  zt.innerHTML = res.ibanOk === true
-    ? `<div class="tampon">✓ IBAN vérifié · mod-97</div>`
-    : res.ibanOk === false
-      ? `<div class="tampon ko">✕ IBAN rejeté · mod-97</div>`
-      : `<div class="tampon ko">✕ Aucun IBAN trouvé</div>`;
+  const icoAlerte = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+  if (res.type === "passeport") {
+    // passeport : vérification par les clés de la MRZ
+    zt.innerHTML = res.mrzOk === true
+      ? `<div class="tampon">✓ ${t("mrz_ok")}</div>`
+      : res.mrzOk === false
+        ? `<div class="tag-alerte">${icoAlerte}${t("mrz_ko")}</div>`
+        : `<div class="tag-alerte">${icoAlerte}${t("mrz_absent")}</div>`;
+  } else {
+    // RIB : vérification par la clé mod-97 de l'IBAN
+    zt.innerHTML = res.ibanOk === true
+      ? `<div class="tampon">✓ ${t("iban_ok")}</div>`
+      : res.ibanOk === false
+        ? `<div class="tag-alerte">${icoAlerte}${t("iban_ko")}</div>`
+        : `<div class="tag-alerte">${icoAlerte}${t("iban_absent")}</div>`;
+  }
 
   document.getElementById("brut").textContent = texteSource.slice(0, 4000);
   document.getElementById("resultats").classList.add("visible");
@@ -756,7 +812,6 @@ function telecharger(){
   a.click();
   setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
 }
-document.getElementById("btnJson").addEventListener("click", telecharger);
 document.getElementById("btnRecommencer").addEventListener("click", () => {
   document.getElementById("resultats").classList.remove("visible");
   fichier = null; input.value = "";

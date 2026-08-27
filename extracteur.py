@@ -141,17 +141,35 @@ Règles strictes :
 - domiciliation : UNIQUEMENT le nom ou la ville de l'agence bancaire (souvent une seule ligne courte, ex. "PARIS OPERA" ou "SAINT MANDE"). N'y mets PAS l'adresse du titulaire, ni un numéro de téléphone, ni le code postal du client. En cas de doute, prends le libellé le plus court situé près du mot "Domiciliation"."""
 
 
-def interroger(texte):
+CONSIGNE_PASSEPORT = """Tu extrais des champs d'un passeport.
+
+Réponds UNIQUEMENT par un objet JSON, sans texte avant ni après, avec exactement ces clés :
+{"nom": ..., "prenom": ..., "numero": ..., "nationalite": ..., "date_naissance": ..., "sexe": ..., "date_expiration": ..., "mrz_ligne1": ..., "mrz_ligne2": ...}
+
+Règles strictes :
+- Recopie uniquement ce qui est présent dans le texte. N'invente jamais une valeur.
+- Si un champ est absent, mets null. Ne devine pas.
+- nom : le nom de famille (surname), en majuscules.
+- prenom : le ou les prénoms (given names), tels qu'écrits.
+- numero : le numéro du passeport (passport number), lettres et chiffres.
+- nationalite : le code ou le nom de la nationalité.
+- date_naissance : au format AAAA-MM-JJ si possible.
+- sexe : M, F ou X.
+- date_expiration : au format AAAA-MM-JJ si possible.
+- mrz_ligne1 et mrz_ligne2 : les DEUX lignes de la zone lisible par machine (MRZ), en bas du passeport, recopiées EXACTEMENT caractère par caractère, y compris tous les chevrons "<". Chaque ligne fait 44 caractères. Si tu ne vois pas la MRZ, mets null."""
+
+
+def interroger(texte, consigne=CONSIGNE):
     from mlx_lm import stream_generate
 
     modele, tokenizer = charger_modele()
     messages = [
-        {"role": "user", "content": CONSIGNE + "\n\nTexte du document :\n\n" + texte[:MAX_CARACTERES]},
+        {"role": "user", "content": consigne + "\n\nTexte du document :\n\n" + texte[:MAX_CARACTERES]},
     ]
     invite = tokenizer.apply_chat_template(messages, add_generation_prompt=True)
 
     morceaux = []
-    for reponse in stream_generate(modele, tokenizer, invite, max_tokens=160):
+    for reponse in stream_generate(modele, tokenizer, invite, max_tokens=220):
         morceaux.append(getattr(reponse, "text", reponse))
     return "".join(morceaux)
 
@@ -213,6 +231,38 @@ def iban_valide(iban):
 
 def bic_valide(bic):
     return bool(re.fullmatch(r"[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?", normaliser(bic)))
+
+
+# ─────────────────────────────────────────────────────────────
+# Passeport — vérification par les clés de la MRZ (norme ICAO 9303)
+# ─────────────────────────────────────────────────────────────
+
+def _mrz_valeur(caractere):
+    """Valeur d'un caractère MRZ : chiffres = valeur, A-Z = 10..35, '<' = 0."""
+    if caractere.isdigit():
+        return int(caractere)
+    if caractere == "<":
+        return 0
+    if "A" <= caractere <= "Z":
+        return ord(caractere) - 55  # A=10, B=11, … Z=35
+    return 0
+
+
+def mrz_cle(champ):
+    """Calcule la clé de contrôle d'un champ MRZ (pondération 7-3-1)."""
+    poids = [7, 3, 1]
+    total = sum(_mrz_valeur(c) * poids[i % 3] for i, c in enumerate(champ))
+    return total % 10
+
+
+def mrz_champ_valide(champ, cle_attendue):
+    """Vrai si la clé de contrôle du champ correspond à la clé lue."""
+    if not champ or cle_attendue is None or cle_attendue == "":
+        return None
+    try:
+        return mrz_cle(champ) == int(cle_attendue)
+    except (ValueError, TypeError):
+        return None
 
 
 def decomposer_iban(iban):
@@ -287,6 +337,189 @@ def construire(brut, source):
 
 
 # ─────────────────────────────────────────────────────────────
+# Détection du type de document (hybride : le document réel prime)
+# ─────────────────────────────────────────────────────────────
+
+def detecter_type(texte, type_indique=None):
+    """Détermine le type réel du document. Le contenu prime sur type_indique.
+    Retourne 'passeport' ou 'rib'."""
+    t = texte.upper()
+    # signature MRZ passeport : "P<" suivi du code pays (3 lettres), ou une
+    # séquence typique de chevrons (au moins 6 d'affilée = zone MRZ)
+    a_mrz = bool(re.search(r"P<[A-Z<]{3}", t) or re.search(r"<{6,}", t))
+    # signature IBAN français
+    a_iban = bool(re.search(r"\bFR\d{2}[\sA-Z0-9]{18,}", t))
+
+    if a_mrz and not a_iban:
+        return "passeport"
+    if a_iban and not a_mrz:
+        return "rib"
+    # ambigu ou aucun signal fort → on suit l'indication de l'app si fournie
+    if type_indique in ("passeport", "rib"):
+        return type_indique
+    # dernier recours : MRZ prioritaire, sinon RIB (comportement historique)
+    return "passeport" if a_mrz else "rib"
+
+
+def _mrz_date_vers_iso(aammjj, naissance=True):
+    """Convertit une date MRZ 'AAMMJJ' (année sur 2 chiffres) en 'AAAA-MM-JJ'.
+    Règle du siècle : une date de naissance ne peut pas être dans le futur.
+    Pour une date d'expiration, on reste dans une fenêtre proche du présent."""
+    import datetime
+    if not aammjj or len(aammjj) != 6 or not aammjj.isdigit():
+        return None
+    aa, mm, jj = int(aammjj[0:2]), int(aammjj[2:4]), int(aammjj[4:6])
+    if not (1 <= mm <= 12 and 1 <= jj <= 31):
+        return None
+    annee_courante = datetime.date.today().year
+    deux_derniers = annee_courante % 100
+    if naissance:
+        # naissance jamais dans le futur : si "aa" > année courante (2 chiffres),
+        # c'est le siècle précédent ; sinon le siècle courant.
+        siecle = (annee_courante // 100) if aa <= deux_derniers else (annee_courante // 100 - 1)
+    else:
+        # expiration : généralement dans le futur proche → siècle courant,
+        # sauf si ça donne une date très ancienne.
+        siecle = annee_courante // 100
+        if siecle * 100 + aa < annee_courante - 10:
+            siecle += 1
+    annee = siecle * 100 + aa
+    try:
+        datetime.date(annee, mm, jj)  # validation
+    except ValueError:
+        return None
+    return f"{annee:04d}-{mm:02d}-{jj:02d}"
+
+
+def _memes_dates(a, b):
+    """Compare deux dates ISO en tolérant les formats (AAAA-MM-JJ vs AAAA/MM/JJ…)."""
+    if not a or not b:
+        return None
+    na = re.sub(r"[^0-9]", "", str(a))
+    nb = re.sub(r"[^0-9]", "", str(b))
+    if len(na) != 8 or len(nb) != 8:
+        return None
+    return na == nb
+
+
+def _memes_valeurs(a, b):
+    """Compare deux valeurs texte en ignorant casse, espaces et chevrons MRZ."""
+    if not a or not b:
+        return None
+    na = re.sub(r"[^A-Z0-9]", "", str(a).upper())
+    nb = re.sub(r"[^A-Z0-9]", "", str(b).upper())
+    if not na or not nb:
+        return None
+    return na == nb
+
+
+def _mrz_parse_noms(l1):
+    """Extrait nom et prénoms de la ligne 1 d'une MRZ TD3 (norme ICAO 9303).
+    Format : P<PAYS NOM<<PRENOM1<PRENOM2<<<...
+    '<<' sépare le nom des prénoms ; '<' simple = espace à l'intérieur.
+    Universel : identique sur tous les passeports du monde."""
+    if not l1 or len(l1) < 5:
+        return None, None
+    # on saute 'P' (type, position 0), le caractère 1 (souvent '<'), et le code pays (2-4)
+    zone_noms = l1[5:]
+    # séparation nom / prénoms sur le premier '<<'
+    if "<<" in zone_noms:
+        partie_nom, partie_prenoms = zone_noms.split("<<", 1)
+    else:
+        partie_nom, partie_prenoms = zone_noms, ""
+
+    def nettoyer(bloc):
+        # '<' simple = espace ; on retire les '<' de remplissage en fin
+        mots = [m for m in bloc.split("<") if m]
+        return " ".join(mots) if mots else None
+
+    nom = nettoyer(partie_nom)
+    prenoms = nettoyer(partie_prenoms)
+    return nom, prenoms
+
+
+def construire_passeport(brut, source):
+    l1 = str(brut.get("mrz_ligne1") or "").upper().replace(" ", "")
+    l2 = str(brut.get("mrz_ligne2") or "").upper().replace(" ", "")
+
+    # La MRZ passeport (TD3) : ligne 2 contient les clés de contrôle.
+    # Positions (0-indexées) sur la ligne 2 de 44 caractères :
+    #  0-8   numéro de passeport   | 9    clé du numéro
+    #  13-18 date de naissance     | 19   clé de la date de naissance
+    #  21-26 date d'expiration     | 27   clé de la date d'expiration
+    num_ok = naiss_ok = exp_ok = None
+    # valeurs DÉRIVÉES de la MRZ = source primaire de TOUS les champs (universel, tous pays)
+    mrz_num = mrz_naiss = mrz_exp = mrz_sexe = mrz_nat = None
+    if len(l2) >= 28:
+        num_ok = mrz_champ_valide(l2[0:9], l2[9])
+        naiss_ok = mrz_champ_valide(l2[13:19], l2[19])
+        exp_ok = mrz_champ_valide(l2[21:27], l2[27])
+        mrz_num = l2[0:9].replace("<", "") or None
+        mrz_nat = l2[10:13].replace("<", "") or None
+        mrz_naiss = _mrz_date_vers_iso(l2[13:19], naissance=True)
+        mrz_exp = _mrz_date_vers_iso(l2[21:27], naissance=False)
+        sexe_c = l2[20:21]
+        mrz_sexe = sexe_c if sexe_c in ("M", "F") else ("X" if sexe_c == "<" else None)
+
+    # nom + prénoms depuis la ligne 1 (règle NOM<<PRENOMS, universelle)
+    mrz_nom, mrz_prenoms = _mrz_parse_noms(l1)
+
+    def champ_mrz(val_mrz, val_visuel, cle_ok=None, est_date=False):
+        """Champ dont la MRZ est la source primaire. Le visuel n'est qu'un
+        bonus SILENCIEUX : il augmente la confiance s'il concorde, mais son
+        absence ou sa divergence ne pénalise PAS et n'affiche aucune alerte.
+        Retourne (valeur, tag, score)."""
+        # si la MRZ n'a rien, on retombe sur le visuel (repli)
+        if not val_mrz:
+            v = val_visuel
+            return v, None, confiance(v, source)
+        # clé de contrôle explicitement fausse → seul cas où l'on alerte
+        if cle_ok is False:
+            return val_mrz, "Clé MRZ invalide — à corriger", 55
+        # concordance visuelle (bonus silencieux)
+        if val_visuel:
+            memes = _memes_dates(val_mrz, val_visuel) if est_date else _memes_valeurs(val_mrz, val_visuel)
+        else:
+            memes = None
+        # la MRZ fait foi : valeur MRZ, haute confiance
+        if cle_ok is True:
+            # champ vérifié par sa clé de contrôle
+            tag = "Vérifié · MRZ + document" if memes is True else "Clé MRZ vérifiée"
+            return val_mrz, tag, 99
+        # champ MRZ sans clé propre (nom, prénoms, nationalité, sexe)
+        if memes is True:
+            return val_mrz, "Lu dans la MRZ · confirmé", 96
+        return val_mrz, "Lu dans la MRZ", 90
+
+    v_nom, t_nom, s_nom = champ_mrz(mrz_nom, brut.get("nom"))
+    v_pre, t_pre, s_pre = champ_mrz(mrz_prenoms, brut.get("prenom"))
+    v_num, t_num, s_num = champ_mrz(mrz_num, brut.get("numero"), cle_ok=num_ok)
+    v_nat, t_nat, s_nat = champ_mrz(mrz_nat, brut.get("nationalite"))
+    v_nai, t_nai, s_nai = champ_mrz(mrz_naiss, brut.get("date_naissance"), cle_ok=naiss_ok, est_date=True)
+    v_sex, t_sex, s_sex = champ_mrz(mrz_sexe, brut.get("sexe"))
+    v_exp, t_exp, s_exp = champ_mrz(mrz_exp, brut.get("date_expiration"), cle_ok=exp_ok, est_date=True)
+
+    champs = [
+        {"cle": "nom", "nom": "Nom", "valeur": v_nom, "score": s_nom, "src": t_nom},
+        {"cle": "prenom", "nom": "Prénom(s)", "valeur": v_pre, "score": s_pre, "src": t_pre},
+        {"cle": "numero", "nom": "N° de passeport", "valeur": v_num, "score": s_num, "src": t_num},
+        {"cle": "nationalite", "nom": "Nationalité", "valeur": v_nat, "score": s_nat, "src": t_nat},
+        {"cle": "date_naissance", "nom": "Date de naissance", "valeur": v_nai, "score": s_nai, "src": t_nai},
+        {"cle": "sexe", "nom": "Sexe", "valeur": v_sex, "score": s_sex, "src": t_sex},
+        {"cle": "date_expiration", "nom": "Date d'expiration", "valeur": v_exp, "score": s_exp, "src": t_exp},
+    ]
+
+    # bilan global : vérifié si les clés de contrôle présentes tombent toutes juste
+    mrz_ok = None
+    controles = [num_ok, naiss_ok, exp_ok]
+    if any(c is not None for c in controles):
+        mrz_ok = all(c for c in controles if c is not None)
+
+    return {"champs": champs, "type": "passeport", "mrzOk": mrz_ok,
+            "texte": source[:4000], "modele": MODELE}
+
+
+# ─────────────────────────────────────────────────────────────
 # Serveur
 # ─────────────────────────────────────────────────────────────
 class Serveur(http.server.SimpleHTTPRequestHandler):
@@ -325,10 +558,17 @@ class Serveur(http.server.SimpleHTTPRequestHandler):
 
         try:
             texte = lire_document(chemin, nom)
-            print(f"  {nom} — {len(texte)} caractères lus, appel du modèle…")
-            reponse = interroger(texte)
-            brut = extraire_json(reponse)
-            self._json(200, construire(brut, texte))
+            print(f"  {nom} — {len(texte)} caractères lus…")
+            # type indiqué par l'app (facultatif), mais le document réel prime
+            type_indique = self.headers.get("X-Type-Document")  # "rib" | "passeport" | None
+            type_reel = detecter_type(texte, type_indique)
+            print(f"  Type indiqué : {type_indique or '—'} · type détecté : {type_reel}")
+            if type_reel == "passeport":
+                brut = extraire_json(interroger(texte, CONSIGNE_PASSEPORT))
+                self._json(200, construire_passeport(brut, texte))
+            else:
+                brut = extraire_json(interroger(texte, CONSIGNE))
+                self._json(200, construire(brut, texte))
         except Exception as e:
             print(f"  Échec : {e}")
             self._json(422, {"erreur": str(e)})
