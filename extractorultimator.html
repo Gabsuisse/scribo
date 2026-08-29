@@ -16,7 +16,7 @@ html{scroll-behavior:smooth}
 section[id],header[id]{scroll-margin-top:80px}
 /* sélecteur de langue */
 .lang-dd{position:relative}
-.lang-trigger{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--trait);border-radius:7px;cursor:pointer;padding:6px 9px;font-size:15px;line-height:1;transition:border-color .15s}
+.lang-trigger{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--trait);border-radius:6px;cursor:pointer;padding:6px 9px;font-size:15px;line-height:1;transition:border-color .15s}
 .lang-trigger:hover{border-color:var(--texte-2)}
 .lang-chev{color:var(--texte-2);transition:transform .18s}
 .lang-dd.ouvert .lang-chev{transform:rotate(180deg)}
@@ -153,8 +153,8 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
 .res-tete h3{font-family:"Clash Display";font-weight:700;font-size:22px;text-transform:uppercase;color:var(--d-txt)}
 .res-tete p{font-family:"Clash Display";font-weight:400;font-size:12px;color:var(--d-txt-3)}
 #champs{display:block}
-.tout-copier{display:inline-flex;align-items:center;gap:8px;margin-bottom:16px;border:1px solid var(--corail);background:transparent;color:var(--corail);font-family:"Clash Display";font-weight:600;font-size:14px;letter-spacing:.03em;text-transform:uppercase;padding:14px 20px;cursor:pointer;border-radius:7px;transition:all .12s}
-.dl-json{display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;border:1px solid var(--d-bord-fort);background:var(--d-carte);color:var(--d-txt);font-family:"Clash Display";font-weight:600;font-size:14px;letter-spacing:.03em;text-transform:uppercase;padding:14px 24px;cursor:pointer;border-radius:7px;transition:all .12s}
+.tout-copier{display:inline-flex;align-items:center;gap:8px;margin-bottom:16px;border:1px solid var(--corail);background:transparent;color:var(--corail);font-family:"Clash Display";font-weight:600;font-size:14px;letter-spacing:.03em;text-transform:uppercase;padding:14px 20px;cursor:pointer;border-radius:6px;transition:all .12s}
+.dl-json{display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;border:1px solid var(--d-bord-fort);background:var(--d-carte);color:var(--d-txt);font-family:"Clash Display";font-weight:600;font-size:14px;letter-spacing:.03em;text-transform:uppercase;padding:14px 24px;cursor:pointer;border-radius:6px;transition:all .12s}
 .dl-json:hover{border-color:var(--d-txt-2);color:#fff}
 .tout-copier:hover{background:var(--corail);color:#fff}
 .tout-copier.ok{background:var(--corail);color:#fff;border-color:var(--corail)}
@@ -194,7 +194,7 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
   font-family:"Clash Display";font-weight:500;font-size:14px;letter-spacing:.01em;text-transform:none}
 .tag-alerte svg{width:16px;height:16px;flex:none;stroke:#FF1F2E}
 .actions{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
-.cta{font-family:"Clash Display";font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.03em;padding:14px 24px;border-radius:7px;cursor:pointer;border:0;background:var(--corail);color:#fff;transition:all .15s}
+.cta{font-family:"Clash Display";font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.03em;padding:14px 24px;border-radius:6px;cursor:pointer;border:0;background:var(--corail);color:#fff;transition:all .15s}
 .cta:hover{background:var(--corail-fonce)}
 .cta.secondaire{background:var(--d-carte);color:var(--d-txt);border:1px solid var(--d-bord-fort)}
 .cta.secondaire:hover{border-color:var(--corail);color:var(--corail);background:var(--d-hover)}
@@ -294,7 +294,7 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
       </div>
       <div id="champs"></div>
       <div class="actions">
-        <button class="cta" id="btnRecommencer" style="background:transparent;color:var(--encre);border:1px solid var(--trait)" data-i18n="m_autre">Extraire un autre RIB</button>
+        <button class="cta" id="btnRecommencer" style="background:transparent;color:var(--d-txt);border:1px solid var(--trait)" data-i18n="m_autre">Extraire un autre RIB</button>
       </div>
       <p class="note" data-i18n="m_note">Le pourcentage n'est pas déclaré par le modèle, il est calculé ici : 50 % de base, +30 si la valeur se retrouve telle quelle dans le texte source, +20 si elle passe son contrôle de forme (clé mod-97 pour l'IBAN, format pour le BIC). Les champs sous 80 % méritent un coup d'œil avant d'être injectés dans un formulaire.</p>
       <details class="brut"><summary data-i18n="m_brut">Voir le texte source lu dans le document</summary><pre id="brut"></pre></details>

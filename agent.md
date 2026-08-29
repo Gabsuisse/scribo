@@ -4,7 +4,11 @@
 > **Thèse produit : « le modèle propose, l'arithmétique dispose. »**
 > Le modèle extrait, des règles de calcul déterministes vérifient, rien ne quitte la machine.
 
-Dernière mise à jour : 27/08/2026.
+Date : 29/08/2026
+Lot : n°2
+Version produit : v0.5.0
+
+---
 
 ---
 
@@ -113,6 +117,15 @@ Le pipeline passeport :
 - Clé de contrôle explicitement fausse → **55** + tag « Clé MRZ invalide ».
 - Repli visuel (pas de MRZ) → `confiance()` classique : 50 base, +30 si la valeur apparaît telle quelle dans le texte source, +20 si elle passe son contrôle de format.
 
+### États de l'interface
+
+Les états visibles de l'app locale sont énumérés et maquettés dans le canvas
+userflow décrit dans `design.md` (§ 2 bis) : statut serveur (chargement / prêt /
+injoignable), modale d'extraction (dépôt vide, fichier prêt, scan, résultats),
+et les états limites (format refusé, clé MRZ invalide, serveur injoignable).
+Toute nouvelle famille de documents activée dans `CATALOGUE` doit ajouter ses
+artboards à ce canvas.
+
 ### Réponses du serveur
 
 - `GET /statut` → `{pret, modele, charge}` (`charge` = modèle chargé en mémoire).
@@ -171,6 +184,13 @@ serveur Python.
 
 ## Historique
 
+- v0.5.0 (Lot 2, 29/08/2026) : deux correctifs CSS dans
+  `extractorultimator.html` — `var(--encre)` (non déclarée) remplacée par
+  `var(--d-txt)`, et rayons ramenés à 6px sur `.cta`, `.tout-copier`, `.dl-json`,
+  `.lang-trigger`. Aucun changement fonctionnel. Le design system est désormais
+  porté par un fichier Figma décrit dans `design.md` § 2 ter.
+- v0.4.0 (Lot 1, 29/08/2026) : ajout du bloc méta ; ajout d'une section
+  « États de l'interface » renvoyant au canvas userflow documenté dans `design.md`.
 - v0.2.0 (27/08/2026) : structuration Landing / App locale — ajout d'une section
   dédiée à la landing (hébergement Scaleway, démo scriptée), la section logique métier
   précisée « App locale ».

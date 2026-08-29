@@ -1,0 +1,7 @@
+# environnement local (uv le recrée)
+.venv/
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
