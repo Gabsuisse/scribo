@@ -163,7 +163,8 @@ Un prototype honnête dit ce qu'il ne fait pas :
 
 ## 🗺️ Suite envisagée
 
-- Export CSV en plus du JSON et du copier-coller.
+- **Extraction par lot (multi-documents)** — déposer plusieurs documents de natures différentes (RIB, passeports…) en une fois et lancer l'extraction de l'ensemble d'un coup, le type de chaque fichier étant détecté automatiquement. C'est la prochaine évolution majeure prévue.
+- **Export personnalisable (JSON / CSV)** — choisir le format de sortie (JSON ou CSV) et sélectionner les champs à inclure, pour brancher directement Scribo sur ses propres outils, tableurs ou formulaires.
 - Nouveaux types de documents (carte grise, avis d'imposition, justificatif de domicile — les formats standardisés d'abord).
 - À terme, auto-remplissage de formulaire via extension navigateur.
 

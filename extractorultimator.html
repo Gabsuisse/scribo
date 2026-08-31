@@ -10,6 +10,14 @@
   --d-bord:#323236;--d-bord-fort:#3F3F46;--d-txt:#FAFAFA;--d-txt-2:#A1A1AA;--d-txt-3:#71717A;
   --corail:#FF5A3C;--corail-fonce:#E8482B;--bleu:#0AADCB;--bleu-dark:#3CC9E3;
   --blanc:#F4F3EF;--blanc-2:#FBFAF7;--texte:#1A1A1C;--texte-2:#55555A;--trait:#DCDAD2;
+  /* feedback (status) — remontés du CSS (lot 3) */
+  --ok:#22C55E;--moyen:#FBBF24;
+  --alerte-txt:#FF1F2E;--alerte-bg:#F8DEDE;
+  --succes-txt:#12B24A;--succes-bg:#DEF8E5;
+  --gris-nav:#2C2C2C;
+  /* échelle d'espacement (lot 3) — référence pour tout nouveau composant */
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;
+  --space-5:20px;--space-6:24px;--space-8:32px;--space-10:40px;--space-12:48px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -60,7 +68,7 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
 .jumbo-cta svg{flex:none}
 .statut{display:flex;align-items:center;gap:8px;font-family:"Clash Display";font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--texte-2);border:1px solid var(--trait);border-radius:999px;padding:6px 13px;background:var(--blanc-2)}
 .pastille{width:7px;height:7px;border-radius:50%;background:var(--d-txt-3);flex:none}
-.pastille.pret{background:#22C55E}          /* vert : serveur prêt */
+.pastille.pret{background:var(--ok)}          /* vert : serveur prêt */
 .pastille.injoignable{background:var(--corail)} /* rouge : injoignable */
 /* loader animé pour l'état "chargement du modèle" */
 .pastille.charge{background:transparent;width:11px;height:11px;border:2px solid var(--trait);border-top-color:var(--bleu);border-radius:50%;animation:tourne .7s linear infinite}
@@ -166,7 +174,7 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
 .champ-info{min-width:0;flex:1}
 .champ-nom{font-family:"Clash Display";font-weight:600;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--d-txt-2);margin-bottom:6px;display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
 .champ-val{font-family:"Clash Display";font-weight:500;font-size:18px;color:var(--d-txt);display:flex;align-items:center;gap:10px;flex-wrap:wrap;word-break:break-word}
-.champ-val .v-mono{font-variant-numeric:tabular-nums}
+.champ-val .v-mono{font-family:"JetBrains Mono",monospace;font-size:16px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .champ-val.vide span{color:var(--d-txt-3);font-style:italic;font-weight:400}
 .champ-src{font-family:"Clash Display";font-weight:400;font-size:12px;color:var(--d-txt-2);margin-top:4px}
 .copier{border:1px solid var(--d-bord-fort);background:var(--d-carte);color:var(--d-txt-2);font-family:"Clash Display";font-weight:500;font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:5px 9px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:border-color .12s,color .12s;flex:none;border-radius:5px}
@@ -181,18 +189,21 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
 /* jauge néon (alignée à droite, centrée verticalement) */
 .jauge{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex:none}
 .jauge b{font-family:"Clash Display";font-weight:600;font-size:15px;font-variant-numeric:tabular-nums}
-.jauge.haut b{color:var(--bleu-dark)}.jauge.moyen b{color:#FBBF24}.jauge.bas b{color:var(--corail)}
+.jauge.haut b{color:var(--bleu-dark)}.jauge.moyen b{color:var(--moyen)}.jauge.bas b{color:var(--corail)}
 .segments{display:inline-flex;gap:4px}
 .segments i{width:20px;height:5px;border-radius:3px;background:var(--d-bord-fort);transition:all .2s}
 .jauge.haut .segments i.on{background:var(--bleu-dark);box-shadow:0 0 8px 0 var(--bleu-dark)}
-.jauge.moyen .segments i.on{background:#FBBF24;box-shadow:0 0 8px 0 #FBBF24}
+.jauge.moyen .segments i.on{background:var(--moyen);box-shadow:0 0 8px 0 var(--moyen)}
 .jauge.bas .segments i.on{background:var(--corail);box-shadow:0 0 8px 0 var(--corail)}
-.tampon{display:inline-flex;align-items:center;gap:9px;margin-top:20px;border:1px solid rgba(60,201,227,.3);background:#0C2E33;color:#8FE3F0;border-radius:7px;padding:10px 16px;font-family:"Clash Display";font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
 /* tag d'alerte — status alerte du design system Scribo */
 .tag-alerte{display:inline-flex;align-items:center;gap:8px;margin-top:20px;border:0;
-  background:#F8DEDE;color:#FF1F2E;border-radius:4px;padding:9px 14px;
+  background:var(--alerte-bg);color:var(--alerte-txt);border-radius:4px;padding:9px 14px;
   font-family:"Clash Display";font-weight:500;font-size:14px;letter-spacing:.01em;text-transform:none}
-.tag-alerte svg{width:16px;height:16px;flex:none;stroke:#FF1F2E}
+.tag-alerte svg{width:16px;height:16px;flex:none;stroke:var(--alerte-txt)}
+.tag-succes{display:inline-flex;align-items:center;gap:8px;margin-top:20px;border:0;
+  background:var(--succes-bg);color:var(--succes-txt);border-radius:4px;padding:9px 14px;
+  font-family:"Clash Display";font-weight:500;font-size:14px;letter-spacing:.01em;text-transform:none}
+.tag-succes svg{width:16px;height:16px;flex:none;stroke:var(--succes-txt)}
 .actions{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
 .cta{font-family:"Clash Display";font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.03em;padding:14px 24px;border-radius:6px;cursor:pointer;border:0;background:var(--corail);color:#fff;transition:all .15s}
 .cta:hover{background:var(--corail-fonce)}
@@ -296,7 +307,7 @@ h1,h2,h3,h4{font-weight:700;line-height:1.05}
       <div class="actions">
         <button class="cta" id="btnRecommencer" style="background:transparent;color:var(--d-txt);border:1px solid var(--trait)" data-i18n="m_autre">Extraire un autre RIB</button>
       </div>
-      <p class="note" data-i18n="m_note">Le pourcentage n'est pas déclaré par le modèle, il est calculé ici : 50 % de base, +30 si la valeur se retrouve telle quelle dans le texte source, +20 si elle passe son contrôle de forme (clé mod-97 pour l'IBAN, format pour le BIC). Les champs sous 80 % méritent un coup d'œil avant d'être injectés dans un formulaire.</p>
+      <p class="note" id="mNote">Le pourcentage n'est pas déclaré par le modèle, il est calculé ici : 50 % de base, +30 si la valeur se retrouve telle quelle dans le texte source, +20 si elle passe son contrôle de forme (clé mod-97 pour l'IBAN, format pour le BIC). Les champs sous 80 % méritent un coup d'œil avant d'être injectés dans un formulaire.</p>
       <details class="brut"><summary data-i18n="m_brut">Voir le texte source lu dans le document</summary><pre id="brut"></pre></details>
     </section>
   </div>
@@ -339,7 +350,8 @@ const I18N = {
     mrz_ok:"Clés MRZ vérifiées", mrz_ko:"Clés MRZ invalides", mrz_absent:"Aucun numéro de passeport trouvé",
     m_glissez:"Glissez votre RIB ici", m_ou:"ou", m_parcourir:"choisissez un fichier",
     m_autre:"Extraire un autre RIB", m_tout_copier:"Tout copier (nom : valeur)",
-    m_note:"Le pourcentage n'est pas déclaré par le modèle, il est calculé ici : 50 % de base, +30 si la valeur se retrouve telle quelle dans le texte source, +20 si elle passe son contrôle de forme (clé mod-97 pour l'IBAN, format pour le BIC). Les champs sous 80 % méritent un coup d'œil avant d'être injectés dans un formulaire.",
+    m_note_rib:"Le pourcentage n'est pas déclaré par le modèle, il est calculé ici : 50 % de base, +30 si la valeur se retrouve telle quelle dans le texte source, +20 si elle passe son contrôle de forme (clé mod-97 pour l'IBAN, format pour le BIC). Les champs sous 80 % méritent un coup d'œil avant d'être injectés dans un formulaire.",
+    m_note_passeport:"Le pourcentage n'est pas déclaré par le modèle, il est calculé ici : les champs lus dans la MRZ et vérifiés par leur clé de contrôle (norme ICAO 9303) obtiennent un score élevé ; ceux confirmés par le scan visuel montent encore. Les champs sous 80 % méritent un coup d'œil avant d'être injectés dans un formulaire.",
     m_brut:"Voir le texte source lu dans le document",
     e_envoi:"Envoi du document…", e_lecture:"Lecture du document…", e_analyse:"Analyse par Mistral 7B…", e_charge:"Le modèle se charge en mémoire, c'est plus long au premier document…", e_toujours:"Toujours en cours, ne fermez pas la page…",
     st_connexion:"Connexion au serveur…", st_pret:"Scribo prêt", st_charge:"Chargement du modèle…", st_injoignable:"Scribo injoignable", st_aide:"En savoir plus",
@@ -364,7 +376,8 @@ const I18N = {
     mrz_ok:"MRZ keys verified", mrz_ko:"MRZ keys invalid", mrz_absent:"No passport number found",
     m_glissez:"Drop your bank details here", m_ou:"or", m_parcourir:"choose a file",
     m_autre:"Extract another document", m_tout_copier:"Copy all (name: value)",
-    m_note:"The percentage is not declared by the model, it is computed here: 50% base, +30 if the value appears verbatim in the source text, +20 if it passes its format check (mod-97 checksum for the IBAN, format for the BIC). Fields below 80% deserve a look before being injected into a form.",
+    m_note_rib:"The percentage is not declared by the model, it is computed here: 50% base, +30 if the value appears verbatim in the source text, +20 if it passes its format check (mod-97 checksum for the IBAN, format for the BIC). Fields below 80% deserve a look before being injected into a form.",
+    m_note_passeport:"The percentage is not declared by the model, it is computed here: fields read from the MRZ and verified by their check digit (ICAO 9303 standard) get a high score; those confirmed by the visual scan score even higher. Fields below 80% deserve a look before being injected into a form.",
     m_brut:"View the source text read from the document",
     e_envoi:"Sending the document…", e_lecture:"Reading the document…", e_analyse:"Analysis by Mistral 7B…", e_charge:"The model is loading into memory, it takes longer for the first document…", e_toujours:"Still running, don't close the page…",
     st_connexion:"Connecting to the server…", st_pret:"Scribo ready", st_charge:"Loading the model…", st_injoignable:"Scribo unreachable", st_aide:"Learn more",
@@ -387,6 +400,11 @@ function appliquerLangue(lang){
   if(typeof rendreCatalogue==="function") rendreCatalogue();
   if(typeof appliquerLangueModale==="function") appliquerLangueModale();
   if(typeof majEnteteModale==="function" && DOC_COURANT) majEnteteModale(DOC_COURANT);
+  // re-traduire la note de calcul si un résultat est affiché
+  if(TYPE_RESULTAT){
+    const elNote = document.getElementById("mNote");
+    if(elNote) elNote.textContent = t(TYPE_RESULTAT === "passeport" ? "m_note_passeport" : "m_note_rib");
+  }
 }
 
 /* Le serveur Python sert cette page : même origine, aucun appel externe. */
@@ -485,6 +503,7 @@ const modale = document.getElementById("modale");
 let dernierFocus = null;
 let DOC_ACTIF = "rib";  // type du document choisi, envoyé au serveur (indication)
 let DOC_COURANT = null; // objet doc courant, pour re-traduire l'entête
+let TYPE_RESULTAT = null; // type du dernier résultat affiché, pour re-traduire la note
 
 function trouverDoc(id){
   for(const fam of CATALOGUE){
@@ -748,23 +767,28 @@ function afficher(res){
 
   const zt = document.getElementById("zoneTampon");
   const icoAlerte = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+  const icoSucces = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
   if (res.type === "passeport") {
     // passeport : vérification par les clés de la MRZ
     zt.innerHTML = res.mrzOk === true
-      ? `<div class="tampon">✓ ${t("mrz_ok")}</div>`
+      ? `<div class="tag-succes">${icoSucces}${t("mrz_ok")}</div>`
       : res.mrzOk === false
         ? `<div class="tag-alerte">${icoAlerte}${t("mrz_ko")}</div>`
         : `<div class="tag-alerte">${icoAlerte}${t("mrz_absent")}</div>`;
   } else {
     // RIB : vérification par la clé mod-97 de l'IBAN
     zt.innerHTML = res.ibanOk === true
-      ? `<div class="tampon">✓ ${t("iban_ok")}</div>`
+      ? `<div class="tag-succes">${icoSucces}${t("iban_ok")}</div>`
       : res.ibanOk === false
         ? `<div class="tag-alerte">${icoAlerte}${t("iban_ko")}</div>`
         : `<div class="tag-alerte">${icoAlerte}${t("iban_absent")}</div>`;
   }
 
   document.getElementById("brut").textContent = texteSource.slice(0, 4000);
+  // note de calcul adaptée au type de document (RIB parle d'IBAN/BIC, passeport de MRZ)
+  TYPE_RESULTAT = res.type === "passeport" ? "passeport" : "rib";
+  const elNote = document.getElementById("mNote");
+  if (elNote) elNote.textContent = t(TYPE_RESULTAT === "passeport" ? "m_note_passeport" : "m_note_rib");
   document.getElementById("resultats").classList.add("visible");
   document.getElementById("resultats").scrollIntoView({ behavior:"smooth", block:"start" });
 }
