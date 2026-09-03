@@ -5,8 +5,8 @@
 > Le modèle extrait, des règles de calcul déterministes vérifient, rien ne quitte la machine.
 
 Date : 29/08/2026
-Lot : n°2
-Version produit : v0.5.0
+Lot : n°3
+Version produit : v0.6.0
 
 ---
 
@@ -184,6 +184,13 @@ serveur Python.
 
 ## Historique
 
+- v0.6.0 (Lot 3, 29/08/2026) : résolution dans le code des dettes de design du lot 2
+  (`extractorultimator.html`) — `.tag-succes` vert implémenté (et `.tampon` supprimé),
+  valeurs extraites en JetBrains Mono, note de calcul scindée `m_note_rib`/`m_note_passeport`
+  (la note passeport parle de la MRZ, plus de l'IBAN), couleurs feedback remontées dans
+  le `:root`, échelle d'espacement `--space-*` introduite. README réécrit en bilingue
+  EN/FR et enrichi de deux évolutions futures (extraction multi-documents, export
+  personnalisable JSON/CSV). Aucun changement de logique métier.
 - v0.5.0 (Lot 2, 29/08/2026) : deux correctifs CSS dans
   `extractorultimator.html` — `var(--encre)` (non déclarée) remplacée par
   `var(--d-txt)`, et rayons ramenés à 6px sur `.cta`, `.tout-copier`, `.dl-json`,

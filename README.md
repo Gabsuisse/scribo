@@ -1,3 +1,179 @@
+<a name="english"></a>
+<p align="center">
+  <img src="docs/banner.png" alt="Scribo — sovereign document extraction, Mistral 7B running locally" width="100%">
+</p>
+
+<p align="center">
+  <strong>Field extraction from documents, without any data ever leaving the machine.</strong><br>
+  Mistral 7B runs locally via MLX · values are verified by computation, not just generated.
+</p>
+
+<p align="center">
+  <strong>English</strong> · <a href="#-français">Français</a>
+</p>
+
+<p align="center">
+  <a href="#-run-it-locally">Run it locally</a> ·
+  <a href="#-the-product-problem">The problem</a> ·
+  <a href="#-the-architecture">Architecture</a> ·
+  <a href="#-technical-decisions">Decisions</a> ·
+  <a href="#-acknowledged-limits">Limits</a>
+</p>
+
+---
+
+## In one sentence
+
+Scribo reads a document (a French bank details slip — "RIB" — to start with), extracts the useful fields, **re-checks every value with a computational rule**, and makes them ready to paste into a form — all while running **entirely on the user's machine**, with no network call.
+
+It's a product prototype: it works end to end, but it was deliberately kept simple to stay readable. This README explains the *product reasoning* as much as the code.
+
+---
+
+## ⚡ Run it locally
+
+> ⚠️ **Platform: Apple Silicon Mac only** (M1, M2, M3 or newer chip).
+> Scribo **does not run** on Windows, Linux, or Intel Macs, because its inference engine relies on **MLX**, Apple's chip-specific library. A portable version (via llama.cpp) may be considered later.
+
+Scribo installs with **[uv](https://docs.astral.sh/uv/)**, which handles everything for you: it installs the right Python version if it's missing, creates an isolated environment and downloads the dependencies — all automatically. **No need to have Python beforehand.**
+
+**1. Install `uv`** (once, if you don't already have it):
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+**2. Get Scribo**, either way:
+
+```bash
+# with git
+git clone https://github.com/Gabsuisse/scribo.git
+cd scribo
+```
+
+*Or without git: download the ZIP from the GitHub page (green **Code → Download ZIP** button), unzip it, and open the folder in the Terminal.*
+
+**3. Launch Scribo** — this single command installs Python if needed, all dependencies, then starts the server:
+
+```bash
+uv run extracteur.py
+```
+
+Then open **http://localhost:8000/extractorultimator.html** in your browser.
+
+> On the first extraction, the model (~4 GB) downloads once. After that, everything is local.
+
+Drop a document — **PDF or image, Scribo adapts on its own** — click **Extract**, and copy the fields in one click. Nothing goes over the network: you can turn off the Wi-Fi and check.
+
+---
+
+## 🗺️ Planned evolution
+
+A **double-clickable Mac application** (`.app`, no terminal) is being considered for general-public use — it requires an Apple packaging and signing step, reserved for a future release. In the meantime, `uv` offers the simplest path: one command, no Python prerequisite.
+
+---
+
+## 🎯 The product problem
+
+Filling in a subscription form's fields by hand from a document (copying a 27-character IBAN, a BIC, an account holder's name) is slow and error-prone. Tools exist to automate this — but almost all of them **send the document to a remote server** to analyze it.
+
+For an individual working on their own bank details, that doesn't matter. But as soon as an organization processes **someone else's** documents and must answer for them — healthcare, public sector, regulated professions — sending a sensitive document to a third-party cloud becomes a compliance problem, not a convenience one.
+
+**Scribo's angle: what if the model came to the document, instead of the document going to the model?**
+
+That's a product decision before it's a technical one. Choosing local processing isn't a tinkerer's taste: it's what makes a promise — "nothing leaves" — true *by construction* rather than *by contract*.
+
+---
+
+## 🏛️ The architecture
+
+```
+┌─────────────────────────── user's machine ────────────────────────────┐
+│                                                                        │
+│   document              local server (Python)             browser      │
+│   ───────                ──────────────────                ───────      │
+│   RIB.pdf   ──────────▶  1. reading  (pdfplumber)                       │
+│                          2. extraction  (Mistral 7B / MLX)              │
+│                          3. key checks  (mod-97…)  ──────▶  fields +    │
+│                          4. temporary file erased           copy        │
+│                                                                         │
+│              no network egress — everything stays in this frame         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+The model doesn't read the image directly: an OCR / text extractor (`pdfplumber`, or character recognition for a scan) provides the raw text, which Mistral then structures into JSON. This reading / interpretation split is what lets a 7B model do well: it doesn't "reason", it spots patterns in provided text.
+
+---
+
+## 🧮 The decision that matters most: verify, don't trust
+
+A 7B model can make mistakes, or hallucinate a character. Scribo's answer is **not** to have the result re-read by a second model (two 7Bs share the same biases). It's deterministic:
+
+- **IBAN** → validated by the **mod-97 key** (the ISO 7064 standard). Once the IBAN is validated, the bank code, branch code, account number and RIB key are **not read by the model**: they are **sliced from the IBAN**. Four fields that *cannot* be wrong.
+- **BIC** → validated by its structure (ISO 9362 regex).
+- **Per-field confidence score** → computed, not declared by the model: 50% base, +30 if the value appears verbatim in the source text, +20 if it passes its form check.
+
+> The principle: **a value validated by computation cannot be a hallucination.** The LLM proposes, arithmetic disposes.
+
+---
+
+## 🗂️ Repository structure
+
+| File | Role |
+|---|---|
+| `extracteur.py` | Local server: model loading (MLX), document reading, extraction, checks, `/extract` API. |
+| `extractorultimator.html` | Interface: document drop, field display with scores, copy-paste. |
+| `scribo.html` | Landing + playable demo (fictional data) — the project's showcase. |
+| `docs/` | Banner and screenshots. |
+
+---
+
+## 🧭 Technical decisions
+
+A few choices, and the *why* — this is where the product thinking shows:
+
+- **MLX rather than llama.cpp** → native Apple Silicon inference, consistent with a "Mac workstation" target.
+- **Temperature 0 at extraction** → we want no creativity, only fidelity to the document.
+- **Capped generation (160 tokens)** → a RIB JSON is ~70 tokens; capping speeds things up without ever truncating.
+- **Model preloaded at startup** → the (one-time) loading cost is moved out of the first document, it becomes invisible.
+- **The document doesn't survive the request** → written to a temporary file, read, deleted in a `finally`.
+- **Deterministic cleanup of ambiguous fields** → e.g. a RIB's "domiciliation" often mixes the branch and the account holder's address; a code rule isolates the branch, as a safety net behind the model's instruction.
+
+---
+
+## 🚧 Acknowledged limits
+
+An honest prototype says what it doesn't do:
+
+- **Deterministic cleanup** assumes the branch name precedes the address; a RIB in the reverse order would trip it up.
+- **macOS Apple Silicon only** (MLX dependency). It's a choice, not an oversight: sovereign local processing only makes sense on a controlled machine.
+- **No app signing or installer**: this repo runs from source. The `.app`/`.dmg` packaging is a later product step.
+
+---
+
+## 🗺️ Roadmap
+
+- **Batch extraction (multi-document)** — drop several documents of different kinds (RIB, passports…) at once and extract the whole set in one go, with each file's type detected automatically. This is the next major planned evolution.
+- **Customizable export (JSON / CSV)** — choose the output format (JSON or CSV) and select which fields to include, to plug Scribo directly into your own tools, spreadsheets or forms.
+- New document types (vehicle registration, tax notice, proof of address — standardized formats first).
+- Eventually, form auto-fill via a browser extension.
+
+---
+
+<p align="center">
+  <sub>Demonstration project. Fictional sample data. Name and positioning subject to change.<br>
+  No certification (HDS, SecNumCloud) claimed — the described value comes from the local processing architecture.</sub>
+</p>
+
+---
+
+<a name="-français"></a>
+# 🇫🇷 Français
+
+<p align="center">
+  <a href="#english">English</a> · <strong>Français</strong>
+</p>
+
 <p align="center">
   <img src="docs/banner.png" alt="Scribo — extraction souveraine de documents, Mistral 7B en local" width="100%">
 </p>
