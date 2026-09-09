@@ -291,6 +291,28 @@ def confiance(valeur, source, controle=None):
     return max(5, min(99, score))
 
 
+def niveau_du_champ(champ):
+    """Traduit le score numérique d'un champ en niveau de fiabilité qualitatif.
+    Trois niveaux, cohérents avec la thèse « le modèle propose, l'arithmétique dispose » :
+      - verifie    : prouvé par un calcul déterministe (mod-97, clé MRZ, dérivé de l'IBAN)
+      - probable   : lu et cohérent, mais sans preuve mathématique
+      - a_verifier : faible correspondance, ou contrôle explicitement en échec
+    Le champ 'src' (déjà présent) porte l'explication du POURQUOI, montrée en survol."""
+    score = champ.get("score") or 0
+    if score >= 97:
+        return "verifie"
+    if score >= 80:
+        return "probable"
+    return "a_verifier"
+
+
+def annoter_niveaux(champs):
+    """Ajoute la clé 'niveau' à chaque champ. Appliqué avant de renvoyer la réponse."""
+    for c in champs:
+        c["niveau"] = niveau_du_champ(c)
+    return champs
+
+
 def construire(brut, source):
     iban = normaliser(brut.get("iban")) or None
     iban_ok = iban_valide(iban) if iban else None
@@ -333,7 +355,7 @@ def construire(brut, source):
             champs.append({"cle": cle, "nom": libelles[cle], "valeur": valeur,
                            "score": 100, "src": "Calculé depuis l'IBAN"})
 
-    return {"champs": champs, "ibanOk": iban_ok, "texte": source[:4000], "modele": MODELE}
+    return {"champs": annoter_niveaux(champs), "ibanOk": iban_ok, "texte": source[:4000], "modele": MODELE}
 
 
 # ─────────────────────────────────────────────────────────────
@@ -515,7 +537,7 @@ def construire_passeport(brut, source):
     if any(c is not None for c in controles):
         mrz_ok = all(c for c in controles if c is not None)
 
-    return {"champs": champs, "type": "passeport", "mrzOk": mrz_ok,
+    return {"champs": annoter_niveaux(champs), "type": "passeport", "mrzOk": mrz_ok,
             "texte": source[:4000], "modele": MODELE}
 
 

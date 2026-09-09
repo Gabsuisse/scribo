@@ -1,8 +1,8 @@
 # Scribo — Design system (design.md)
 
 Date : 29/08/2026
-Lot : n°3
-Version produit : v0.6.0
+Lot : n°4
+Version produit : v0.7.0
 
 ---
 
@@ -118,6 +118,22 @@ pour les status négatif / positif du design system.
 - **CTA central** en fin de zone : « Extract another document » (relance une sélection).
 - **Barre d'actions** : « Copy all (name: value) » + « Download the JSON » côte à côte,
   12px d'écart, même hauteur que les CTA standard (47px).
+
+#### Jauge de fiabilité (3 niveaux)
+Remplace l'ancien score en pourcentage. Un pourcentage se lit comme une probabilité,
+or Scribo ne produit pas des probabilités mais des **statuts vérifiables**. Trois
+niveaux, chacun avec sa couleur, son nombre de segments et un libellé :
+- **Vérifié / Verified** — vert (`--succes-txt`), 3 segments. Valeur prouvée par un
+  calcul déterministe (clé mod-97, champ découpé de l'IBAN, clé de contrôle MRZ).
+- **Probable** — ambre (`--moyen`), 2 segments. Valeur lue et cohérente, sans preuve
+  mathématique (nom/prénoms MRZ, titulaire/banque retrouvés dans le texte).
+- **À vérifier / Check needed** — corail (`--corail`), 1 segment. Faible correspondance
+  ou contrôle en échec.
+
+Le **survol** de la jauge affiche l'explication du niveau (le champ `src` renvoyé par
+le serveur : « Clé mod-97 vérifiée », « Lu dans la MRZ »…) — traçabilité du *pourquoi*.
+Le niveau est calculé côté serveur (`niveau_du_champ`) et transmis dans chaque champ
+(`niveau`), l'interface ne fait que l'afficher.
 
 #### Cards de documents (catalogue)
 - Cards actives = cliquables (RIB, passeport). Cards inactives = grisées
@@ -250,6 +266,12 @@ correspondant aux sections de la nomenclature (§ 2 bis).
 
 ## Historique
 
+- v0.7.0 (Lot 4, 29/08/2026) : remplacement du **score en pourcentage** par une
+  **jauge de fiabilité à 3 niveaux** (Vérifié / Probable / À vérifier), calculée côté
+  serveur (`niveau_du_champ`) et transmise par champ. Couleurs vert/ambre/corail,
+  libellé texte, survol expliquant le niveau (traçabilité du `src`). Motivation : un
+  pourcentage se lit comme une probabilité, or Scribo produit des statuts vérifiables
+  — le niveau qualitatif est plus honnête et plus rapide à lire (« copier ou vérifier »).
 - v0.6.0 (Lot 3, 29/08/2026) : résolution dans le code de cinq dettes consignées au
   lot 2 — `.tag-succes` implémenté (et `.tampon` supprimé), valeurs en JetBrains Mono,
   `m_note` scindée RIB/passeport, couleurs feedback remontées dans le `:root`, échelle

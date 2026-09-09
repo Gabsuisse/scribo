@@ -5,8 +5,8 @@
 > Le modèle extrait, des règles de calcul déterministes vérifient, rien ne quitte la machine.
 
 Date : 29/08/2026
-Lot : n°3
-Version produit : v0.6.0
+Lot : n°4
+Version produit : v0.7.0
 
 ---
 
@@ -110,12 +110,28 @@ Le pipeline passeport :
 
 **Règle du siècle** (`_mrz_date_vers_iso`) : l'année MRZ est sur 2 chiffres. Pour une date de naissance, on choisit le siècle tel que la date ne soit jamais dans le futur (« 23 » → 2023, « 95 » → 1995). Pour l'expiration, siècle courant par défaut.
 
-### Scoring de confiance
+### Scoring de confiance et niveaux de fiabilité
 
+Chaque champ porte un **score** numérique interne (0-100) :
 - Champ MRZ vérifié par sa clé de contrôle → **99**.
 - Champ MRZ sans clé propre (nom, prénoms, nationalité, sexe), confirmé par le visuel → **96** ; non confirmé → **90**.
 - Clé de contrôle explicitement fausse → **55** + tag « Clé MRZ invalide ».
 - Repli visuel (pas de MRZ) → `confiance()` classique : 50 base, +30 si la valeur apparaît telle quelle dans le texte source, +20 si elle passe son contrôle de format.
+- Champ RIB découpé de l'IBAN → **100**.
+
+**Le score n'est PAS affiché tel quel.** `niveau_du_champ()` le traduit en un
+**niveau de fiabilité qualitatif** (`annoter_niveaux()` l'applique à chaque champ
+avant la réponse), transmis dans la clé `niveau` :
+- score ≥ 97 → **`verifie`** (prouvé par le calcul : mod-97, clé MRZ, découpé de l'IBAN).
+- score ≥ 80 → **`probable`** (lu et cohérent, sans preuve mathématique).
+- score < 80 → **`a_verifier`** (faible correspondance ou contrôle en échec).
+
+Raison du choix : un pourcentage se lit comme une probabilité, or Scribo produit des
+**statuts vérifiables**, pas des probabilités. Le niveau qualitatif est plus honnête
+(il ne prétend pas à une précision qu'il n'a pas) et plus rapide à lire pour la seule
+décision qui compte : « je copie, ou je vérifie ? ». L'interface affiche le niveau
+(couleur + libellé Vérifié/Probable/À vérifier) ; le champ `src` explique le *pourquoi*
+au survol (voir `design.md`).
 
 ### États de l'interface
 
@@ -129,7 +145,7 @@ artboards à ce canvas.
 ### Réponses du serveur
 
 - `GET /statut` → `{pret, modele, charge}` (`charge` = modèle chargé en mémoire).
-- `POST /extract` (corps = fichier, en-têtes `X-Nom-Fichier`, `X-Type-Document`) → `{champs:[{cle,nom,valeur,score,src}], type, ibanOk|mrzOk, texte, modele}`.
+- `POST /extract` (corps = fichier, en-têtes `X-Nom-Fichier`, `X-Type-Document`) → `{champs:[{cle,nom,valeur,score,src,niveau}], type, ibanOk|mrzOk, texte, modele}`. `niveau` ∈ {`verifie`, `probable`, `a_verifier`}.
 
 ---
 
@@ -184,6 +200,12 @@ serveur Python.
 
 ## Historique
 
+- v0.7.0 (Lot 4, 29/08/2026) : remplacement du score en pourcentage par des **niveaux
+  de fiabilité** (`verifie` / `probable` / `a_verifier`). Ajout de `niveau_du_champ()`
+  et `annoter_niveaux()` dans `extracteur.py` ; chaque champ de la réponse `/extract`
+  porte désormais une clé `niveau`. L'interface affiche le niveau (couleur + libellé)
+  au lieu du %, avec le `src` en survol. Motivation : un % se lit comme une probabilité,
+  or Scribo produit des statuts vérifiables.
 - v0.6.0 (Lot 3, 29/08/2026) : résolution dans le code des dettes de design du lot 2
   (`extractorultimator.html`) — `.tag-succes` vert implémenté (et `.tampon` supprimé),
   valeurs extraites en JetBrains Mono, note de calcul scindée `m_note_rib`/`m_note_passeport`

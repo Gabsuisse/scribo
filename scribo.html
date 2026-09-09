@@ -338,8 +338,8 @@ html[data-theme="dark"]{--menu-bg:#0E0E0F;--menu-txt:#FAFAFA;--menu-bord:#2C2C30
 @keyframes surgir{to{opacity:1;transform:none}}
 .champ-tete{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
 .champ-nom{font-family:"Clash Display";font-weight:600;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--d-txt-2)}
-.champ-pct{font-family:"Clash Display";font-weight:600;font-size:13px}
-.haut .champ-pct{color:var(--bleu-dark)}.moyen .champ-pct{color:#FBBF24}.calc .champ-pct{color:var(--bleu-dark)}
+.champ-pct{font-family:"Clash Display";font-weight:600;font-size:12px;letter-spacing:.02em;white-space:nowrap;cursor:default}
+.verifie .champ-pct{color:#12B24A}.probable .champ-pct{color:#D89A00}.a_verifier .champ-pct{color:var(--corail)}
 .champ-val{font-family:"Clash Display";font-weight:500;font-size:18px;color:var(--d-txt);margin-top:6px;
   word-break:break-word;display:flex;align-items:center;gap:10px;flex-wrap:wrap;letter-spacing:.01em}
 .champ-val .v-mono{font-variant-numeric:tabular-nums}
@@ -662,14 +662,15 @@ const I18N = {
     avert:"Démonstration à but d'illustration. Les documents d'exemple et leurs données sont entièrement fictifs. Scribo est un projet en cours ; le nom et les caractéristiques sont susceptibles d'évoluer. Aucune certification (HDS, SecNumCloud) n'est revendiquée à ce stade — la valeur décrite relève de l'architecture de traitement local.",
     // démo dynamique
     res_titre:"2 · Champs extraits", non_trouve:"non trouvé dans le document",
+    niv_verifie:"Vérifié", niv_probable:"Probable", niv_a_verifier:"À vérifier",
     avec_espaces:"avec espaces", sans_espaces:"sans espaces", copier:"copier", copie_ok:"copié",
-    tampon:"✓ IBAN vérifié · clé mod-97", relancer:"Relancer",
+    tampon:"✓ IBAN vérifié · clé mod-97", tampon_passeport:"✓ Clés MRZ vérifiées", relancer:"Relancer",
     lancer_ext:"Lancer l'extraction", extraction:"Extraction…", relire:"Lecture du document…",
     etape1:"Lecture du document…", etape2:"Analyse des champs…", etape3:"Contrôle des clés…",
-    ex_noms:["RIB — La Banque Postale","RIB — Crédit établissement","RIB — scan de mauvaise qualité"],
-    ex_desc:["cas standard, une agence","deux adresses, une nettoyée","un champ en doute"],
-    champs:{"Titulaire du compte":"Titulaire du compte","Établissement":"Établissement","Domiciliation":"Domiciliation","Code banque":"Code banque","Code guichet":"Code guichet","Numéro de compte":"Numéro de compte","Clé RIB":"Clé RIB","BIC / SWIFT":"BIC / SWIFT"},
-    src:{"Clé mod-97 vérifiée":"Clé mod-97 vérifiée","Calculé depuis l'IBAN":"Calculé depuis l'IBAN","Adresse du titulaire retirée":"Adresse du titulaire retirée"},
+    ex_noms:["RIB — La Banque Postale","RIB — Crédit établissement","Passeport — spécimen"],
+    ex_desc:["cas standard, une agence","deux adresses, une nettoyée","champs vérifiés par la MRZ"],
+    champs:{"Titulaire du compte":"Titulaire du compte","Établissement":"Établissement","Domiciliation":"Domiciliation","Code banque":"Code banque","Code guichet":"Code guichet","Numéro de compte":"Numéro de compte","Clé RIB":"Clé RIB","BIC / SWIFT":"BIC / SWIFT","Nom":"Nom","Prénom(s)":"Prénom(s)","N° de passeport":"N° de passeport","Nationalité":"Nationalité","Date de naissance":"Date de naissance","Sexe":"Sexe","Date d'expiration":"Date d'expiration"},
+    src:{"Clé mod-97 vérifiée":"Clé mod-97 vérifiée","Calculé depuis l'IBAN":"Calculé depuis l'IBAN","Adresse du titulaire retirée":"Adresse du titulaire retirée","Format BIC conforme":"Format BIC conforme","Lu dans la MRZ":"Lu dans la MRZ","Clé MRZ vérifiée":"Clé MRZ vérifiée"},
   },
   en:{
     nav_home:"Home", nav_principe:"Principle", nav_demo:"Demo", cta_tester:"Try the project",
@@ -706,14 +707,15 @@ const I18N = {
     final_cta:"Try the project on GitHub →",
     avert:"Illustrative demonstration. The sample documents and their data are entirely fictional. Scribo is a work in progress; the name and features may change. No certification (HDS, SecNumCloud) is claimed at this stage — the value described stems from the local-processing architecture.",
     res_titre:"2 · Extracted fields", non_trouve:"not found in the document",
+    niv_verifie:"Verified", niv_probable:"Probable", niv_a_verifier:"Check needed",
     avec_espaces:"with spaces", sans_espaces:"without spaces", copier:"copy", copie_ok:"copied",
-    tampon:"✓ IBAN verified · mod-97 checksum", relancer:"Run again",
+    tampon:"✓ IBAN verified · mod-97 checksum", tampon_passeport:"✓ MRZ keys verified", relancer:"Run again",
     lancer_ext:"Run extraction", extraction:"Extracting…", relire:"Reading the document…",
     etape1:"Reading the document…", etape2:"Analyzing fields…", etape3:"Verifying checksums…",
-    ex_noms:["Bank form — La Banque Postale","Bank form — Credit institution","Bank form — poor-quality scan"],
-    ex_desc:["standard case, one branch","two addresses, one cleaned","one uncertain field"],
-    champs:{"Titulaire du compte":"Account holder","Établissement":"Institution","Domiciliation":"Branch location","Code banque":"Bank code","Code guichet":"Branch code","Numéro de compte":"Account number","Clé RIB":"Check digits","BIC / SWIFT":"BIC / SWIFT"},
-    src:{"Clé mod-97 vérifiée":"mod-97 checksum verified","Calculé depuis l'IBAN":"Derived from the IBAN","Adresse du titulaire retirée":"Account holder address removed"},
+    ex_noms:["Bank form — La Banque Postale","Bank form — Credit institution","Passport — specimen"],
+    ex_desc:["standard case, one branch","two addresses, one cleaned","fields verified by the MRZ"],
+    champs:{"Titulaire du compte":"Account holder","Établissement":"Institution","Domiciliation":"Branch location","Code banque":"Bank code","Code guichet":"Branch code","Numéro de compte":"Account number","Clé RIB":"Check digits","BIC / SWIFT":"BIC / SWIFT","Nom":"Surname","Prénom(s)":"Given name(s)","N° de passeport":"Passport no.","Nationalité":"Nationality","Date de naissance":"Date of birth","Sexe":"Sex","Date d'expiration":"Expiry date"},
+    src:{"Clé mod-97 vérifiée":"mod-97 checksum verified","Calculé depuis l'IBAN":"Derived from the IBAN","Adresse du titulaire retirée":"Account holder address removed","Format BIC conforme":"BIC format valid","Lu dans la MRZ":"Read from the MRZ","Clé MRZ vérifiée":"MRZ check digit verified"},
   }
 };
 let LANG = "fr";
@@ -739,39 +741,37 @@ function appliquerLangue(lang){
 const EXEMPLES = [
   { id:"lbp", nom:"RIB — La Banque Postale", desc:"cas standard, une agence",
     champs:[
-      {nom:"Titulaire du compte", val:"MARIE LEROUX", pct:80, niveau:"haut"},
-      {nom:"IBAN", val:"FR70 1751 5900 0004 2756 4600 4", pct:99, niveau:"haut", src:"Clé mod-97 vérifiée", iban:true},
-      {nom:"BIC / SWIFT", val:"PSSTFRPPXXX", pct:80, niveau:"haut"},
-      {nom:"Établissement", val:"LA BANQUE POSTALE", pct:80, niveau:"haut"},
-      {nom:"Domiciliation", val:"MONTREUIL", pct:55, niveau:"moyen"},
-      {nom:"Code banque", val:"17515", pct:100, niveau:"calc", src:"Calculé depuis l'IBAN"},
-      {nom:"Code guichet", val:"90000", pct:100, niveau:"calc", src:"Calculé depuis l'IBAN"},
-      {nom:"Numéro de compte", val:"04275646004", pct:100, niveau:"calc", src:"Calculé depuis l'IBAN"},
-      {nom:"Clé RIB", val:"04", pct:100, niveau:"calc", src:"Calculé depuis l'IBAN"},
+      {nom:"Titulaire du compte", val:"MARIE LEROUX", niveau:"probable"},
+      {nom:"IBAN", val:"FR70 1751 5900 0004 2756 4600 4", niveau:"verifie", src:"Clé mod-97 vérifiée", iban:true},
+      {nom:"BIC / SWIFT", val:"PSSTFRPPXXX", niveau:"verifie", src:"Format BIC conforme"},
+      {nom:"Établissement", val:"LA BANQUE POSTALE", niveau:"probable"},
+      {nom:"Domiciliation", val:"MONTREUIL", niveau:"a_verifier"},
+      {nom:"Code banque", val:"17515", niveau:"verifie", src:"Calculé depuis l'IBAN"},
+      {nom:"Code guichet", val:"90000", niveau:"verifie", src:"Calculé depuis l'IBAN"},
+      {nom:"Numéro de compte", val:"04275646004", niveau:"verifie", src:"Calculé depuis l'IBAN"},
+      {nom:"Clé RIB", val:"04", niveau:"verifie", src:"Calculé depuis l'IBAN"},
     ]},
   { id:"ca", nom:"RIB — Credit etablissement", desc:"deux adresses, une nettoyee",
     champs:[
-      {nom:"Titulaire du compte", val:"SCI DES TILLEULS", pct:80, niveau:"haut"},
-      {nom:"IBAN", val:"FR20 3000 6000 0112 3456 7890 4", pct:99, niveau:"haut", src:"Clé mod-97 vérifiée", iban:true},
-      {nom:"BIC / SWIFT", val:"AGRIFRPP883", pct:80, niveau:"haut"},
-      {nom:"Établissement", val:"CREDIT ETABLISSEMENT", pct:80, niveau:"haut"},
-      {nom:"Domiciliation", val:"LYON PART-DIEU", pct:55, niveau:"moyen", src:"Adresse du titulaire retirée"},
-      {nom:"Code banque", val:"30006", pct:100, niveau:"calc", src:"Calculé depuis l'IBAN"},
-      {nom:"Code guichet", val:"00001", pct:100, niveau:"calc", src:"Calculé depuis l'IBAN"},
-      {nom:"Numéro de compte", val:"12345678904", pct:100, niveau:"calc", src:"Calculé depuis l'IBAN"},
-      {nom:"Clé RIB", val:"04", pct:100, niveau:"calc", src:"Calculé depuis l'IBAN"},
+      {nom:"Titulaire du compte", val:"SCI DES TILLEULS", niveau:"probable"},
+      {nom:"IBAN", val:"FR20 3000 6000 0112 3456 7890 4", niveau:"verifie", src:"Clé mod-97 vérifiée", iban:true},
+      {nom:"BIC / SWIFT", val:"AGRIFRPP883", niveau:"verifie", src:"Format BIC conforme"},
+      {nom:"Établissement", val:"CREDIT ETABLISSEMENT", niveau:"probable"},
+      {nom:"Domiciliation", val:"LYON PART-DIEU", niveau:"probable", src:"Adresse du titulaire retirée"},
+      {nom:"Code banque", val:"30006", niveau:"verifie", src:"Calculé depuis l'IBAN"},
+      {nom:"Code guichet", val:"00001", niveau:"verifie", src:"Calculé depuis l'IBAN"},
+      {nom:"Numéro de compte", val:"12345678904", niveau:"verifie", src:"Calculé depuis l'IBAN"},
+      {nom:"Clé RIB", val:"04", niveau:"verifie", src:"Calculé depuis l'IBAN"},
     ]},
-  { id:"scan", nom:"RIB — scan de mauvaise qualite", desc:"un champ en doute",
+  { id:"passeport", nom:"Passeport — spécimen", desc:"champs vérifiés par la MRZ",
     champs:[
-      {nom:"Titulaire du compte", val:"JEAN-PIERRE M?RCHAND", pct:45, niveau:"moyen"},
-      {nom:"IBAN", val:"FR54 1020 7000 0198 7654 3210 4", pct:99, niveau:"haut", src:"Clé mod-97 vérifiée", iban:true},
-      {nom:"BIC / SWIFT", val:"CMCIFR2A", pct:80, niveau:"haut"},
-      {nom:"Établissement", val:"BANQUE POPULAIRE", pct:80, niveau:"haut"},
-      {nom:"Domiciliation", val:"non trouvé", pct:0, niveau:"moyen"},
-      {nom:"Code banque", val:"10207", pct:100, niveau:"calc", src:"Calculé depuis l'IBAN"},
-      {nom:"Code guichet", val:"00001", pct:100, niveau:"calc", src:"Calculé depuis l'IBAN"},
-      {nom:"Numéro de compte", val:"98765432104", pct:100, niveau:"calc", src:"Calculé depuis l'IBAN"},
-      {nom:"Clé RIB", val:"04", pct:100, niveau:"calc", src:"Calculé depuis l'IBAN"},
+      {nom:"Nom", val:"SPECIMEN", niveau:"probable", src:"Lu dans la MRZ"},
+      {nom:"Prénom(s)", val:"MARIE CLAIRE", niveau:"probable", src:"Lu dans la MRZ"},
+      {nom:"N° de passeport", val:"24HK58291", niveau:"verifie", src:"Clé MRZ vérifiée"},
+      {nom:"Nationalité", val:"FRA", niveau:"probable", src:"Lu dans la MRZ"},
+      {nom:"Date de naissance", val:"1990-02-15", niveau:"verifie", src:"Clé MRZ vérifiée"},
+      {nom:"Sexe", val:"F", niveau:"probable", src:"Lu dans la MRZ"},
+      {nom:"Date d'expiration", val:"2030-02-14", niveau:"verifie", src:"Clé MRZ vérifiée"},
     ]},
 ];
 function ETAPES(){ return [[0,t("etape1")],[900,t("etape2")],[2100,t("etape3")]]; }
@@ -852,7 +852,7 @@ function afficher(ex){
       div.className="champ "+c.niveau;
       div.style.animationDelay=(reduit?0:i*70)+"ms";
       if(c.iban) div.dataset.iban="1";
-      const pct=c.pct>0?c.pct+" %":"—";
+      const nivLbl = t(c.niveau==="verifie"?"niv_verifie":c.niveau==="probable"?"niv_probable":"niv_a_verifier");
       const trouve=c.val&&c.val!=="non trouvé";
       const affiche=c.iban?ibanFormate(c.val):c.val;
       const nomAff = c.iban ? c.nom : (t.champs&&t.champs[c.nom]?t.champs[c.nom]:c.nom);
@@ -865,7 +865,7 @@ function afficher(ex){
             '<button class="mini-copie'+(avecEspaces?'':' ok')+'" data-esp="non">'+t("sans_espaces")+'</button>'+
           '</span>' : '';
       const srcTxt = c.src ? (t.src&&t.src[c.src]?t.src[c.src]:c.src) : '';
-      div.innerHTML='<div class="champ-tete"><span class="champ-nom">'+nomAff+toggleIban+'</span><span class="champ-pct">'+pct+'</span></div>'+
+      div.innerHTML='<div class="champ-tete"><span class="champ-nom">'+nomAff+toggleIban+'</span><span class="champ-pct"'+(c.src?' title="'+srcTxt.replace(/"/g,"&quot;")+'"':'')+'>'+nivLbl+'</span></div>'+
         '<div class="champ-val"><span>'+val+'</span>'+
         (trouve?'<button class="copier" data-c="'+aCopier+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>'+t("copier")+'</button>':"")+'</div>'+
         (srcTxt?'<div class="champ-src">'+srcTxt+'</div>':"");
@@ -874,7 +874,7 @@ function afficher(ex){
     const tampon=document.createElement("div");
     tampon.className="tampon";
     tampon.style.animationDelay=(reduit?0:ex.champs.length*70+100)+"ms";
-    tampon.innerHTML=t("tampon");
+    tampon.innerHTML = ex.id==="passeport" ? t("tampon_passeport") : t("tampon");
     champs.appendChild(tampon);
     brancherActions();
   }

@@ -124,6 +124,7 @@ A 7B model can make mistakes, or hallucinate a character. Scribo's answer is **n
 | `extracteur.py` | Local server: model loading (MLX), document reading, extraction, checks, `/extract` API. |
 | `extractorultimator.html` | Interface: document drop, field display with scores, copy-paste. |
 | `scribo.html` | Landing + playable demo (fictional data) — the project's showcase. |
+| `pdfjs/` | PDF.js library, **bundled locally** so the document preview needs no network call (keeps the "nothing leaves the machine" promise true, even for libraries). |
 | `docs/` | Banner and screenshots. |
 
 ---
@@ -154,6 +155,7 @@ An honest prototype says what it doesn't do:
 ## 🗺️ Roadmap
 
 - **Batch extraction (multi-document)** — drop several documents of different kinds (RIB, passports…) at once and extract the whole set in one go, with each file's type detected automatically. This is the next major planned evolution.
+- **Provenance highlighting** — when clicking an extracted field, draw a box on the original document image around where that value comes from, so the user can verify at a glance. Requires carrying the OCR bounding boxes through the pipeline and matching each extracted value to its position — non-trivial, especially for reformatted values (IBAN) and derived fields.
 - **Customizable export (JSON / CSV)** — choose the output format (JSON or CSV) and select which fields to include, to plug Scribo directly into your own tools, spreadsheets or forms.
 - New document types (vehicle registration, tax notice, proof of address — standardized formats first).
 - Eventually, form auto-fill via a browser extension.
@@ -296,7 +298,7 @@ Un modèle 7B peut se tromper, ou halluciner un caractère. La réponse de Scrib
 | `extracteur.py` | Serveur local : chargement du modèle (MLX), lecture du document, extraction, contrôles, API `/extract`. |
 | `extractorultimator.html` | Interface : dépôt du document, affichage des champs avec scores, copier-coller. |
 | `scribo.html` | Landing + démo jouable (données fictives) — la vitrine du projet. |
-| `desinstaller.sh` | Retire proprement le modèle en cache et les dépendances, avec confirmation à chaque étape. |
+| `pdfjs/` | Bibliothèque PDF.js, **embarquée en local** pour que l'aperçu du document ne nécessite aucun appel réseau (préserve la promesse « rien ne quitte la machine », jusque dans les librairies). |
 | `docs/` | Bannière et captures. |
 
 ---
@@ -340,6 +342,7 @@ Un prototype honnête dit ce qu'il ne fait pas :
 ## 🗺️ Suite envisagée
 
 - **Extraction par lot (multi-documents)** — déposer plusieurs documents de natures différentes (RIB, passeports…) en une fois et lancer l'extraction de l'ensemble d'un coup, le type de chaque fichier étant détecté automatiquement. C'est la prochaine évolution majeure prévue.
+- **Surlignage de provenance** — au clic sur un champ extrait, dessiner un cadre sur l'aperçu du document original autour de l'endroit d'où vient la valeur, pour que l'utilisateur vérifie d'un coup d'œil. Nécessite de faire remonter les positions (bounding boxes) de l'OCR dans tout le pipeline et d'associer chaque valeur extraite à sa position — non trivial, surtout pour les valeurs reformatées (IBAN) et les champs dérivés.
 - **Export personnalisable (JSON / CSV)** — choisir le format de sortie (JSON ou CSV) et sélectionner les champs à inclure, pour brancher directement Scribo sur ses propres outils, tableurs ou formulaires.
 - Nouveaux types de documents (carte grise, avis d'imposition, justificatif de domicile — les formats standardisés d'abord).
 - À terme, auto-remplissage de formulaire via extension navigateur.
